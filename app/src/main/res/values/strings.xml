@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Aldeias Infantis Dashboard</string>
+    <string name="information_item_count">%1$d ITENS</string>
 </resources>

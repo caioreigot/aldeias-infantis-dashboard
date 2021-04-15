@@ -3,13 +3,21 @@ package br.org.aldeiasinfantis.dashboard
 import android.app.Dialog
 import android.content.res.Resources
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.MotionEvent
 import android.view.VelocityTracker
+import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.RotateAnimation
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.org.aldeiasinfantis.dashboard.model.Information
@@ -22,18 +30,34 @@ class InformationsActivity : AppCompatActivity() {
     private var idReceived: Int = -1
 
     private lateinit var mDashboardReference: DatabaseReference
+    private lateinit var mSelectorReference: DatabaseReference
     private lateinit var mDatabase: FirebaseDatabase
 
-    lateinit var recyclerViewMain: RecyclerView
-    lateinit var infoGroupName: TextView
-    lateinit var infoItemCount: TextView
+    private lateinit var recyclerViewMain: RecyclerView
+    private lateinit var infoGroupName: TextView
+    private lateinit var infoItemCount: TextView
+    private lateinit var infoProgressBar: ProgressBar
+    private lateinit var infoRefreshButton: CardView
+    private lateinit var infoRefreshImage: ImageView
 
     lateinit var velocity: VelocityTracker
     var alreadyCalled: Boolean = false
+    var fetchingInformations: Boolean = false
+
+    // Informações que serão coletadas do Firebase
+    private var _header: String? = ""
+    private var _content: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_informations)
+
+        recyclerViewMain = findViewById(R.id.recycler_view_main)
+        infoProgressBar = findViewById(R.id.information_progress_bar)
+        infoItemCount = findViewById(R.id.info_item_count)
+        infoRefreshButton = findViewById(R.id.info_refresh_button)
+        infoRefreshImage = findViewById(R.id.info_refresh_image)
+        velocity = VelocityTracker.obtain()
 
         val fetchId = intent
         idReceived = fetchId.getIntExtra(MainActivity.intentIDTag, -1)
@@ -47,85 +71,96 @@ class InformationsActivity : AppCompatActivity() {
 
         // Conexão com o Firebase
         mDatabase = FirebaseDatabase.getInstance()
-        mDashboardReference = mDatabase.reference.child("Dashboard")
+        mDashboardReference = mDatabase.reference.child("dashboard")
 
-        recyclerViewMain = findViewById(R.id.recycler_view_main)
+        when (idReceived) {
+            MainActivity.button1.id -> {
+                infoGroupName = findViewById(R.id.info_group_name)
+                infoGroupName.text = "INFORMAÇÕES: CASA"
 
-        // Botão 1
-        if (idReceived == MainActivity.button1.id) {
-            infoGroupName = findViewById(R.id.info_group_name)
-            infoItemCount = findViewById(R.id.info_item_count)
+                // Referência de "casas" do database
+                mSelectorReference = mDashboardReference.child("casas")
+                fetchDatabaseInformations(mSelectorReference)
+            }
 
-            infoGroupName.text = "INFORMAÇÕES: CASA"
+            MainActivity.button2.id -> {
 
-            // Pegando as casas do Firebase
-            val mCasasReference = mDashboardReference.child("Casas")
-            val casasData = mutableListOf<DataSnapshot>()
+            }
 
-            mCasasReference.addListenerForSingleValueEvent(object: ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    for (ss in snapshot.children) {
-                        for (snapshot in ss.children) {
-                            /* TODO: aqui irá acessar o cabeçalho/conteúdo de cada casa, fazer uma
-                                classe de data poderia ajudar
-                                https://stackoverflow.com/questions/40366717/firebase-for-android-how-can-i-loop-through-a-child-for-each-child-x-do-y
-                             */
-                        }
+            MainActivity.button3.id -> {
+
+            }
+
+            MainActivity.button4.id -> {
+
+            }
+        }
+    }
+
+    fun fetchDatabaseInformations(mReference: DatabaseReference) {
+        mReference.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val informationData = mutableListOf<Information>()
+
+                for (ss in snapshot.children) {
+                    for (snap_shot in ss.children) {
+                        _header = if (snap_shot.key == "cabecalho") snap_shot.getValue(String::class.java) else _header
+                        _content = if (snap_shot.key == "conteudo") snap_shot.getValue(String::class.java) else _content
                     }
+
+                    informationData.add(information {
+                        this.header = _header!!
+                        this.content = _content!!
+                    })
                 }
 
-                override fun onCancelled(error: DatabaseError) {
-                    // TODO: tela de erro (conexão perdida?)
-                }
+                fetchingInformations = false
+                infoRefreshImage.animation?.cancel()
+                loadUIAndRecyclerView(informationData, mReference)
+            }
 
-            })
+            override fun onCancelled(error: DatabaseError) {
+                // TODO: tela de erro (conexão perdida?)
+            }
+        })
+    }
 
-            val fakeData = mutableListOf(
-                information {
-                    header = "Casa 01"
-                    content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                },
-                information {
-                    header = "Casa 02"
-                    content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                },
-                information {
-                    header = "Casa 03"
-                    content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                },
-                information {
-                    header = "Casa 04"
-                    content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                },
-                information {
-                    header = "Casa 05"
-                    content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                },
-                information {
-                    header = "Casa 06"
-                    content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                }
-            )
+    fun loadUIAndRecyclerView(informationData: MutableList<Information>, mReference: DatabaseReference) {
+        // apagar
+//        createMyConnectionErrorDialog(400).show()
 
-            recyclerViewMain.adapter = InformationAdapter(fakeData)
-            recyclerViewMain.layoutManager = LinearLayoutManager(this)
+        recyclerViewMain.adapter = InformationAdapter(informationData)
+        recyclerViewMain.layoutManager = LinearLayoutManager(this)
 
-            infoItemCount.text = "${fakeData.size.toString()} ITENS"
+        infoProgressBar.visibility = View.GONE
+
+        // Contagem de itens
+        infoItemCount.text = getString(R.string.information_item_count, informationData.size)
+
+        // Mostrando refresh button
+        infoRefreshButton.visibility = View.VISIBLE
+        infoRefreshImage.visibility = View.VISIBLE
+
+        // Animation do refresh button
+        val rotateAnimation = RotateAnimation(0.0F, 720.0F,
+                Animation.RELATIVE_TO_SELF, 0.5F,
+                Animation.RELATIVE_TO_SELF, 0.5f)
+
+        rotateAnimation.repeatCount = Animation.INFINITE
+        rotateAnimation.duration = 1200
+
+        infoRefreshButton.setOnClickListener {
+            if (!fetchingInformations) {
+                fetchingInformations = true
+
+                infoRefreshImage.startAnimation(rotateAnimation)
+
+                recyclerViewMain.adapter = null
+                Handler(Looper.getMainLooper()).postDelayed({
+                    fetchDatabaseInformations(mReference)
+                }, 600)
+            }
         }
-        // Botão 2
-        else if (idReceived == MainActivity.button2.id) {
-
-        }
-        // Botão 3
-        else if (idReceived == MainActivity.button3.id) {
-
-        }
-        // Botão 4
-        else if (idReceived == MainActivity.button4.id) {
-
-        }
-
-        velocity = VelocityTracker.obtain()
     }
 
     override fun finish() {
@@ -166,7 +201,7 @@ class InformationsActivity : AppCompatActivity() {
         val height = Resources.getSystem().displayMetrics.heightPixels
 
         // MIN_DISTANCE = width * x% of Screen Width
-        val MIN_DISTANCE = (height * 0.20);
+        val MIN_DISTANCE = (height * 0.20)
 
         when (event.action) {
             MotionEvent.ACTION_DOWN -> y1 = event.y
