@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "671133421509",
+    "firebase_url": "https://aldeias-infantis-dashboard-default-rtdb.firebaseio.com",
+    "project_id": "aldeias-infantis-dashboard",
+    "storage_bucket": "aldeias-infantis-dashboard.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:671133421509:android:80829537fca6daf10a45ac",
+        "android_client_info": {
+          "package_name": "br.org.aldeiasinfantis.dashboard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "671133421509-nd29j3g3f07n0qjg65kv7lk9oal55lke.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiC49gBj-uIhYimHXFwy63AjWMrDMZVwE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "671133421509-nd29j3g3f07n0qjg65kv7lk9oal55lke.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

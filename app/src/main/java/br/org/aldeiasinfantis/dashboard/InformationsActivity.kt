@@ -14,11 +14,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.org.aldeiasinfantis.dashboard.model.Information
 import br.org.aldeiasinfantis.dashboard.model.information
+import com.google.firebase.database.*
 import java.lang.Math.abs
 
 class InformationsActivity : AppCompatActivity() {
 
     private var idReceived: Int = -1
+
+    private lateinit var mDashboardReference: DatabaseReference
+    private lateinit var mDatabase: FirebaseDatabase
 
     lateinit var recyclerViewMain: RecyclerView
     lateinit var infoGroupName: TextView
@@ -41,6 +45,10 @@ class InformationsActivity : AppCompatActivity() {
             return
         }
 
+        // Conexão com o Firebase
+        mDatabase = FirebaseDatabase.getInstance()
+        mDashboardReference = mDatabase.reference.child("Dashboard")
+
         recyclerViewMain = findViewById(R.id.recycler_view_main)
 
         // Botão 1
@@ -49,6 +57,28 @@ class InformationsActivity : AppCompatActivity() {
             infoItemCount = findViewById(R.id.info_item_count)
 
             infoGroupName.text = "INFORMAÇÕES: CASA"
+
+            // Pegando as casas do Firebase
+            val mCasasReference = mDashboardReference.child("Casas")
+            val casasData = mutableListOf<DataSnapshot>()
+
+            mCasasReference.addListenerForSingleValueEvent(object: ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (ss in snapshot.children) {
+                        for (snapshot in ss.children) {
+                            /* TODO: aqui irá acessar o cabeçalho/conteúdo de cada casa, fazer uma
+                                classe de data poderia ajudar
+                                https://stackoverflow.com/questions/40366717/firebase-for-android-how-can-i-loop-through-a-child-for-each-child-x-do-y
+                             */
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    // TODO: tela de erro (conexão perdida?)
+                }
+
+            })
 
             val fakeData = mutableListOf(
                 information {
