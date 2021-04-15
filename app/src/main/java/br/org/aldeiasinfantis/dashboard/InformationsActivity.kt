@@ -5,11 +5,9 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.DisplayMetrics
 import android.util.Log
-import android.view.MotionEvent
-import android.view.VelocityTracker
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
 import android.widget.Button
@@ -24,6 +22,7 @@ import br.org.aldeiasinfantis.dashboard.model.Information
 import br.org.aldeiasinfantis.dashboard.model.information
 import com.google.firebase.database.*
 import java.lang.Math.abs
+import kotlin.system.exitProcess
 
 class InformationsActivity : AppCompatActivity() {
 
@@ -64,8 +63,7 @@ class InformationsActivity : AppCompatActivity() {
 
         // Se o ID for menor que 0, ele não foi encontrado no intent
         if (idReceived < 0) {
-            // TODO: Tela de erro para ID não encontrado
-
+            createMyConnectionErrorDialog(true).show()
             return
         }
 
@@ -120,24 +118,19 @@ class InformationsActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // TODO: tela de erro (conexão perdida?)
+                createMyConnectionErrorDialog(false).show()
             }
         })
     }
 
     fun loadUIAndRecyclerView(informationData: MutableList<Information>, mReference: DatabaseReference) {
-        // apagar
-//        createMyConnectionErrorDialog(400).show()
-
         recyclerViewMain.adapter = InformationAdapter(informationData)
         recyclerViewMain.layoutManager = LinearLayoutManager(this)
 
         infoProgressBar.visibility = View.GONE
 
-        // Contagem de itens
         infoItemCount.text = getString(R.string.information_item_count, informationData.size)
 
-        // Mostrando refresh button
         infoRefreshButton.visibility = View.VISIBLE
         infoRefreshImage.visibility = View.VISIBLE
 
@@ -168,28 +161,41 @@ class InformationsActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_up)
     }
 
-    fun createMyConnectionErrorDialog(dps: Int): Dialog {
+    fun createMyConnectionErrorDialog(isUnexpectedError: Boolean): Dialog {
         val dialog = Dialog(this)
-        dialog.setContentView(R.layout.connection_error_dialog)
+
+        if (isUnexpectedError) {
+            dialog.setContentView(R.layout.unexpected_error_dialog)
+            dialog.findViewById<TextView>(R.id.textView2).text = getString(R.string.unexpected_error_message)
+
+            val btnPositive: Button = dialog.findViewById(R.id.btn_positive)
+
+            btnPositive.setOnClickListener {
+                finish()
+                exitProcess(0)
+            }
+        } else {
+            dialog.setContentView(R.layout.connection_error_dialog)
+            dialog.findViewById<TextView>(R.id.textView2).text = getString(R.string.connection_error_message)
+
+            val btnPositive: Button = dialog.findViewById(R.id.btn_positive)
+            val btnNegative: Button = dialog.findViewById(R.id.btn_negative)
+
+            btnPositive.setOnClickListener {
+                recyclerViewMain.adapter = null
+                fetchDatabaseInformations(mSelectorReference)
+                dialog.dismiss()
+            }
+
+            btnNegative.setOnClickListener {
+                dialog.dismiss()
+            }
+        }
+
         dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
 
-        val scale: Float = resources.displayMetrics.density
-        val widthDp: Int = (dps * scale + 0.5F).toInt()
-        dialog.window?.setLayout(widthDp, ViewGroup.LayoutParams.WRAP_CONTENT)
-
-        dialog.setCancelable(true)
-
-        val btnPositive: Button = dialog.findViewById(R.id.btn_positive)
-        val btnNegative: Button = dialog.findViewById(R.id.btn_negative)
-
-        btnPositive.setOnClickListener {
-            // TODO: Tentar reconectar com o banco de dados
-            dialog.dismiss()
-        }
-
-        btnNegative.setOnClickListener {
-            dialog.dismiss()
-        }
+        dialog.window?.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog.window?.setGravity(Gravity.CENTER)
 
         return dialog
     }
