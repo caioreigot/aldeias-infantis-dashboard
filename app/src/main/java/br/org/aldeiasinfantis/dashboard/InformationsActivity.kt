@@ -1,7 +1,11 @@
 package br.org.aldeiasinfantis.dashboard
 
 import android.app.Dialog
+import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
+import android.view.MotionEvent
+import android.view.VelocityTracker
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
@@ -10,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.org.aldeiasinfantis.dashboard.model.Information
 import br.org.aldeiasinfantis.dashboard.model.information
+import java.lang.Math.abs
 
 class InformationsActivity : AppCompatActivity() {
 
@@ -18,6 +23,9 @@ class InformationsActivity : AppCompatActivity() {
     lateinit var recyclerViewMain: RecyclerView
     lateinit var infoGroupName: TextView
     lateinit var infoItemCount: TextView
+
+    lateinit var velocity: VelocityTracker
+    var alreadyCalled: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,6 +94,8 @@ class InformationsActivity : AppCompatActivity() {
         else if (idReceived == MainActivity.button4.id) {
 
         }
+
+        velocity = VelocityTracker.obtain()
     }
 
     override fun finish() {
@@ -117,6 +127,44 @@ class InformationsActivity : AppCompatActivity() {
         }
 
         return dialog
+    }
+
+    var y1: Float = 0F
+    var y2: Float = 0F
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        val height = Resources.getSystem().displayMetrics.heightPixels
+
+        // MIN_DISTANCE = width * x% of Screen Width
+        val MIN_DISTANCE = (height * 0.20);
+
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> y1 = event.y
+
+            MotionEvent.ACTION_UP -> {
+                y2 = event.y
+
+                val deltaY = y2 - y1
+                if (abs(deltaY) > MIN_DISTANCE) {
+                    super.onBackPressed()
+                }
+            }
+            
+            MotionEvent.ACTION_MOVE -> {
+                velocity.addMovement(event)
+                velocity.computeCurrentVelocity(1000)
+
+                //var xVelocity: Float = velocity.xVelocity
+                var yVelocity: Float = velocity.yVelocity
+
+                if (yVelocity > 4000) {
+                    if (!alreadyCalled)
+                        super.onBackPressed()
+                }
+            }
+        }
+
+        return super.onTouchEvent(event)
     }
 
 }
