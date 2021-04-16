@@ -5,7 +5,6 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
 import android.view.animation.Animation
@@ -28,6 +27,7 @@ class InformationsActivity : AppCompatActivity() {
 
     private var idReceived: Int = -1
 
+    private var fetchDB: FetchDatabaseInformations? = null
     private lateinit var mDashboardReference: DatabaseReference
     private lateinit var mSelectorReference: DatabaseReference
     private lateinit var mDatabase: FirebaseDatabase
@@ -39,13 +39,10 @@ class InformationsActivity : AppCompatActivity() {
     private lateinit var infoRefreshButton: CardView
     private lateinit var infoRefreshImage: ImageView
 
-    lateinit var velocity: VelocityTracker
-    var alreadyCalled: Boolean = false
-    var fetchingInformations: Boolean = false
+    private lateinit var velocity: VelocityTracker
 
-    // Informações que serão coletadas do Firebase
-    private var _header: String? = ""
-    private var _content: String? = ""
+    private var alreadyCalled: Boolean = false
+    private var fetchingInformations: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +53,7 @@ class InformationsActivity : AppCompatActivity() {
         infoItemCount = findViewById(R.id.info_item_count)
         infoRefreshButton = findViewById(R.id.info_refresh_button)
         infoRefreshImage = findViewById(R.id.info_refresh_image)
+        fetchDB = FetchDatabaseInformations()
         velocity = VelocityTracker.obtain()
 
         val fetchId = intent
@@ -63,14 +61,25 @@ class InformationsActivity : AppCompatActivity() {
 
         // Se o ID for menor que 0, ele não foi encontrado no intent
         if (idReceived < 0) {
-            createMyConnectionErrorDialog(true).show()
+            val dialog = Dialog(this)
+
+            fun clickListener(view: View) {
+                finish()
+                exitProcess(0)
+            }
+
+            Utils.createUnexpectedErrorDialog(dialog, this, ::clickListener).show()
             return
         }
 
-        // Conexão com o Firebase
+        // Pegando a referência do dashboard no Firebase
         mDatabase = FirebaseDatabase.getInstance()
         mDashboardReference = mDatabase.reference.child("dashboard")
 
+        displayRequestInformation(idReceived)
+    }
+
+    fun displayRequestInformation(idReceived: Int) {
         when (idReceived) {
             MainActivity.button1.id -> {
                 infoGroupName = findViewById(R.id.info_group_name)
@@ -78,7 +87,13 @@ class InformationsActivity : AppCompatActivity() {
 
                 // Referência de "casas" do database
                 mSelectorReference = mDashboardReference.child("casas")
-                fetchDatabaseInformations(mSelectorReference)
+
+                fetchDB?.fetchDatabaseInformations(
+                        this,
+                        ::loadUIAndRecyclerView,
+                        mSelectorReference,
+                        recyclerViewMain
+                )
             }
 
             MainActivity.button2.id -> {
@@ -95,37 +110,15 @@ class InformationsActivity : AppCompatActivity() {
         }
     }
 
-    fun fetchDatabaseInformations(mReference: DatabaseReference) {
-        mReference.addListenerForSingleValueEvent(object: ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val informationData = mutableListOf<Information>()
-
-                for (ss in snapshot.children) {
-                    for (snap_shot in ss.children) {
-                        _header = if (snap_shot.key == "cabecalho") snap_shot.getValue(String::class.java) else _header
-                        _content = if (snap_shot.key == "conteudo") snap_shot.getValue(String::class.java) else _content
-                    }
-
-                    informationData.add(information {
-                        this.header = _header!!
-                        this.content = _content!!
-                    })
-                }
-
-                fetchingInformations = false
-                infoRefreshImage.animation?.cancel()
-                loadUIAndRecyclerView(informationData, mReference)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                createMyConnectionErrorDialog(false).show()
-            }
-        })
-    }
-
     fun loadUIAndRecyclerView(informationData: MutableList<Information>, mReference: DatabaseReference) {
+        fetchingInformations = false
+
+        // Atualizando/alimentando a recyclerView
         recyclerViewMain.adapter = InformationAdapter(informationData)
         recyclerViewMain.layoutManager = LinearLayoutManager(this)
+
+        // Se o refresh button estiver rodando (animado), cancelar
+        infoRefreshImage.animation?.cancel()
 
         infoProgressBar.visibility = View.GONE
 
@@ -150,8 +143,12 @@ class InformationsActivity : AppCompatActivity() {
 
                 recyclerViewMain.adapter = null
                 Handler(Looper.getMainLooper()).postDelayed({
-                    fetchDatabaseInformations(mReference)
-                }, 600)
+                    fetchDB?.fetchDatabaseInformations(
+                            this,
+                            ::loadUIAndRecyclerView,
+                            mReference,
+                            recyclerViewMain
+                    )}, 600)
             }
         }
     }
@@ -161,47 +158,7 @@ class InformationsActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_up)
     }
 
-    fun createMyConnectionErrorDialog(isUnexpectedError: Boolean): Dialog {
-        val dialog = Dialog(this)
-
-        if (isUnexpectedError) {
-            dialog.setContentView(R.layout.unexpected_error_dialog)
-            dialog.findViewById<TextView>(R.id.textView2).text = getString(R.string.unexpected_error_message)
-
-            val btnPositive: Button = dialog.findViewById(R.id.btn_positive)
-
-            btnPositive.setOnClickListener {
-                finish()
-                exitProcess(0)
-            }
-        } else {
-            dialog.setContentView(R.layout.connection_error_dialog)
-            dialog.findViewById<TextView>(R.id.textView2).text = getString(R.string.connection_error_message)
-
-            val btnPositive: Button = dialog.findViewById(R.id.btn_positive)
-            val btnNegative: Button = dialog.findViewById(R.id.btn_negative)
-
-            btnPositive.setOnClickListener {
-                recyclerViewMain.adapter = null
-                fetchDatabaseInformations(mSelectorReference)
-                dialog.dismiss()
-            }
-
-            btnNegative.setOnClickListener {
-                dialog.dismiss()
-            }
-        }
-
-        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
-
-        dialog.window?.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        dialog.window?.setGravity(Gravity.CENTER)
-
-        return dialog
-    }
-
-    var y1: Float = 0F
-    var y2: Float = 0F
+    var y1: Float = 0F; var y2: Float = 0F
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val height = Resources.getSystem().displayMetrics.heightPixels
