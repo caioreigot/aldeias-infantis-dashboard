@@ -54,22 +54,32 @@
 
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/info_group_name"
+        <HorizontalScrollView
+            android:id="@+id/info_group_scrollview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:scrollbars="none"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="17dp"
-            tools:text="INFORMAÇÕES: CASA"
-            android:textStyle="bold"
-            android:textSize="24sp"
-            android:textColor="@color/white"/>
+            android:layout_marginEnd="12dp"
+            android:layout_marginStart="12dp">
+
+            <TextView
+                android:id="@+id/info_group_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                tools:text="ACOLHIMENTO EM CASAS LARES"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:textColor="@color/white"/>
+        </HorizontalScrollView>
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/info_group_name"
+            android:layout_below="@+id/info_group_scrollview"
             android:layout_centerHorizontal="true">
 
             <TextView
@@ -105,7 +115,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/info_top_bar"
         android:background="@color/white"
-        tools:listitem="@layout/information_item"
+        tools:listitem="@layout/text_item"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 </RelativeLayout>

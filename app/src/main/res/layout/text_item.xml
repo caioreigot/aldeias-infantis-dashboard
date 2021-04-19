@@ -19,7 +19,7 @@
             android:background="@drawable/information_item_top_bar">
 
             <TextView
-                android:id="@+id/information_header_text"
+                android:id="@+id/information_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="CASA 01"
@@ -27,11 +27,12 @@
                 android:textStyle="bold"
                 android:textColor="@color/white"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"/>
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"/>
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/information_content_text"
+            android:id="@+id/information_content"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:paddingTop="6dp"

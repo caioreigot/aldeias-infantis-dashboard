@@ -5,11 +5,9 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -18,7 +16,7 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.org.aldeiasinfantis.dashboard.model.Information
-import br.org.aldeiasinfantis.dashboard.model.information
+import br.org.aldeiasinfantis.dashboard.model.InformationType
 import com.google.firebase.database.*
 import java.lang.Math.abs
 import kotlin.system.exitProcess
@@ -83,21 +81,36 @@ class InformationsActivity : AppCompatActivity() {
         when (idReceived) {
             MainActivity.button1.id -> {
                 infoGroupName = findViewById(R.id.info_group_name)
-                infoGroupName.text = "INFORMAÇÕES: CASA"
+                infoGroupName.text = "ACOLHIMENTO EM CASAS LARES"
+                val currentTnformationType = InformationType.VALUE
 
-                // Referência de "casas" do database
-                mSelectorReference = mDashboardReference.child("casas")
+                // Referência do respectivo indicador
+                mSelectorReference = mDashboardReference.child("acolhimento em casas lares")
 
                 fetchDB?.fetchDatabaseInformations(
                         this,
                         ::loadUIAndRecyclerView,
+                        currentTnformationType,
                         mSelectorReference,
                         recyclerViewMain
                 )
             }
 
             MainActivity.button2.id -> {
+                infoGroupName = findViewById(R.id.info_group_name)
+                infoGroupName.text = "FORTALECIMENTO FAMILIAR"
+                val currentTnformationType = InformationType.VALUE
 
+                // Referência do respectivo indicador
+                mSelectorReference = mDashboardReference.child("fortalecimento familiar")
+
+                fetchDB?.fetchDatabaseInformations(
+                        this,
+                        ::loadUIAndRecyclerView,
+                        currentTnformationType,
+                        mSelectorReference,
+                        recyclerViewMain
+                )
             }
 
             MainActivity.button3.id -> {
@@ -110,11 +123,15 @@ class InformationsActivity : AppCompatActivity() {
         }
     }
 
-    fun loadUIAndRecyclerView(informationData: MutableList<Information>, mReference: DatabaseReference) {
+    fun loadUIAndRecyclerView(
+            informationData: MutableList<Information>,
+            informationType: InformationType,
+            mReference: DatabaseReference
+    ) {
         fetchingInformations = false
 
         // Atualizando/alimentando a recyclerView
-        recyclerViewMain.adapter = InformationAdapter(informationData)
+        recyclerViewMain.adapter = InformationAdapter(informationData, informationType)
         recyclerViewMain.layoutManager = LinearLayoutManager(this)
 
         // Se o refresh button estiver rodando (animado), cancelar
@@ -146,6 +163,7 @@ class InformationsActivity : AppCompatActivity() {
                     fetchDB?.fetchDatabaseInformations(
                             this,
                             ::loadUIAndRecyclerView,
+                            informationType,
                             mReference,
                             recyclerViewMain
                     )}, 600)
@@ -173,22 +191,19 @@ class InformationsActivity : AppCompatActivity() {
                 y2 = event.y
 
                 val deltaY = y2 - y1
-                if (abs(deltaY) > MIN_DISTANCE) {
+
+                if (abs(deltaY) > MIN_DISTANCE)
                     super.onBackPressed()
-                }
             }
 
             MotionEvent.ACTION_MOVE -> {
                 velocity.addMovement(event)
                 velocity.computeCurrentVelocity(1000)
 
-                //var xVelocity: Float = velocity.xVelocity
                 var yVelocity: Float = velocity.yVelocity
 
-                if (yVelocity > 4000) {
-                    if (!alreadyCalled)
-                        super.onBackPressed()
-                }
+                if (yVelocity > 4000 && !alreadyCalled)
+                    super.onBackPressed()
             }
         }
 

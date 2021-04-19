@@ -6,22 +6,46 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import br.org.aldeiasinfantis.dashboard.model.Information
+import br.org.aldeiasinfantis.dashboard.model.InformationType
 
-class InformationAdapter(val informations: MutableList<Information>): RecyclerView.Adapter<InformationAdapter.InformationViewHolder>() {
+class InformationAdapter(val informations: MutableList<Information>, val informationType: InformationType): RecyclerView.Adapter<InformationAdapter.InformationViewHolder>() {
 
-    inner class InformationViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        private val header: TextView = itemView.findViewById(R.id.information_header_text)
-        private val content: TextView = itemView.findViewById(R.id.information_content_text)
-
+    inner class InformationViewHolder(itemView: View, informationType: InformationType): RecyclerView.ViewHolder(itemView) {
         fun bind(info: Information) {
-            header.text = info.header
-            content.text = info.content
+            when (informationType) {
+                InformationType.TEXT -> {
+                    val header: TextView = itemView.findViewById(R.id.information_header)
+                    val content: TextView = itemView.findViewById(R.id.information_content)
+
+                    header.text = info.header
+                    content.text = info.content
+                }
+
+                InformationType.VALUE -> {
+                    val header: TextView = itemView.findViewById(R.id.information_header)
+                    val value: TextView = itemView.findViewById(R.id.information_value)
+                    val date: TextView = itemView.findViewById(R.id.information_date)
+
+                    header.text = info.header
+                    value.text = info.value
+                    date.text = info.date
+                }
+            }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InformationViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.information_item, parent, false)
-        return InformationViewHolder(view)
+        return when (informationType) {
+            InformationType.TEXT -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.text_item, parent, false)
+                InformationViewHolder(view, informationType)
+            }
+
+            InformationType.VALUE -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.value_item, parent, false)
+                InformationViewHolder(view, informationType)
+            }
+        }
     }
 
     override fun onBindViewHolder(holder: InformationViewHolder, position: Int) {
