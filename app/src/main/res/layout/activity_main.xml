@@ -89,7 +89,7 @@
                         android:layout_height="match_parent">
 
                         <ImageView
-                            app:srcCompat="@drawable/culture"
+                            app:srcCompat="@drawable/home"
                             android:layout_width="130dp"
                             android:layout_height="80dp"
                             tools:ignore="ContentDescription"/>
@@ -97,10 +97,10 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="ACOLHIMENTO EM CASAS LARES"
+                            android:text="@string/field_1"
                             android:textSize="18sp"
                             android:gravity="center"
-                            android:textColor="#F09C4D"
+                            android:textColor="#8A65F0"
                             android:textStyle="bold"
                             android:layout_marginTop="14dp"/>
                     </LinearLayout>
@@ -128,7 +128,7 @@
                         android:layout_height="match_parent">
 
                         <ImageView
-                            app:srcCompat="@drawable/home"
+                            app:srcCompat="@drawable/siblings"
                             android:layout_width="130dp"
                             android:layout_height="80dp"
                             tools:ignore="ContentDescription"/>
@@ -136,9 +136,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="FORTALECIMENTO FAMILIAR"
+                            android:text="@string/field_2"
                             android:textSize="18sp"
-                            android:textColor="#8A65F0"
+                            android:textColor="#C18751"
                             android:textStyle="bold"
                             android:layout_marginTop="14dp"/>
                     </LinearLayout>
@@ -166,7 +166,7 @@
                         android:layout_height="match_parent">
 
                         <ImageView
-                            app:srcCompat="@drawable/maternity"
+                            app:srcCompat="@drawable/operational"
                             android:layout_width="130dp"
                             android:layout_height="80dp"
                             tools:ignore="ContentDescription"/>
@@ -174,52 +174,52 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="CAMPO 3"
+                            android:text="@string/field_3"
                             android:textSize="18sp"
-                            android:textColor="#86CF61"
+                            android:textColor="#28ACE2"
                             android:textStyle="bold"
                             android:layout_marginTop="14dp"/>
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/campo_4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:cardElevation="6dp"
-                    app:cardCornerRadius="12dp"
-                    android:layout_margin="14dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    android:layout_columnWeight="1"
-                    android:layout_rowWeight="4">
+<!--                <androidx.cardview.widget.CardView-->
+<!--                    android:id="@+id/campo_4"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    app:cardElevation="6dp"-->
+<!--                    app:cardCornerRadius="12dp"-->
+<!--                    android:layout_margin="14dp"-->
+<!--                    android:clickable="true"-->
+<!--                    android:focusable="true"-->
+<!--                    android:foreground="?android:attr/selectableItemBackground"-->
+<!--                    android:layout_columnWeight="1"-->
+<!--                    android:layout_rowWeight="4">-->
 
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:padding="18dp"
-                        android:gravity="center"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+<!--                    <LinearLayout-->
+<!--                        android:orientation="vertical"-->
+<!--                        android:padding="18dp"-->
+<!--                        android:gravity="center"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent">-->
 
-                        <ImageView
-                            app:srcCompat="@drawable/siblings"
-                            android:layout_width="130dp"
-                            android:layout_height="80dp"
-                            tools:ignore="ContentDescription"/>
+<!--                        <ImageView-->
+<!--                            app:srcCompat="@drawable/siblings"-->
+<!--                            android:layout_width="130dp"-->
+<!--                            android:layout_height="80dp"-->
+<!--                            tools:ignore="ContentDescription"/>-->
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="CAMPO 4"
-                            android:textSize="18sp"
-                            android:textColor="#C18751"
-                            android:textStyle="bold"
-                            android:layout_marginTop="14dp"/>
-                    </LinearLayout>
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="CAMPO 4"-->
+<!--                            android:textSize="18sp"-->
+<!--                            android:textColor="#C18751"-->
+<!--                            android:textStyle="bold"-->
+<!--                            android:layout_marginTop="14dp"/>-->
+<!--                    </LinearLayout>-->
 
-                </androidx.cardview.widget.CardView>
+<!--                </androidx.cardview.widget.CardView>-->
 
             </GridLayout>
 

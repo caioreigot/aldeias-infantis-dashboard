@@ -116,6 +116,7 @@
         android:layout_below="@+id/info_top_bar"
         android:background="@color/white"
         tools:listitem="@layout/text_item"
+        tools:itemCount="1"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 </RelativeLayout>

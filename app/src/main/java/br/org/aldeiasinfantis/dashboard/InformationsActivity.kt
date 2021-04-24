@@ -114,12 +114,25 @@ class InformationsActivity : AppCompatActivity() {
             }
 
             MainActivity.button3.id -> {
+                infoGroupName = findViewById(R.id.info_group_name)
+                infoGroupName.text = "JUVENTUDE"
+                val currentTnformationType = InformationType.VALUE
 
+                // Referência do respectivo indicador
+                mSelectorReference = mDashboardReference.child("juventudes")
+
+                fetchDB?.fetchDatabaseInformations(
+                        this,
+                        ::loadUIAndRecyclerView,
+                        currentTnformationType,
+                        mSelectorReference,
+                        recyclerViewMain
+                )
             }
 
-            MainActivity.button4.id -> {
-
-            }
+//            MainActivity.button4.id -> {
+//
+//            }
         }
     }
 

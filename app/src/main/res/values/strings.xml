@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Aldeias Infantis Dashboard</string>
+    <string name="field_1">ACOLHIMENTO EM CASAS LARES</string>
+    <string name="field_2">FORTALECIMENTO FAMILIAR</string>
+    <string name="field_3">JUVENTUDES</string>
     <string name="information_item_count">%1$d ITENS</string>
     <string name="error">Erro</string>
     <string name="connection_error_message">Erro ao carregar informações, deseja tentar novamente?</string>

@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         lateinit var button1: CardView
         lateinit var button2: CardView
         lateinit var button3: CardView
-        lateinit var button4: CardView
+//        lateinit var button4: CardView
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,12 +44,12 @@ class MainActivity : AppCompatActivity() {
         button1 = findViewById(R.id.campo_1)
         button2 = findViewById(R.id.campo_2)
         button3 = findViewById(R.id.campo_3)
-        button4 = findViewById(R.id.campo_4)
+//        button4 = findViewById(R.id.campo_4)
 
         buttons[0] = button1
         buttons[1] = button2
         buttons[2] = button3
-        buttons[3] = button4
+//        buttons[3] = button4
 
         for (i in buttons.indices) {
             buttons[i]?.let { it ->
