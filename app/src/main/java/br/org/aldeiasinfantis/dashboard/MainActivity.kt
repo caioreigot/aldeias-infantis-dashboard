@@ -1,7 +1,13 @@
 package br.org.aldeiasinfantis.dashboard
 
 import android.content.Intent
+import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.text.Html
+import android.text.method.LinkMovementMethod
+import android.text.util.Linkify
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
@@ -19,27 +25,20 @@ class MainActivity : AppCompatActivity() {
 //        lateinit var button4: CardView
     }
 
+    lateinit var loginLink: TextView
+    lateinit var becomeDonor: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_Main)
 
-/*        try {
-            val displayMetrics = DisplayMetrics()
-            windowManager.defaultDisplay.getRealMetrics(displayMetrics)
-            val height = displayMetrics.heightPixels
-            val width = displayMetrics.widthPixels
-
-            if (width > height) {
-                val bottomPart = findViewById<ImageView>(R.id.bottom_circle)
-                val bottomPartText = findViewById<TextView>(R.id.bottom_part_text)
-                bottomPart.visibility = View.GONE
-                bottomPartText.visibility = View.GONE
-            }
-        } catch (e: Exception) {
-            Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
-        }*/
-
         setContentView(R.layout.activity_main)
+
+        loginLink = findViewById(R.id.loginLink)
+        becomeDonor = findViewById(R.id.becomeDonor)
+
+        loginLink.movementMethod = LinkMovementMethod.getInstance()
+        becomeDonor.movementMethod = LinkMovementMethod.getInstance()
 
         button1 = findViewById(R.id.campo_1)
         button2 = findViewById(R.id.campo_2)
@@ -50,6 +49,9 @@ class MainActivity : AppCompatActivity() {
         buttons[1] = button2
         buttons[2] = button3
 //        buttons[3] = button4
+
+        val itensCount = findViewById<GridLayout>(R.id.main_grid_layout).childCount
+        findViewById<TextView>(R.id.main_item_count).text = getString(R.string.information_item_count, itensCount)
 
         for (i in buttons.indices) {
             buttons[i]?.let { it ->

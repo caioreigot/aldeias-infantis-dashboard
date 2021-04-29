@@ -50,18 +50,20 @@
                 android:gravity="center"/>
 
             <TextView
+                android:id="@+id/main_item_count"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="4 ITENS"
+                android:text="3 ITENS"
                 android:textColor="@color/primaryBlue"
                 android:textSize="24sp"
                 android:layout_marginTop="2dp"
                 android:gravity="center"/>
 
-            <!-- Grid da Dashboard -->
+             <!-- Grid da Dashboard -->
             <GridLayout
+                android:id="@+id/main_grid_layout"
                 android:columnCount="1"
-                android:rowCount="4"
+                android:rowCount="3"
                 android:columnOrderPreserved="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -222,6 +224,35 @@
 <!--                </androidx.cardview.widget.CardView>-->
 
             </GridLayout>
+
+            <!-- Links -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:paddingBottom="26dp">
+
+                <TextView
+                    android:id="@+id/loginLink"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:linksClickable="true"
+                    android:text="@string/login_link"
+                    android:textColorLink="@color/primaryBlue"/>
+
+                <TextView
+                    android:id="@+id/becomeDonor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textSize="16sp"
+                    android:linksClickable="true"
+                    android:text="@string/become_donor"
+                    android:textColorLink="@color/primaryBlue"/>
+            </LinearLayout>
 
         </LinearLayout>
 

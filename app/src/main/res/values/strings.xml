@@ -8,4 +8,6 @@
     <string name="connection_error_message">Erro ao carregar informações, deseja tentar novamente?</string>
     <string name="unexpected_error">Erro inesperado</string>
     <string name="unexpected_error_message">Ops! Um erro inesperado ocorreu. Voltando para o menu principal</string>
+    <string name="login_link">Já é um doador? Acesse o <a href="https://aldeias.portaldodoador.org/login">Portal do Doador</a></string>
+    <string name="become_donor">Torne-se um doador! Clique <a href="https://doe.aldeiasinfantis.org.br/?utm_source=app&amp;utm_medium=botao-doacao&amp;utm_campaign=aplicativo-aldeias">Aqui</a></string>
 </resources>
