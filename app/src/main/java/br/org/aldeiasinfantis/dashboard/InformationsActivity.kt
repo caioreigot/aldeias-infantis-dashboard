@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
@@ -54,8 +55,7 @@ class InformationsActivity : AppCompatActivity() {
         fetchDB = FetchDatabaseInformations()
         velocity = VelocityTracker.obtain()
 
-        val fetchId = intent
-        idReceived = fetchId.getIntExtra(MainActivity.intentIDTag, -1)
+        idReceived = intent.getIntExtra(MainActivity.intentIDTag, -1)
 
         // Se o ID for menor que 0, ele não foi encontrado no intent
         if (idReceived < 0) {
@@ -130,9 +130,16 @@ class InformationsActivity : AppCompatActivity() {
                 )
             }
 
-//            MainActivity.button4.id -> {
-//
-//            }
+            MainActivity.button4.id -> {
+                val choiceIdReceived = intent.getIntExtra(MainActivity.choiceTag, -1)
+
+                /*
+                 * ID 1 = Mes anterior
+                 * ID 2 = Ano anterior
+                 */
+
+
+            }
         }
     }
 
