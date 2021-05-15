@@ -163,13 +163,14 @@ class InformationsActivity : AppCompatActivity() {
 
     fun loadUIAndRecyclerView(
             informationData: MutableList<Information>,
+            subInformationsParent: MutableList<MutableList<Information>>,
             informationType: InformationType,
             mReference: DatabaseReference
     ) {
         fetchingInformations = false
 
         // Atualizando/alimentando a recyclerView
-        recyclerViewMain.adapter = InformationAdapter(informationData, informationType)
+        recyclerViewMain.adapter = InformationAdapter(informationData, subInformationsParent, informationType, this)
         recyclerViewMain.layoutManager = LinearLayoutManager(this)
 
         // Se o refresh button estiver rodando (animado), cancelar

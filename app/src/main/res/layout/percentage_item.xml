@@ -37,9 +37,12 @@
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/percentage_recycle_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/information_top_bar"
+            android:nestedScrollingEnabled="false"
+            android:clickable="false"
             tools:listitem="@layout/percentage_unique_item"
             tools:itemCount="3"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>

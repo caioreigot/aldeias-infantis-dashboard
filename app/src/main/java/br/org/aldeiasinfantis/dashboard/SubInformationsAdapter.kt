@@ -1,21 +1,23 @@
 package br.org.aldeiasinfantis.dashboard
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import br.org.aldeiasinfantis.dashboard.model.Information
 import br.org.aldeiasinfantis.dashboard.model.InformationType
 
-class InformationAdapter(
-    val informationData: MutableList<Information>,
-    val subInformationsParent: MutableList<MutableList<Information>>,
+class SubInformationsAdapter(
+    val subInformationData: MutableList<Information>,
     val informationType: InformationType,
     val context: Context
 )
-    : RecyclerView.Adapter<InformationAdapter.InformationViewHolder>() {
+    : RecyclerView.Adapter<SubInformationsAdapter.InformationViewHolder>() {
 
     inner class InformationViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         fun bind(info: Information, position: Int) {
@@ -39,18 +41,25 @@ class InformationAdapter(
                 }
 
                 InformationType.PERCENTAGE -> {
-                    val header: TextView = itemView.findViewById(R.id.information_header)
+                    val itemTopic: TextView = itemView.findViewById(R.id.item_topic)
+                    val itemPercentage: TextView = itemView.findViewById(R.id.item_percentage)
 
-                    header.text = info.header
+                    itemTopic.text = info.header
 
-                    // Passando o adapter para RecyclerView de cada item
-                    val subRecyclerView = itemView.findViewById<RecyclerView>(R.id.percentage_recycle_view)
+                    // Deixar os valores positivos em azul
+                    if (info.percentage[0] != '-')
+                        itemPercentage.setTextColor(Color.parseColor("#28ACE2"))
 
-                    subRecyclerView.adapter = SubInformationsAdapter(
-                        subInformationsParent[position],
-                        InformationType.PERCENTAGE,
-                        context
-                    )
+                    itemPercentage.text = info.percentage
+
+                    // Se for o ultimo item, deixe as bordas arredondadas
+                    if (position == subInformationData.size - 1) {
+                        val leftItemPart = itemView.findViewById<LinearLayout>(R.id.left_item)
+                        val rightItemPart = itemView.findViewById<LinearLayout>(R.id.right_item)
+
+                        leftItemPart.background = ContextCompat.getDrawable(context, R.drawable.bottom_left_rounded)
+                        rightItemPart.background = ContextCompat.getDrawable(context, R.drawable.bottom_right_rounded)
+                    }
                 }
             }
         }
@@ -60,7 +69,7 @@ class InformationAdapter(
         val layoutToInflate = when (informationType) {
             InformationType.TEXT -> R.layout.text_item
             InformationType.VALUE -> R.layout.value_item
-            InformationType.PERCENTAGE -> R.layout.percentage_item
+            InformationType.PERCENTAGE -> R.layout.percentage_unique_item
         }
 
         val view = LayoutInflater.from(parent.context).inflate(layoutToInflate, parent, false)
@@ -68,11 +77,11 @@ class InformationAdapter(
     }
 
     override fun onBindViewHolder(holder: InformationViewHolder, position: Int) {
-        holder.bind(informationData[position], position)
+        holder.bind(subInformationData[position], position)
     }
 
     override fun getItemCount(): Int {
-        return informationData.size
+        return subInformationData.size
     }
 
 }

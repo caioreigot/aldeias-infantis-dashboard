@@ -2,6 +2,7 @@ package br.org.aldeiasinfantis.dashboard
 
 import android.app.Activity
 import android.app.Dialog
+import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import br.org.aldeiasinfantis.dashboard.model.Information
@@ -24,7 +25,12 @@ class FetchDatabaseInformations {
 
     fun fetchDatabaseInformations(
             activity: Activity,
-            callback: (MutableList<Information>, InformationType, DatabaseReference) -> (Unit),
+
+            callback: (MutableList<Information>,
+                       MutableList<MutableList<Information>>,
+                       InformationType,
+                       DatabaseReference) -> (Unit),
+
             informationType: InformationType,
             mReference: DatabaseReference,
             recyclerViewMain: RecyclerView
@@ -33,15 +39,18 @@ class FetchDatabaseInformations {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val informationData = mutableListOf<Information>()
 
+                val subInformationsParent = mutableListOf<MutableList<Information>>()
+                val subInformationData = mutableListOf<Information>()
+
                 when (informationType) {
                     InformationType.TEXT -> {
-                        for (ss in snapshot.children) {
-                            for (snap_shot in ss.children) {
-                                _header = if (snap_shot.key == "cabecalho")
-                                    snap_shot.getValue(String::class.java) else _header
+                        for (info in snapshot.children) {
+                            for (infoChild in info.children) {
+                                _header = if (infoChild.key == "cabecalho")
+                                    infoChild.getValue(String::class.java) else _header
 
-                                _content = if (snap_shot.key == "conteudo")
-                                    snap_shot.getValue(String::class.java) else _content
+                                _content = if (infoChild.key == "conteudo")
+                                    infoChild.getValue(String::class.java) else _content
                             }
 
                             informationData.add(information {
@@ -52,16 +61,16 @@ class FetchDatabaseInformations {
                     }
 
                     InformationType.VALUE -> {
-                        for (ss in snapshot.children) {
-                            for (snap_shot in ss.children) {
-                                _header = if (snap_shot.key == "indicador")
-                                    snap_shot.getValue(String::class.java) else _header
+                        for (info in snapshot.children) {
+                            for (infoChild in info.children) {
+                                _header = if (infoChild.key == "indicador")
+                                    infoChild.getValue(String::class.java) else _header
 
-                                _value = if (snap_shot.key == "valor")
-                                    snap_shot.getValue(Int::class.java).toString() else _value
+                                _value = if (infoChild.key == "valor")
+                                    infoChild.getValue(Int::class.java).toString() else _value
 
-                                _date = if (snap_shot.key == "competencia")
-                                    snap_shot.getValue(String::class.java) else _date
+                                _date = if (infoChild.key == "competencia")
+                                    infoChild.getValue(String::class.java) else _date
                             }
 
                             informationData.add(information {
@@ -73,26 +82,47 @@ class FetchDatabaseInformations {
                     }
 
                     InformationType.PERCENTAGE -> {
-                        for (ss in snapshot.children) {
-                            for (snap_shot in ss.children) {
-                                _header = if (snap_shot.key == "indicador")
-                                    snap_shot.getValue(String::class.java) else _header
+                        // Cada info dentro de "indicadores gerais"
+                        for (info in snapshot.children) {
+                            // Valores dentro de info01, info02... de indicadores gerais
+                            for (infoChild in info.children) {
+                                _header = if (infoChild.key == "indicador")
+                                    infoChild.getValue(String::class.java) else _header
 
-                                if (snap_shot.key == "infos") {
-                                    for (snap_shot_child in snap_shot.children) {
-                                        TODO("Loop entre todas as informações de cada indicador pai")
+                                if (infoChild.key != "infos") {
+                                    informationData.add(information {
+                                        this.header = _header!!
+                                    })
+                                } else {
+                                    // Cada filho dentro de "infos"
+                                    for (infosChild in infoChild.children) {
+                                        // valores dentro de info01, info02... de "infos"
+                                        for (subInfosChild in infosChild.children) {
+                                            _header = if (subInfosChild.key == "indicador")
+                                                subInfosChild.getValue(String::class.java) else _header
+
+                                            _percentage = if (subInfosChild.key == "porcentagem")
+                                                subInfosChild.getValue(String::class.java) else _percentage
+                                        }
+
+                                        subInformationData.add(information {
+                                            this.header = _header!!
+                                            this.percentage = _percentage!!
+                                        })
                                     }
+
+                                    // Adicionando as informações de "infos" para um índice do "pai"
+                                    subInformationsParent.add(subInformationData.toMutableList())
+
+                                    // Limpando após adicioná-la ao "pai"
+                                    subInformationData.clear()
                                 }
                             }
-
-                            informationData.add(information {
-                                this.header = _header!!
-                            })
                         }
                     }
                 }
 
-                callback.invoke(informationData, informationType, mReference)
+                callback.invoke(informationData, subInformationsParent, informationType, mReference)
             }
 
             override fun onCancelled(error: DatabaseError) {
