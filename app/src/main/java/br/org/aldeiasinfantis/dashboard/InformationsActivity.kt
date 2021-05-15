@@ -133,12 +133,30 @@ class InformationsActivity : AppCompatActivity() {
             MainActivity.button4.id -> {
                 val choiceIdReceived = intent.getIntExtra(MainActivity.choiceTag, -1)
 
-                /*
-                 * ID 1 = Mes anterior
-                 * ID 2 = Ano anterior
-                 */
+                when (choiceIdReceived) {
+                    // ID 1 = Mes anterior
+                    1 -> {
+                        infoGroupName = findViewById(R.id.info_group_name)
+                        infoGroupName.text = "INDICADORES GERAIS"
+                        val currentTnformationType = InformationType.PERCENTAGE
 
+                        // Referência do respectivo indicador
+                        mSelectorReference = mDashboardReference.child("indicadores gerais")
 
+                        fetchDB?.fetchDatabaseInformations(
+                            this,
+                            ::loadUIAndRecyclerView,
+                            currentTnformationType,
+                            mSelectorReference,
+                            recyclerViewMain
+                        )
+                    }
+
+                    // ID 2 = Ano anterior
+                    2 -> {
+
+                    }
+                }
             }
         }
     }

@@ -20,6 +20,7 @@ class FetchDatabaseInformations {
     private var _content: String? = ""
     private var _value: String? = ""
     private var _date: String? = ""
+    private var _percentage: String? = ""
 
     fun fetchDatabaseInformations(
             activity: Activity,
@@ -67,6 +68,25 @@ class FetchDatabaseInformations {
                                 this.header = _header!!
                                 this.value = _value!!
                                 this.date = _date!!.toLowerCase(Locale.ROOT)
+                            })
+                        }
+                    }
+
+                    InformationType.PERCENTAGE -> {
+                        for (ss in snapshot.children) {
+                            for (snap_shot in ss.children) {
+                                _header = if (snap_shot.key == "indicador")
+                                    snap_shot.getValue(String::class.java) else _header
+
+                                if (snap_shot.key == "infos") {
+                                    for (snap_shot_child in snap_shot.children) {
+                                        TODO("Loop entre todas as informações de cada indicador pai")
+                                    }
+                                }
+                            }
+
+                            informationData.add(information {
+                                this.header = _header!!
                             })
                         }
                     }

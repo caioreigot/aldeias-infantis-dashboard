@@ -94,7 +94,8 @@ class MainActivity : AppCompatActivity() {
                     R.anim.slide_in_up, R.anim.slide_out_down
                 ).toBundle()
 
-                startActivity(intent, bundle);
+                startActivity(intent, bundle)
+                choiceDialog.dismiss()
             }
 
             choiceDialog.findViewById<Button>(R.id.ano_anterior).setOnClickListener {
@@ -113,7 +114,8 @@ class MainActivity : AppCompatActivity() {
                     R.anim.slide_in_up, R.anim.slide_out_down
                 ).toBundle()
 
-                startActivity(intent, bundle);
+                startActivity(intent, bundle)
+                choiceDialog.dismiss()
             }
 
             choiceDialog.show()

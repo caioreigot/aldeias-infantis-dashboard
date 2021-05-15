@@ -4,7 +4,8 @@ data class Information (
     val header: String,
     val content: String,
     val value: String,
-    val date: String
+    val date: String,
+    val percentage: String
 )
 
 class InformationBuilder {
@@ -12,9 +13,10 @@ class InformationBuilder {
     var content: String = ""
     var value: String = ""
     var date: String = ""
+    var percentage: String = ""
 
     fun build(): Information {
-        return Information(header, content, value, date)
+        return Information(header, content, value, date, percentage)
     }
 }
 

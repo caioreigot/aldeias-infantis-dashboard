@@ -10,7 +10,7 @@ import br.org.aldeiasinfantis.dashboard.model.InformationType
 
 class InformationAdapter(val informations: MutableList<Information>, val informationType: InformationType): RecyclerView.Adapter<InformationAdapter.InformationViewHolder>() {
 
-    inner class InformationViewHolder(itemView: View, informationType: InformationType): RecyclerView.ViewHolder(itemView) {
+    inner class InformationViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         fun bind(info: Information) {
             when (informationType) {
                 InformationType.TEXT -> {
@@ -30,22 +30,25 @@ class InformationAdapter(val informations: MutableList<Information>, val informa
                     value.text = info.value
                     date.text = info.date
                 }
+
+                InformationType.PERCENTAGE -> {
+                    val header: TextView = itemView.findViewById(R.id.information_header)
+
+                    header.text = info.header
+                }
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InformationViewHolder {
-        return when (informationType) {
-            InformationType.TEXT -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.text_item, parent, false)
-                InformationViewHolder(view, informationType)
-            }
-
-            InformationType.VALUE -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.value_item, parent, false)
-                InformationViewHolder(view, informationType)
-            }
+        val layoutToInflate = when (informationType) {
+            InformationType.TEXT -> R.layout.text_item
+            InformationType.VALUE -> R.layout.value_item
+            InformationType.PERCENTAGE -> R.layout.percentage_item
         }
+
+        val view = LayoutInflater.from(parent.context).inflate(layoutToInflate, parent, false)
+        return InformationViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: InformationViewHolder, position: Int) {
