@@ -82,9 +82,9 @@ class FetchDatabaseInformations {
                     }
 
                     InformationType.PERCENTAGE -> {
-                        // Cada info dentro de "indicadores gerais"
+                        // Cada info dentro de "(mes/ano anterior)"
                         for (info in snapshot.children) {
-                            // Valores dentro de info01, info02... de indicadores gerais
+                            // Valores dentro de info01, info02... de "(mes/ano anterior)"
                             for (infoChild in info.children) {
                                 _header = if (infoChild.key == "indicador")
                                     infoChild.getValue(String::class.java) else _header

@@ -137,11 +137,13 @@ class InformationsActivity : AppCompatActivity() {
                     // ID 1 = Mes anterior
                     1 -> {
                         infoGroupName = findViewById(R.id.info_group_name)
-                        infoGroupName.text = "INDICADORES GERAIS"
+                        infoGroupName.text = "INDICADORES GERAIS - MÊS ANTERIOR"
                         val currentTnformationType = InformationType.PERCENTAGE
 
                         // Referência do respectivo indicador
-                        mSelectorReference = mDashboardReference.child("indicadores gerais")
+                        mSelectorReference = mDashboardReference
+                            .child("indicadores gerais")
+                            .child("mes anterior")
 
                         fetchDB?.fetchDatabaseInformations(
                             this,
@@ -154,7 +156,22 @@ class InformationsActivity : AppCompatActivity() {
 
                     // ID 2 = Ano anterior
                     2 -> {
+                        infoGroupName = findViewById(R.id.info_group_name)
+                        infoGroupName.text = "INDICADORES GERAIS - ANO ANTERIOR"
+                        val currentTnformationType = InformationType.PERCENTAGE
 
+                        // Referência do respectivo indicador
+                        mSelectorReference = mDashboardReference
+                            .child("indicadores gerais")
+                            .child("ano anterior")
+
+                        fetchDB?.fetchDatabaseInformations(
+                            this,
+                            ::loadUIAndRecyclerView,
+                            currentTnformationType,
+                            mSelectorReference,
+                            recyclerViewMain
+                        )
                     }
                 }
             }
