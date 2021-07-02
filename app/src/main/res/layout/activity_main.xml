@@ -207,7 +207,7 @@
                         android:layout_height="match_parent">
 
                         <ImageView
-                            app:srcCompat="@drawable/operational"
+                            app:srcCompat="@drawable/crianca_cofrinho"
                             android:layout_width="130dp"
                             android:layout_height="80dp"
                             tools:ignore="ContentDescription"/>
