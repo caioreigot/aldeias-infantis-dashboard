@@ -3,6 +3,7 @@
     package="br.org.aldeiasinfantis.dashboard">
 
     <application
+        android:name=".Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -10,10 +11,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SplashScreen">
         <activity
-            android:name=".InformationsActivity"/>
+            android:name=".ui.information.InformationActivity"/>
 
         <activity
-            android:name=".SplashActivity"
+            android:name=".ui.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +24,7 @@
         </activity>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:screenOrientation="portrait"/>
     </application>
 

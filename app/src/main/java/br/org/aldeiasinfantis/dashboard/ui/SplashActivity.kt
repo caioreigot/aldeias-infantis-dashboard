@@ -1,4 +1,4 @@
-package br.org.aldeiasinfantis.dashboard
+package br.org.aldeiasinfantis.dashboard.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
+import br.org.aldeiasinfantis.dashboard.R
 
 class SplashActivity : AppCompatActivity() {
 

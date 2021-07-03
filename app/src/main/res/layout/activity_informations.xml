@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".MainActivity">
+    tools:context=".ui.MainActivity">
 
     <!-- Top Bar View Group -->
     <RelativeLayout
@@ -116,7 +116,7 @@
         android:layout_below="@+id/info_top_bar"
         android:background="@color/white"
         tools:listitem="@layout/value_item"
-        tools:itemCount="7"
+        tools:itemCount="2"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
 </RelativeLayout>

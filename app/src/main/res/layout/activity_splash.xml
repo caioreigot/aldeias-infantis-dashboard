@@ -7,7 +7,7 @@
     android:background="@drawable/blue_background"
     android:fitsSystemWindows="false"
     android:gravity="center"
-    tools:context=".SplashActivity">
+    tools:context=".ui.SplashActivity">
 
     <ImageView
         android:layout_width="wrap_content"

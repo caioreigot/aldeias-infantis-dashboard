@@ -100,7 +100,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/field_1"
+                            android:text="@string/acolhimento_casas_lares"
                             android:textSize="18sp"
                             android:gravity="center"
                             android:textColor="#8A65F0"
@@ -139,7 +139,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/field_2"
+                            android:text="@string/fortalecimento_familiar"
                             android:textSize="18sp"
                             android:textColor="#C18751"
                             android:textStyle="bold"
@@ -177,7 +177,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/field_3"
+                            android:text="@string/juventudes"
                             android:textSize="18sp"
                             android:textColor="#28ACE2"
                             android:textStyle="bold"
@@ -215,7 +215,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/field_4"
+                            android:text="@string/indicadores_gerais"
                             android:textSize="18sp"
                             android:textColor="#28ACE2"
                             android:textStyle="bold"

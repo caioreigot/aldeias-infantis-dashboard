@@ -1,4 +1,4 @@
-package br.org.aldeiasinfantis.dashboard
+package br.org.aldeiasinfantis.dashboard.data.helper
 
 import android.app.Activity
 import android.app.Dialog
@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import kotlin.system.exitProcess
+import br.org.aldeiasinfantis.dashboard.R
 
 class Utils {
 

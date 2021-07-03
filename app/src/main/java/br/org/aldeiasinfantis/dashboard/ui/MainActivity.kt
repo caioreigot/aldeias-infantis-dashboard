@@ -1,19 +1,15 @@
-package br.org.aldeiasinfantis.dashboard
+package br.org.aldeiasinfantis.dashboard.ui
 
 import android.app.Dialog
 import android.content.Intent
-import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
-import android.text.Html
 import android.text.method.LinkMovementMethod
-import android.text.util.Linkify
-import android.util.Log
-import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityOptionsCompat
+import br.org.aldeiasinfantis.dashboard.R
+import br.org.aldeiasinfantis.dashboard.ui.information.InformationActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,14 +18,15 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val intentIDTag = "BUTTON_ID"
         const val choiceTag = "GENERAL_INFO_CHOICE_ID"
+
         lateinit var button1: CardView
         lateinit var button2: CardView
         lateinit var button3: CardView
         lateinit var button4: CardView
     }
 
-    lateinit var loginLink: TextView
-    lateinit var becomeDonor: TextView
+    private lateinit var loginLink: TextView
+    private lateinit var becomeDonor: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,24 +48,25 @@ class MainActivity : AppCompatActivity() {
         buttons[0] = button1
         buttons[1] = button2
         buttons[2] = button3
-//        buttons[3] = button4
+        // Não será adicionado ao array pois o onClickListener será diferente
+        //buttons[3] = button4
 
-        val itensCount = findViewById<GridLayout>(R.id.main_grid_layout).childCount
-        findViewById<TextView>(R.id.main_item_count).text = getString(R.string.information_item_count, itensCount)
+        val itemsCount = findViewById<GridLayout>(R.id.main_grid_layout).childCount
+        findViewById<TextView>(R.id.main_item_count).text = getString(R.string.information_item_count, itemsCount)
 
         for (i in buttons.indices) {
             buttons[i]?.let { it ->
                 it.setOnClickListener {
                     val id = it.id
-                    val intent = Intent(this, InformationsActivity::class.java)
+                    val intent = Intent(this, InformationActivity::class.java)
                     intent.putExtra(intentIDTag, id)
 
                     val bundle = ActivityOptionsCompat.makeCustomAnimation(
                             this@MainActivity,
-                            R.anim.slide_in_up, R.anim.slide_out_down
+                        R.anim.slide_in_up, R.anim.slide_out_down
                     ).toBundle()
 
-                    startActivity(intent, bundle);
+                    startActivity(intent, bundle)
                 }
             }
         }
@@ -79,7 +77,7 @@ class MainActivity : AppCompatActivity() {
             choiceDialog.setContentView(R.layout.general_info_dialog)
 
             choiceDialog.findViewById<Button>(R.id.mes_anterior).setOnClickListener {
-                val intent = Intent(this, InformationsActivity::class.java)
+                val intent = Intent(this, InformationActivity::class.java)
 
                 // Setando os extras
                 val extras = Bundle()
@@ -99,7 +97,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             choiceDialog.findViewById<Button>(R.id.ano_anterior).setOnClickListener {
-                val intent = Intent(this, InformationsActivity::class.java)
+                val intent = Intent(this, InformationActivity::class.java)
 
                 // Setando os extras
                 val extras = Bundle()
