@@ -1,5 +1,6 @@
-package br.org.aldeiasinfantis.dashboard.ui
+package br.org.aldeiasinfantis.dashboard.ui.information
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -19,6 +20,7 @@ class SubInformationAdapter(
     val context: Context
 ) : RecyclerView.Adapter<SubInformationAdapter.InformationViewHolder>() {
 
+    @SuppressLint("ResourceType")
     inner class InformationViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         fun bind(info: Information, position: Int) {
             when (informationType) {
@@ -48,7 +50,7 @@ class SubInformationAdapter(
 
                     // Deixar os valores positivos em azul (por padrão é vermelho)
                     if (info.percentage[0] != '-')
-                        itemPercentage.setTextColor(Color.parseColor("#28ACE2"))
+                        itemPercentage.setTextColor(Color.parseColor(context.getString(R.color.primaryBlue)))
 
                     itemPercentage.text = info.percentage
 
@@ -57,11 +59,13 @@ class SubInformationAdapter(
                         val leftItemPart = itemView.findViewById<LinearLayout>(R.id.left_item)
                         val rightItemPart = itemView.findViewById<LinearLayout>(R.id.right_item)
 
-                        leftItemPart.background = ContextCompat.getDrawable(context,
+                        leftItemPart.background = ContextCompat.getDrawable(
+                            context,
                             R.drawable.bottom_left_rounded
                         )
 
-                        rightItemPart.background = ContextCompat.getDrawable(context,
+                        rightItemPart.background = ContextCompat.getDrawable(
+                            context,
                             R.drawable.bottom_right_rounded
                         )
                     }

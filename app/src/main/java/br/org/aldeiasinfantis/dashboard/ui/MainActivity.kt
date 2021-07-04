@@ -40,24 +40,22 @@ class MainActivity : AppCompatActivity() {
         loginLink.movementMethod = LinkMovementMethod.getInstance()
         becomeDonor.movementMethod = LinkMovementMethod.getInstance()
 
-        button1 = findViewById(R.id.campo_1)
-        button2 = findViewById(R.id.campo_2)
-        button3 = findViewById(R.id.campo_3)
-        button4 = findViewById(R.id.campo_4)
+        button1 = findViewById(R.id.acolhimento_casas_lares)
+        button2 = findViewById(R.id.fortalecimento_familiar)
+        button3 = findViewById(R.id.juventudes)
+        button4 = findViewById(R.id.indicadores_gerais)
 
         buttons[0] = button1
         buttons[1] = button2
         buttons[2] = button3
-        // Não será adicionado ao array pois o onClickListener será diferente
-        //buttons[3] = button4
 
         val itemsCount = findViewById<GridLayout>(R.id.main_grid_layout).childCount
         findViewById<TextView>(R.id.main_item_count).text = getString(R.string.information_item_count, itemsCount)
 
         for (i in buttons.indices) {
             buttons[i]?.let { it ->
-                it.setOnClickListener {
-                    val id = it.id
+                it.setOnClickListener { buttonCV ->
+                    val id = buttonCV.id
                     val intent = Intent(this, InformationActivity::class.java)
                     intent.putExtra(intentIDTag, id)
 
@@ -71,7 +69,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Botão 4 tem dois subtópicos, ele abrirá um dialog fragment
+        // Botão 4 tem dois subtópicos, ele abrirá um Dialog
         button4.setOnClickListener {
             val choiceDialog = Dialog(this)
             choiceDialog.setContentView(R.layout.general_info_dialog)

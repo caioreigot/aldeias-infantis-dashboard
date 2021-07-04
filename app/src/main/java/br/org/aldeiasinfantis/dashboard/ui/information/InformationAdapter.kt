@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import br.org.aldeiasinfantis.dashboard.R
 import br.org.aldeiasinfantis.dashboard.data.model.Information
 import br.org.aldeiasinfantis.dashboard.data.model.InformationType
-import br.org.aldeiasinfantis.dashboard.ui.SubInformationAdapter
 
 class InformationAdapter(
     val informationData: MutableList<Information>,

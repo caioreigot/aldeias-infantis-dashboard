@@ -34,6 +34,7 @@ class InformationActivity : AppCompatActivity() {
     private val informationViewModel: InformationViewModel by viewModels()
 
     private var idReceived: Int = -1
+
     private lateinit var currentInformationType: InformationType
     private lateinit var selectorReference: DatabaseReference
 
@@ -55,7 +56,7 @@ class InformationActivity : AppCompatActivity() {
 
         //region Assignments
         recyclerViewMain = findViewById(R.id.recycler_view_main)
-        infoGroupName = findViewById(R.id.info_group_name)
+        infoGroupName = findViewById(R.id.info_group_name_tv)
         infoProgressBar = findViewById(R.id.information_progress_bar)
         infoItemCount = findViewById(R.id.info_item_count)
         infoRefreshButton = findViewById(R.id.info_refresh_button)
@@ -71,7 +72,7 @@ class InformationActivity : AppCompatActivity() {
         if (idReceived < 0) {
             val dialog = Dialog(this)
 
-            fun clickListener(view: View) {
+            fun clickListener(v: View) {
                 finish()
                 exitProcess(0)
             }
@@ -94,9 +95,8 @@ class InformationActivity : AppCompatActivity() {
             MainActivity.button1.id -> {
                 infoGroupName.text = getString(R.string.acolhimento_casas_lares)
 
-                // Referência do respectivo indicador
+                // Referência do respectivo indicador e o tipo de informação
                 selectorReference = Singleton.DB_ACOLHIMENTO_CASAS_LARES_REF
-
                 currentInformationType = InformationType.VALUE
 
                 informationViewModel.fetchDatabaseInformation(currentInformationType, selectorReference)
@@ -105,9 +105,8 @@ class InformationActivity : AppCompatActivity() {
             MainActivity.button2.id -> {
                 infoGroupName.text = getString(R.string.fortalecimento_familiar)
 
-                // Referência do respectivo indicador
+                // Referência do respectivo indicador e o tipo de informação
                 selectorReference = Singleton.DB_FORTALECIMENTO_FAMILIAR_REF
-
                 currentInformationType = InformationType.VALUE
 
                 informationViewModel.fetchDatabaseInformation(currentInformationType, selectorReference)
@@ -116,9 +115,8 @@ class InformationActivity : AppCompatActivity() {
             MainActivity.button3.id -> {
                 infoGroupName.text = getString(R.string.juventudes)
 
-                // Referência do respectivo indicador
+                // Referência do respectivo indicador e o tipo de informação
                 selectorReference = Singleton.DB_JUVENTUDES_REF
-
                 currentInformationType = InformationType.VALUE
 
                 informationViewModel.fetchDatabaseInformation(currentInformationType, selectorReference)
@@ -132,9 +130,8 @@ class InformationActivity : AppCompatActivity() {
                     1 -> {
                         infoGroupName.text = getString(R.string.indicadores_gerais_mes)
 
-                        // Referência do respectivo indicador
+                        // Referência do respectivo indicador e o tipo de informação
                         selectorReference = Singleton.DB_INDICADORES_GERAIS_MES_REF
-
                         currentInformationType = InformationType.PERCENTAGE
 
                         informationViewModel.fetchDatabaseInformation(currentInformationType, selectorReference)
@@ -144,9 +141,8 @@ class InformationActivity : AppCompatActivity() {
                     2 -> {
                         infoGroupName.text = getString(R.string.indicadores_gerais_ano)
 
-                        // Referência do respectivo indicador
+                        // Referência do respectivo indicador e o tipo de informação
                         selectorReference = Singleton.DB_INDICADORES_GERAIS_ANO_REF
-
                         currentInformationType = InformationType.PERCENTAGE
 
                         informationViewModel.fetchDatabaseInformation(currentInformationType, selectorReference)
@@ -162,7 +158,7 @@ class InformationActivity : AppCompatActivity() {
     ) {
         fetchingInformation = false
 
-        // Atualizando/alimentando a RecyclerView
+        // Atualizando/alimentando a RecyclerView com os itens
         recyclerViewMain.adapter = InformationAdapter(
             informationData,
             subInformationParent,

@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Aldeias Infantis Dashboard</string>
+    <string name="login_company_name">Aldeias Infantis</string>
+    <string name="login_dashboard">Dashboard</string>
     <string name="acolhimento_casas_lares">ACOLHIMENTO EM CASAS LARES</string>
     <string name="fortalecimento_familiar">FORTALECIMENTO FAMILIAR</string>
     <string name="juventudes">JUVENTUDES</string>

@@ -54,32 +54,29 @@
 
         </RelativeLayout>
 
-        <HorizontalScrollView
-            android:id="@+id/info_group_scrollview"
+        <TextView
+            android:id="@+id/info_group_name_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scrollbars="none"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:gravity="center"
+            tools:text="ACOLHIMENTO EM CASAS LARES"
             android:layout_marginTop="17dp"
             android:layout_marginEnd="12dp"
-            android:layout_marginStart="12dp">
-
-            <TextView
-                android:id="@+id/info_group_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                tools:text="ACOLHIMENTO EM CASAS LARES"
-                android:textStyle="bold"
-                android:textSize="24sp"
-                android:textColor="@color/white"/>
-        </HorizontalScrollView>
+            android:layout_marginStart="12dp"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:maxLines="1"
+            app:autoSizeTextType="uniform"
+            app:autoSizeMinTextSize="1sp"
+            app:autoSizeMaxTextSize="40sp"
+            android:textColor="@color/white"/>
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/info_group_scrollview"
+            android:layout_below="@+id/info_group_name_tv"
             android:layout_centerHorizontal="true">
 
             <TextView

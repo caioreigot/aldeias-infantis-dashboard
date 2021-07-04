@@ -72,7 +72,7 @@
                 android:orientation="vertical">
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/campo_1"
+                    android:id="@+id/acolhimento_casas_lares"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardElevation="6dp"
@@ -111,7 +111,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/campo_2"
+                    android:id="@+id/fortalecimento_familiar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardElevation="6dp"
@@ -149,7 +149,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/campo_3"
+                    android:id="@+id/juventudes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardElevation="6dp"
@@ -187,7 +187,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/campo_4"
+                    android:id="@+id/indicadores_gerais"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardElevation="6dp"
