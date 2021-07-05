@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primaryBlue"
@@ -15,13 +16,14 @@
         android:layout_width="110dp"
         android:layout_height="110dp"
         android:transitionName="logo"
-        app:srcCompat="@drawable/logo_no_bg" />
+        app:srcCompat="@drawable/img_logo_no_bg" />
 
     <LinearLayout
         android:id="@+id/login_view_group"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:alpha="0"
+        tools:alpha="1"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -56,12 +58,13 @@
 
             <EditText
                 android:id="@+id/email_edit_text"
-                android:layout_width="match_parent"
+                android:layout_width="278dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginEnd="40dp"
                 android:background="@drawable/edit_text_line_white_bg"
-                android:hint="E-mail"
+                android:hint="@string/email_hint"
                 android:inputType="textEmailAddress"
                 android:paddingStart="36dp"
                 android:paddingEnd="4dp"
@@ -90,12 +93,13 @@
 
             <EditText
                 android:id="@+id/password_edit_text"
-                android:layout_width="match_parent"
+                android:layout_width="278dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginEnd="40dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
                 android:background="@drawable/edit_text_line_white_bg"
-                android:hint="Senha"
+                android:hint="@string/password_hint"
                 android:inputType="textPassword"
                 android:paddingStart="36dp"
                 android:paddingEnd="4dp"
@@ -108,12 +112,22 @@
 
         </RelativeLayout>
 
-        <androidx.cardview.widget.CardView
+        <CheckBox
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="18dp"
-            android:layout_marginEnd="40dp"
+            android:layout_marginStart="26dp"
+            android:layout_marginEnd="26dp"
+            android:layout_gravity="start"
+            android:buttonTint="@color/white"
+            android:textColor="@color/white"
+            android:text="@string/remember_me"/>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="278dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="30dp"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackgroundBorderless"
@@ -127,48 +141,78 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:letterSpacing="0.06"
-                android:text="ENTRAR"
+                android:text="@string/enter_button"
                 android:textColor="@color/primaryBlue"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
         </androidx.cardview.widget.CardView>
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="18dp"
-            android:layout_marginEnd="40dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackgroundBorderless"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="4dp"
-            app:cardElevation="0dp"
-            app:contentPadding="7dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:letterSpacing="0.06"
-                android:text="CADASTRAR"
-                android:textColor="@color/primaryBlue"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-        </androidx.cardview.widget.CardView>
-
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="11dp"
             android:clickable="true"
             android:focusable="true"
-            android:text="Esqueceu sua senha?"
-            android:textColor="@color/white"
-            android:textSize="15sp" />
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:background="?attr/selectableItemBackground">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/forgot_password"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="18dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <View style="@style/LoginRowView"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/or"
+                android:textColor="@color/white"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"/>
+
+            <View style="@style/LoginRowView"/>
+
+        </LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/create_account_btn"
+            android:layout_width="278dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="30dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="0dp"
+            app:contentPadding="7dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:letterSpacing="0.06"
+                android:text="@string/create_account"
+                android:textColor="@color/primaryBlue"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 

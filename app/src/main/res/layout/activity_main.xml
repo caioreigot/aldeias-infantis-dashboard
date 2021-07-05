@@ -28,14 +28,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/top_circle_cutted"
+                    android:src="@drawable/img_top_circle_cutted"
                     android:adjustViewBounds="true"
                     tools:ignore="ContentDescription"/>
 
                 <ImageView
                     android:layout_width="140dp"
                     android:layout_height="140dp"
-                    app:srcCompat="@drawable/logo_no_bg"
+                    app:srcCompat="@drawable/img_logo_no_bg"
                     android:layout_centerInParent="true"
                     tools:ignore="ContentDescription"/>
             </RelativeLayout>
@@ -92,7 +92,7 @@
                         android:layout_height="match_parent">
 
                         <ImageView
-                            app:srcCompat="@drawable/home"
+                            app:srcCompat="@drawable/img_home"
                             android:layout_width="130dp"
                             android:layout_height="80dp"
                             tools:ignore="ContentDescription"/>
@@ -131,7 +131,7 @@
                         android:layout_height="match_parent">
 
                         <ImageView
-                            app:srcCompat="@drawable/siblings"
+                            app:srcCompat="@drawable/img_siblings"
                             android:layout_width="130dp"
                             android:layout_height="80dp"
                             tools:ignore="ContentDescription"/>
@@ -169,7 +169,7 @@
                         android:layout_height="match_parent">
 
                         <ImageView
-                            app:srcCompat="@drawable/operational"
+                            app:srcCompat="@drawable/img_operational"
                             android:layout_width="130dp"
                             android:layout_height="80dp"
                             tools:ignore="ContentDescription"/>
@@ -207,7 +207,7 @@
                         android:layout_height="match_parent">
 
                         <ImageView
-                            app:srcCompat="@drawable/crianca_cofrinho"
+                            app:srcCompat="@drawable/img_crianca_cofrinho"
                             android:layout_width="130dp"
                             android:layout_height="80dp"
                             tools:ignore="ContentDescription"/>

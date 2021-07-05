@@ -11,6 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SplashScreen">
         <activity
+            android:name=".ui.signup.SignUpActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -19,16 +22,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name=".ui.LoginActivity" />
-
-        <activity
-            android:name=".ui.information.InformationActivity"/>
-
+            android:name=".ui.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.information.InformationActivity" />
         <activity
             android:name=".ui.MainActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

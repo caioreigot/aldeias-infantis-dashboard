@@ -21,15 +21,15 @@ import br.org.aldeiasinfantis.dashboard.data.helper.Utils
 import br.org.aldeiasinfantis.dashboard.data.model.Information
 import br.org.aldeiasinfantis.dashboard.data.model.InformationType
 import br.org.aldeiasinfantis.dashboard.data.model.Singleton
+import br.org.aldeiasinfantis.dashboard.ui.BaseActivity
 import br.org.aldeiasinfantis.dashboard.ui.MainActivity
 import com.google.firebase.database.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Math.abs
-import javax.inject.Inject
 import kotlin.system.exitProcess
 
 @AndroidEntryPoint
-class InformationActivity : AppCompatActivity() {
+class InformationActivity : BaseActivity() {
 
     private val informationViewModel: InformationViewModel by viewModels()
 
@@ -77,7 +77,7 @@ class InformationActivity : AppCompatActivity() {
                 exitProcess(0)
             }
 
-            Utils.createUnexpectedErrorDialog(dialog, this, ::clickListener).show()
+            // Todo: dialog de erro
             return
         }
 
@@ -205,7 +205,7 @@ class InformationActivity : AppCompatActivity() {
 
     override fun finish() {
         super.finish()
-        overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_up)
+        overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down)
     }
 
     var y1: Float = 0F; var y2: Float = 0F

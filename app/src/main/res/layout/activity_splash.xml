@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/blue_background"
+    android:background="@color/primaryBlue"
     android:fitsSystemWindows="false"
     android:gravity="center">
 
@@ -12,7 +12,7 @@
         android:id="@+id/splash_screen_logo_iv"
         android:layout_width="110dp"
         android:layout_height="110dp"
-        app:srcCompat="@drawable/logo_no_bg"
+        app:srcCompat="@drawable/img_logo_no_bg"
         android:transitionName="logo" />
 
 </LinearLayout>

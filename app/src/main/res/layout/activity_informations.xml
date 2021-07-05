@@ -14,11 +14,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
+        <View
             android:id="@+id/info_blue_top_bar"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:src="@drawable/blue_background"/>
+            android:background="@color/primaryBlue"/>
 
         <!-- Refresh Button -->
         <RelativeLayout
@@ -112,7 +112,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/info_top_bar"
         android:background="@color/white"
-        tools:listitem="@layout/value_item"
+        tools:listitem="@layout/item_value"
         tools:itemCount="2"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 

@@ -1,7 +1,36 @@
 <resources>
     <string name="app_name">Aldeias Infantis Dashboard</string>
+
+    <!-- Commons -->
+    <string name="empty_field_error_message">Por favor, preencha todos os campos</string>
+
+    <!-- Message Dialog -->
+    <string name="message_error_ops_header">Ops!</string>
+    <string name="message_error_header">Erro</string>
+    <string name="message_success_header">Sucesso!</string>
+    <string name="message_confirmation_header">Confirmar ação</string>
+    <string name="message_dialog_close">Fechar</string>
+    <string name="dialog_cancel_button">Cancelar</string>
+    <string name="dialog_yes_button">Sim</string>
+
+    <!-- Login Activity -->
     <string name="login_company_name">Aldeias Infantis</string>
     <string name="login_dashboard">Dashboard</string>
+    <string name="email_hint">E-mail</string>
+    <string name="password_hint">Senha</string>
+    <string name="remember_me">Lembre-se de mim</string>
+    <string name="enter_button">Entrar</string>
+    <string name="forgot_password">Esqueceu sua senha?</string>
+    <string name="or">ou</string>
+    <string name="create_account">Criar conta</string>
+
+    <!-- Sign Up Activity -->
+    <string name="name_hint">Nome</string>
+    <!-- Sign Up Activity Result Messages -->
+    <string name="signup_success_message">Cadastro realizado com sucesso!</string>
+    <string name="invalid_email_message">Formato de e-mail fornecido não é válido</string>
+    <string name="email_already_registered_error_message">E-mail já cadastrado</string>
+
     <string name="acolhimento_casas_lares">ACOLHIMENTO EM CASAS LARES</string>
     <string name="fortalecimento_familiar">FORTALECIMENTO FAMILIAR</string>
     <string name="juventudes">JUVENTUDES</string>

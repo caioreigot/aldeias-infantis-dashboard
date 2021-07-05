@@ -1,9 +1,13 @@
 package br.org.aldeiasinfantis.dashboard.data.model
 
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
 object Singleton {
+    // FirebaseAuth
+    private fun getAuthInstance(): FirebaseAuth = FirebaseAuth.getInstance()
+
     // Database Instance
     private fun getDatabaseInstance(): FirebaseDatabase = FirebaseDatabase.getInstance()
     val DATABASE: FirebaseDatabase = getDatabaseInstance()
@@ -34,7 +38,8 @@ object Singleton {
         DB_DASHBOARD_REF.child(Global.DatabaseNames.INDICADORES_GERAIS)
             .child(Global.DatabaseNames.INDICADORES_GERAIS_ANO)
 
-    val DB_DASHBOARD_REF = getDatabaseDashboardInstance()
+    val AUTH: FirebaseAuth = getAuthInstance()
+    private val DB_DASHBOARD_REF = getDatabaseDashboardInstance()
     val DB_ACOLHIMENTO_CASAS_LARES_REF = getAcolhimentoEmCasasLaresReference()
     val DB_FORTALECIMENTO_FAMILIAR_REF = getFortalecimentoFamiliarReference()
     val DB_JUVENTUDES_REF = getJuventudesReference()

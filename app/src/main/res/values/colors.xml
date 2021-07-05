@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="primaryBlue">#28ACE2</color>
-    <color name="primaryBrighterBlue">#2EC4FF</color>
+    <color name="primaryBluePressed">#46C0F3</color>
+    <color name="primaryBlueBrighter">#2EC4FF</color>
     <color name="transparent">#00FFFFFF</color>
-    <color name="snackbarRedBackground">#D70000</color>
+
     <color name="black">#FF000000</color>
+    <color name="blackBrighter1">#121212</color>
+    <color name="blackBrighter2">#555555</color>
+
+    <color name="errorIcon">#FA3232</color>
+    <color name="errorIconBrighter">#FF5656</color>
+
+    <color name="successIcon">#37E725</color>
     <color name="white">#FFFFFFFF</color>
     <color name="white_translucent">#32FFFFFF</color>
 </resources>

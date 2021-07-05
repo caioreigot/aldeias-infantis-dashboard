@@ -11,7 +11,7 @@ import androidx.core.app.ActivityOptionsCompat
 import br.org.aldeiasinfantis.dashboard.R
 import br.org.aldeiasinfantis.dashboard.ui.information.InformationActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private var buttons = arrayOfNulls<CardView>(4)
 
@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
 
                     val bundle = ActivityOptionsCompat.makeCustomAnimation(
                             this@MainActivity,
-                        R.anim.slide_in_up, R.anim.slide_out_down
+                        R.anim.slide_in_up, R.anim.slide_out_up
                     ).toBundle()
 
                     startActivity(intent, bundle)
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         // Botão 4 tem dois subtópicos, ele abrirá um Dialog
         button4.setOnClickListener {
             val choiceDialog = Dialog(this)
-            choiceDialog.setContentView(R.layout.general_info_dialog)
+            choiceDialog.setContentView(R.layout.dialog_general_info)
 
             choiceDialog.findViewById<Button>(R.id.mes_anterior).setOnClickListener {
                 val intent = Intent(this, InformationActivity::class.java)
@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
 
                 val bundle = ActivityOptionsCompat.makeCustomAnimation(
                     this@MainActivity,
-                    R.anim.slide_in_up, R.anim.slide_out_down
+                    R.anim.slide_in_up, R.anim.slide_out_up
                 ).toBundle()
 
                 startActivity(intent, bundle)
@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
 
                 val bundle = ActivityOptionsCompat.makeCustomAnimation(
                     this@MainActivity,
-                    R.anim.slide_in_up, R.anim.slide_out_down
+                    R.anim.slide_in_up, R.anim.slide_out_up
                 ).toBundle()
 
                 startActivity(intent, bundle)

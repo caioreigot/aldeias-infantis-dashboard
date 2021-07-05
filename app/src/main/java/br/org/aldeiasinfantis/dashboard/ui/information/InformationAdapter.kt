@@ -58,9 +58,9 @@ class InformationAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InformationViewHolder {
         val layoutToInflate = when (informationType) {
-            InformationType.TEXT -> R.layout.text_item
-            InformationType.VALUE -> R.layout.value_item
-            InformationType.PERCENTAGE -> R.layout.percentage_item
+            InformationType.TEXT -> R.layout.item_text
+            InformationType.VALUE -> R.layout.item_value
+            InformationType.PERCENTAGE -> R.layout.item_percentage
         }
 
         val view = LayoutInflater.from(parent.context).inflate(layoutToInflate, parent, false)

@@ -43,7 +43,7 @@
             android:layout_below="@id/information_top_bar"
             android:nestedScrollingEnabled="false"
             android:clickable="false"
-            tools:listitem="@layout/percentage_unique_item"
+            tools:listitem="@layout/item_percentage_unique"
             tools:itemCount="3"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 

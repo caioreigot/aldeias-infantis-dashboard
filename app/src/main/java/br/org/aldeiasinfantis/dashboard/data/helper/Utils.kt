@@ -2,46 +2,43 @@ package br.org.aldeiasinfantis.dashboard.data.helper
 
 import android.app.Activity
 import android.app.Dialog
+import android.text.TextUtils
+import android.util.Log
+import android.util.Patterns
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import br.org.aldeiasinfantis.dashboard.R
+import br.org.aldeiasinfantis.dashboard.data.model.ErrorType
 
 class Utils {
 
     companion object {
-        fun createConnectionErrorDialog(dialog: Dialog, activity: Activity, positiveBtnCallback: View.OnClickListener?, negativeBtnCallback: View.OnClickListener?): Dialog {
-            dialog.setContentView(R.layout.connection_error_dialog)
-            dialog.findViewById<TextView>(R.id.textView2).text = activity.getString(R.string.connection_error_message)
+        private fun isValidEmail(target: CharSequence): Boolean =
+            !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches()
 
-            dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
-            dialog.window?.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            dialog.window?.setGravity(Gravity.CENTER)
+        fun isRegisterInformationValid(
+            name: String? = null,
+            email: String? = null,
+            password: String? = null
+        ): Pair<Boolean, ErrorType?>
+        {
+            if (TextUtils.isEmpty(name) ||
+                TextUtils.isEmpty(email) ||
+                TextUtils.isEmpty(password))
+            {
+                return Pair(false, ErrorType.EMPTY_FIELD)
+            }
 
-            val btnPositive: Button = dialog.findViewById(R.id.btn_positive)
-            val btnNegative: Button = dialog.findViewById(R.id.btn_negative)
+            if (!isValidEmail(email!!))
+                return Pair(false, ErrorType.INVALID_EMAIL)
 
-            btnPositive.setOnClickListener(positiveBtnCallback)
-            btnNegative.setOnClickListener(negativeBtnCallback)
+            /*if (password!!.length < Global.PASSWORD_MINIMUM_LENGTH)
+                return Pair(false, ErrorType.WEAK_PASSWORD)*/
 
-            return dialog
-        }
-
-        fun createUnexpectedErrorDialog(dialog: Dialog, activity: Activity, positiveBtnCallback: View.OnClickListener?): Dialog {
-            dialog.setContentView(R.layout.unexpected_error_dialog)
-            dialog.findViewById<TextView>(R.id.textView2).text = activity.getString(R.string.unexpected_error_message)
-
-            dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
-            dialog.window?.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            dialog.window?.setGravity(Gravity.CENTER)
-
-            val btnPositive: Button = dialog.findViewById(R.id.btn_positive)
-
-            btnPositive.setOnClickListener(positiveBtnCallback)
-
-            return dialog
+            return Pair(true, null)
         }
     }
 

@@ -1,17 +1,21 @@
 package br.org.aldeiasinfantis.dashboard.ui
 
+import android.content.Intent
 import android.os.Bundle
-import android.transition.Transition
 import android.view.ViewGroup
-import android.view.animation.AlphaAnimation
 import android.view.animation.LinearInterpolator
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
+import androidx.core.app.ActivityOptionsCompat
 import br.org.aldeiasinfantis.dashboard.R
+import br.org.aldeiasinfantis.dashboard.ui.signup.SignUpActivity
 
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : BaseActivity() {
 
-    lateinit var viewGroup: ViewGroup
+    private lateinit var viewGroup: ViewGroup
+
+    private lateinit var createAccountBtnCV: CardView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +29,19 @@ class LoginActivity : AppCompatActivity() {
             alpha(1f)
             startDelay = 600
             start()
+        }
+
+        createAccountBtnCV = findViewById(R.id.create_account_btn)
+
+        createAccountBtnCV.setOnClickListener {
+            val i = Intent(this, SignUpActivity::class.java)
+
+            val options = ActivityOptionsCompat.makeCustomAnimation(
+                this,
+                R.anim.slide_in_left, R.anim.slide_out_left
+            ).toBundle()
+
+            startActivity(i, options)
         }
 
         /*val sharedElementEnterTransition: Transition = window.sharedElementEnterTransition
