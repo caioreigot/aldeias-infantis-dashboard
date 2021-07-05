@@ -30,6 +30,8 @@
     <string name="signup_success_message">Cadastro realizado com sucesso!</string>
     <string name="invalid_email_message">Formato de e-mail fornecido não é válido</string>
     <string name="email_already_registered_error_message">E-mail já cadastrado</string>
+    <string name="weak_password_error_message">A senha precisa ter no mínimo %1$d dígitos</string>
+    <string name="registration_successful_made">Cadastro feito com sucesso!</string>
 
     <string name="acolhimento_casas_lares">ACOLHIMENTO EM CASAS LARES</string>
     <string name="fortalecimento_familiar">FORTALECIMENTO FAMILIAR</string>
@@ -44,7 +46,7 @@
     <string name="connection_error_message">Erro ao carregar informações, deseja tentar novamente?</string>
 
     <string name="unexpected_error">Erro inesperado</string>
-    <string name="unexpected_error_message">Ops! Aconteceu um erro inesperado, por favor, tente denovo ou reinicie o aplicativo</string>
+    <string name="unexpected_error_message">Ocorreu um erro inesperado, por favor, tente denovo ou reinicie o aplicativo</string>
     <string name="server_error_message">Erro no servidor</string>
 
     <string name="login_link">Já é um doador? Acesse o <a href="https://aldeias.portaldodoador.org/login">Portal do Doador</a></string>

@@ -50,7 +50,8 @@ open class BaseActivity : AppCompatActivity() {
                 titleTV.text = getString(R.string.message_success_header)
                 image.setImageResource(R.drawable.ic_baseline_check_circle_24)
 
-                positiveBtn.setBackgroundColor(ContextCompat.getColor(this, R.color.successIcon))
+                positiveBtn.setBackgroundResource(R.drawable.button_message_green_bg)
+                positiveBtn.text = getString(R.string.message_dialog_close)
             }
 
             MessageType.ERROR -> {

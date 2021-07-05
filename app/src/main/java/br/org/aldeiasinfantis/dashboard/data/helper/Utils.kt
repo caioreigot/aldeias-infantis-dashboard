@@ -12,11 +12,12 @@ import android.widget.Button
 import android.widget.TextView
 import br.org.aldeiasinfantis.dashboard.R
 import br.org.aldeiasinfantis.dashboard.data.model.ErrorType
+import br.org.aldeiasinfantis.dashboard.data.model.Global
 
 class Utils {
 
     companion object {
-        private fun isValidEmail(target: CharSequence): Boolean =
+        fun isValidEmail(target: CharSequence): Boolean =
             !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches()
 
         fun isRegisterInformationValid(
@@ -34,6 +35,9 @@ class Utils {
 
             if (!isValidEmail(email!!))
                 return Pair(false, ErrorType.INVALID_EMAIL)
+
+            if (password!!.length < Global.PASSWORD_MINIMUM_LENGTH)
+                return Pair(false, ErrorType.WEAK_PASSWORD)
 
             /*if (password!!.length < Global.PASSWORD_MINIMUM_LENGTH)
                 return Pair(false, ErrorType.WEAK_PASSWORD)*/

@@ -13,6 +13,8 @@
     <color name="errorIconBrighter">#FF5656</color>
 
     <color name="successIcon">#37E725</color>
+    <color name="successIconBrighter">#4CF83C</color>
+
     <color name="white">#FFFFFFFF</color>
     <color name="white_translucent">#32FFFFFF</color>
 </resources>

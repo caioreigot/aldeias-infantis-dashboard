@@ -12,9 +12,13 @@ object Singleton {
     private fun getDatabaseInstance(): FirebaseDatabase = FirebaseDatabase.getInstance()
     val DATABASE: FirebaseDatabase = getDatabaseInstance()
 
-    // Database Dashboard Instance
-    private fun getDatabaseDashboardInstance(): DatabaseReference =
+    // Database Dashboard Reference
+    private fun getDatabaseDashboardReference(): DatabaseReference =
         DATABASE.reference.child(Global.DatabaseNames.DASHBOARD_PARENT)
+
+    // Database Users Reference
+    private fun getDatabaseUsersReference(): DatabaseReference =
+        DATABASE.reference.child(Global.DatabaseNames.USERS_PARENT)
 
     // Acolhimento em Casas Lares Reference
     private fun getAcolhimentoEmCasasLaresReference(): DatabaseReference =
@@ -39,7 +43,8 @@ object Singleton {
             .child(Global.DatabaseNames.INDICADORES_GERAIS_ANO)
 
     val AUTH: FirebaseAuth = getAuthInstance()
-    private val DB_DASHBOARD_REF = getDatabaseDashboardInstance()
+    private val DB_DASHBOARD_REF = getDatabaseDashboardReference()
+    val DB_USERS_REF = getDatabaseUsersReference()
     val DB_ACOLHIMENTO_CASAS_LARES_REF = getAcolhimentoEmCasasLaresReference()
     val DB_FORTALECIMENTO_FAMILIAR_REF = getFortalecimentoFamiliarReference()
     val DB_JUVENTUDES_REF = getJuventudesReference()

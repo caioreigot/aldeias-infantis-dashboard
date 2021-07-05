@@ -1,12 +1,12 @@
 package br.org.aldeiasinfantis.dashboard.ui.signup
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.InputType.*
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ViewFlipper
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import br.org.aldeiasinfantis.dashboard.R
@@ -24,6 +24,7 @@ class SignUpActivity : BaseActivity() {
     private lateinit var passwordET: EditText
     private lateinit var visibilityBtn: LinearLayout
     private lateinit var signUpBtnCV: CardView
+    private lateinit var signUpViewFlipper: ViewFlipper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +36,7 @@ class SignUpActivity : BaseActivity() {
         passwordET = findViewById(R.id.password_edit_text)
         visibilityBtn = findViewById(R.id.password_visibility_btn_ll)
         signUpBtnCV = findViewById(R.id.sign_up_btn_cv)
+        signUpViewFlipper = findViewById(R.id.sign_up_view_flipper)
         //endregion Assignments
 
         visibilityBtn.setOnClickListener(PasswordVisibilityButtonListener(passwordET))
@@ -55,6 +57,23 @@ class SignUpActivity : BaseActivity() {
                     message
                 ).show()
             }
+        })
+
+        signUpViewModel.signUpViewFlipper.observe(this, {
+            it?.let { childToDisplay ->
+                signUpViewFlipper.displayedChild = childToDisplay
+            }
+        })
+
+        signUpViewModel.registrationMade.observe(this, {
+            createMessageDialog(
+                this,
+                MessageType.SUCCESSFUL,
+                getString(R.string.registration_successful_made),
+                null,
+                null,
+                { finish() }
+            ).show()
         })
     }
 
