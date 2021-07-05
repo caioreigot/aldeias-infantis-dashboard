@@ -1,5 +1,6 @@
 package br.org.aldeiasinfantis.dashboard.ui.signup
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputType.*
 import android.view.View
@@ -9,13 +10,19 @@ import android.widget.LinearLayout
 import android.widget.ViewFlipper
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
+import androidx.core.app.ActivityOptionsCompat
 import br.org.aldeiasinfantis.dashboard.R
 import br.org.aldeiasinfantis.dashboard.data.model.MessageType
 import br.org.aldeiasinfantis.dashboard.ui.BaseActivity
+import br.org.aldeiasinfantis.dashboard.ui.login.LoginActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SignUpActivity : BaseActivity() {
+
+    companion object {
+        const val EMAIL_EXTRA_TAG = "email_extra"
+    }
 
     private val signUpViewModel: SignUpViewModel by viewModels()
 
@@ -66,14 +73,29 @@ class SignUpActivity : BaseActivity() {
         })
 
         signUpViewModel.registrationMade.observe(this, {
-            createMessageDialog(
-                this,
-                MessageType.SUCCESSFUL,
-                getString(R.string.registration_successful_made),
-                null,
-                null,
-                { finish() }
-            ).show()
+            it?.let { user ->
+                createMessageDialog(
+                    this,
+                    MessageType.SUCCESSFUL,
+                    getString(R.string.registration_successful_made),
+                    null,
+                    null,
+                    {
+                        val i = Intent(this, LoginActivity::class.java)
+
+                        val options = ActivityOptionsCompat.makeCustomAnimation(
+                            this,
+                            R.anim.slide_in_right, R.anim.slide_out_right
+                        ).toBundle()
+
+                        i.putExtra(EMAIL_EXTRA_TAG, user.email)
+
+                        startActivity(i, options)
+
+                        supportFinishAfterTransition()
+                    }
+                ).show()
+            }
         })
     }
 

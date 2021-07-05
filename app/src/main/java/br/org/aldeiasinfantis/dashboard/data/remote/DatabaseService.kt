@@ -9,6 +9,43 @@ import com.google.firebase.database.ValueEventListener
 
 class DatabaseService : DatabaseRepository {
 
+    override fun getLoggedUserInformation(
+        callback: (User?, ServiceResult) -> Unit
+    ) {
+        Singleton.AUTH.currentUser?.let { currentUser ->
+            val loggedUserReference = Singleton.DB_USERS_REF.child(currentUser.uid)
+
+            Singleton.DB_ADMINS_REF
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(adminsSnapshot: DataSnapshot) {
+                        val isUserAdmin = adminsSnapshot.child(currentUser.uid).exists()
+
+                        loggedUserReference.addListenerForSingleValueEvent(object :
+                            ValueEventListener {
+                            override fun onDataChange(userSnapshot: DataSnapshot) {
+                                val user: User? = userSnapshot.getValue(User::class.java)
+                                user?.isAdmin = isUserAdmin
+
+                                callback(user, ServiceResult.Success)
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                callback(null, ServiceResult.Error(ErrorType.SERVER_ERROR))
+                                return
+                            }
+                        })
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        callback(null, ServiceResult.Error(ErrorType.SERVER_ERROR))
+                        return
+                    }
+                })
+
+            return
+        }
+    }
+
     override fun fetchDatabaseInformation(
         informationType: InformationType,
         targetReference: DatabaseReference,

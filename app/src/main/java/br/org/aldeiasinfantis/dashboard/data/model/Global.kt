@@ -2,7 +2,10 @@ package br.org.aldeiasinfantis.dashboard.data.model
 
 object Global {
 
-    const val PASSWORD_MINIMUM_LENGTH = 6
+    const val LOGIN_ATTEMPT_DELAY_IN_MILLIS: Long = 1000L
+    const val SPLASH_SCREEN_DURATION_IN_MILLIS: Long = 1200L
+    const val MAX_LOGIN_ATTEMPTS: Int = 5
+    const val PASSWORD_MINIMUM_LENGTH: Int = 6
 
     object DatabaseNames {
         /*
@@ -15,6 +18,7 @@ object Global {
         */
         const val DASHBOARD_PARENT = "dashboard"
         const val USERS_PARENT = "users"
+        const val ADMINS_PARENT = "admins"
 
         const val ACOLHIMENTO_EM_CASAS_LARES = "acolhimento em casas lares"
         const val FORTALECIMENTO_FAMILIAR = "fortalecimento familiar"

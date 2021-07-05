@@ -8,6 +8,7 @@ import br.org.aldeiasinfantis.dashboard.data.helper.ResourceProvider
 import br.org.aldeiasinfantis.dashboard.data.helper.SingleLiveEvent
 import br.org.aldeiasinfantis.dashboard.data.helper.Utils
 import br.org.aldeiasinfantis.dashboard.data.model.ServiceResult
+import br.org.aldeiasinfantis.dashboard.data.model.User
 import br.org.aldeiasinfantis.dashboard.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -27,8 +28,8 @@ class SignUpViewModel @Inject constructor(
     val errorMessage: LiveData<String>
         get() = _errorMessage
 
-    private val _registrationMade: SingleLiveEvent<Unit> = SingleLiveEvent()
-    val registrationMade: LiveData<Unit>
+    private val _registrationMade: SingleLiveEvent<User> = SingleLiveEvent()
+    val registrationMade: LiveData<User>
         get() = _registrationMade
 
     private val _signUpViewFlipper: MutableLiveData<Int> = MutableLiveData()
@@ -66,7 +67,10 @@ class SignUpViewModel @Inject constructor(
             _signUpViewFlipper.value = VIEW_FLIPPER_REGISTER_BUTTON
 
             when (result) {
-                is ServiceResult.Success -> _registrationMade.call()
+                is ServiceResult.Success -> _registrationMade.value = User(
+                    name = name,
+                    email = email
+                )
 
                 is ServiceResult.Error -> {
                     _errorMessage.value =

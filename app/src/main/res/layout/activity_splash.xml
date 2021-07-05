@@ -6,13 +6,23 @@
     android:layout_height="match_parent"
     android:background="@color/primaryBlue"
     android:fitsSystemWindows="false"
-    android:gravity="center">
+    android:gravity="center"
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/splash_screen_logo_iv"
         android:layout_width="110dp"
         android:layout_height="110dp"
-        app:srcCompat="@drawable/img_logo_no_bg"
-        android:transitionName="logo" />
+        android:transitionName="logo"
+        app:srcCompat="@drawable/img_logo_no_bg" />
+
+    <ProgressBar
+        android:id="@+id/splash_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:indeterminate="true"
+        android:indeterminateDrawable="@drawable/progress_bar_white"
+        android:visibility="gone" />
 
 </LinearLayout>

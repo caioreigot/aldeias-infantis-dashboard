@@ -44,6 +44,23 @@ class Utils {
 
             return Pair(true, null)
         }
+
+        fun isLoginInformationValid(
+            email: String? = null,
+            password: String? = null
+        ): Pair<Boolean, ErrorType?>
+        {
+            if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password))
+                return Pair(false, ErrorType.EMPTY_FIELD)
+
+            if (!isValidEmail(email!!))
+                return Pair(false, ErrorType.INVALID_EMAIL)
+
+            if (password!!.length < Global.PASSWORD_MINIMUM_LENGTH)
+                return Pair(false, ErrorType.WEAK_PASSWORD)
+
+            return Pair(true, null)
+        }
     }
 
 }

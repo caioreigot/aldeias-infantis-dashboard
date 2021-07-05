@@ -20,6 +20,10 @@ object Singleton {
     private fun getDatabaseUsersReference(): DatabaseReference =
         DATABASE.reference.child(Global.DatabaseNames.USERS_PARENT)
 
+    // Database Users Reference
+    private fun getDatabaseAdminsReference(): DatabaseReference =
+        DATABASE.reference.child(Global.DatabaseNames.ADMINS_PARENT)
+
     // Acolhimento em Casas Lares Reference
     private fun getAcolhimentoEmCasasLaresReference(): DatabaseReference =
         DB_DASHBOARD_REF.child(Global.DatabaseNames.ACOLHIMENTO_EM_CASAS_LARES)
@@ -44,6 +48,7 @@ object Singleton {
 
     val AUTH: FirebaseAuth = getAuthInstance()
     private val DB_DASHBOARD_REF = getDatabaseDashboardReference()
+    val DB_ADMINS_REF = getDatabaseAdminsReference()
     val DB_USERS_REF = getDatabaseUsersReference()
     val DB_ACOLHIMENTO_CASAS_LARES_REF = getAcolhimentoEmCasasLaresReference()
     val DB_FORTALECIMENTO_FAMILIAR_REF = getFortalecimentoFamiliarReference()
