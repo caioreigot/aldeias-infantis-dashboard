@@ -11,8 +11,10 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 class AuthService : AuthRepository {
 
@@ -32,10 +34,9 @@ class AuthService : AuthRepository {
         }
 
         val runnable = Runnable {
-            val task: Task<AuthResult> = Singleton.AUTH.signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener {
-                    callback(ServiceResult.Success)
-                }
+            val task: Task<AuthResult> = Singleton.AUTH
+                .signInWithEmailAndPassword(email, password)
+                .addOnSuccessListener { callback(ServiceResult.Success) }
 
             try {
                 Tasks.await(task, 10, TimeUnit.SECONDS)
@@ -43,22 +44,28 @@ class AuthService : AuthRepository {
                 when (e.cause) {
                     // Errors related to Firebase Auth
                     is FirebaseAuthException -> {
-                        callback(ServiceResult.Error(ErrorType.AUTH_EXCEPTION))
+                        when (e.cause) {
+                            is FirebaseAuthInvalidUserException ->
+                                callback(ServiceResult.Error(ErrorType.AUTH_INVALID_USER))
 
-                        /*when (e.cause) {
-                            is FirebaseAuthInvalidUserException -> {}
-                            // ...
-                        }*/
+                            else ->
+                                callback(ServiceResult.Error(ErrorType.UNEXPECTED_ERROR))
+                        }
                     }
+
+                    is TimeoutException ->
+                        callback(ServiceResult.Error(ErrorType.NETWORK_EXCEPTION))
 
                     is FirebaseNetworkException ->
                         callback(ServiceResult.Error(ErrorType.NETWORK_EXCEPTION))
 
-                    else -> callback(ServiceResult.Error(ErrorType.UNEXPECTED_ERROR))
+                    else ->
+                        callback(ServiceResult.Error(ErrorType.UNEXPECTED_ERROR))
                 }
             }
         }
 
+        // Thread to try sign in user
         val thread = Thread(runnable)
         thread.start()
     }
@@ -99,10 +106,16 @@ class AuthService : AuthRepository {
                     }
 
                     false -> {
-                        if (task.exception?.message == "The email address is already in use by another account.")
-                            callback(ServiceResult.Error(ErrorType.EMAIL_ALREADY_REGISTERED))
-                        else
-                            callback(ServiceResult.Error(ErrorType.UNEXPECTED_ERROR))
+                        when ((task.exception as FirebaseAuthException).errorCode) {
+                            "ERROR_EMAIL_ALREADY_IN_USE" ->
+                                callback(ServiceResult.Error(ErrorType.EMAIL_ALREADY_REGISTERED))
+
+                            "ERROR_INVALID_EMAIL" ->
+                                callback(ServiceResult.Error(ErrorType.INVALID_EMAIL))
+
+                            else ->
+                                callback(ServiceResult.Error(ErrorType.UNEXPECTED_ERROR))
+                        }
                     }
                 }
             }
@@ -118,11 +131,7 @@ class AuthService : AuthRepository {
         }
 
         Singleton.AUTH.sendPasswordResetEmail(email)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful)
-                    callback(ServiceResult.Success)
-                else
-                    callback(ServiceResult.Error(ErrorType.SERVER_ERROR))
-            }
+            .addOnSuccessListener { callback(ServiceResult.Success) }
+            .addOnFailureListener { callback(ServiceResult.Error(ErrorType.SERVER_ERROR)) }
     }
 }

@@ -3,11 +3,10 @@ package br.org.aldeiasinfantis.dashboard.ui.signup
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType.*
+import android.view.KeyEvent
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ViewFlipper
+import android.view.inputmethod.EditorInfo
+import android.widget.*
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityOptionsCompat
@@ -55,6 +54,25 @@ class SignUpActivity : BaseActivity() {
                 password = passwordET.text.toString()
             )
         }
+
+        /*
+         "passwordET" is the last EditText on the registration screen, so it has an option
+         defined in the xml (android:imeOptions="actionSend") that makes a "send" button on
+         the keyboard, and this is a listener for when the user clicks on it
+         */
+        passwordET.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+            override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    passwordET.clearFocus()
+
+                    // Perform a click action on the sign up button
+                    signUpBtnCV.callOnClick()
+                    return true
+                }
+
+                return false
+            }
+        })
 
         signUpViewModel.errorMessage.observe(this, {
             it?.let { message ->

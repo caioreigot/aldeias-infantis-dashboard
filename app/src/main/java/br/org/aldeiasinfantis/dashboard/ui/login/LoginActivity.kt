@@ -55,15 +55,14 @@ class LoginActivity : BaseActivity() {
         emailReceived?.let { email ->
             emailET.setText(email)
             viewGroup.alpha = 1f
-        } ?: run {
-            viewGroup.animate().apply {
+        }
+            ?: viewGroup.animate().apply {
                 interpolator = LinearInterpolator()
                 duration = 300
                 alpha(1f)
                 startDelay = 600
                 start()
             }
-        }
 
         errorReceived?.let { message ->
             createMessageDialog(
@@ -81,7 +80,8 @@ class LoginActivity : BaseActivity() {
         }
 
         forgotPasswordBtnLL.setOnClickListener {
-            // TODO
+            val forgotPasswordDialog = ForgotPasswordDialog()
+            forgotPasswordDialog.show(supportFragmentManager, forgotPasswordDialog.tag)
         }
 
         createAccountBtnCV.setOnClickListener {
@@ -120,6 +120,14 @@ class LoginActivity : BaseActivity() {
 
                 changeToMainActivity()
             }
+        })
+
+        loginViewModel.resetPasswordMessage.observe(this, { (messageType, message) ->
+            createMessageDialog(
+                this,
+                messageType,
+                message
+            ).show()
         })
 
         /*val sharedElementEnterTransition: Transition = window.sharedElementEnterTransition

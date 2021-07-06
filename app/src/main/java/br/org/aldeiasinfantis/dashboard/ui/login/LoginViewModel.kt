@@ -3,10 +3,13 @@ package br.org.aldeiasinfantis.dashboard.ui.login
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import br.org.aldeiasinfantis.dashboard.R
 import br.org.aldeiasinfantis.dashboard.data.helper.ErrorMessageHandler
 import br.org.aldeiasinfantis.dashboard.data.helper.ResourceProvider
+import br.org.aldeiasinfantis.dashboard.data.helper.SingleLiveEvent
 import br.org.aldeiasinfantis.dashboard.data.local.Preferences
 import br.org.aldeiasinfantis.dashboard.data.model.ErrorType
+import br.org.aldeiasinfantis.dashboard.data.model.MessageType
 import br.org.aldeiasinfantis.dashboard.data.model.ServiceResult
 import br.org.aldeiasinfantis.dashboard.data.model.User
 import br.org.aldeiasinfantis.dashboard.data.repository.AuthRepository
@@ -34,6 +37,15 @@ class LoginViewModel @Inject constructor(
     private val _loginViewFlipper: MutableLiveData<Int> = MutableLiveData()
     val loginViewFlipper: LiveData<Int>
         get() = _loginViewFlipper
+
+    private val _forgotPasswordBtnViewFlipper: MutableLiveData<Int> = MutableLiveData()
+    val forgotPasswordBtnViewFlipper: LiveData<Int>
+        get() = _forgotPasswordBtnViewFlipper
+
+    private val _resetPasswordMessage: SingleLiveEvent<Pair<MessageType, String>> =
+        SingleLiveEvent<Pair<MessageType, String>>()
+    val resetPasswordMessage: LiveData<Pair<MessageType, String>>
+        get() = _resetPasswordMessage
 
     private val _loggedUserInformation: MutableLiveData<Pair<User, String>> = MutableLiveData()
     val loggedUserInformation: LiveData<Pair<User, String>>
@@ -76,10 +88,37 @@ class LoginViewModel @Inject constructor(
 
                 is ServiceResult.Error -> {
                     _errorMessage.postValue(ErrorMessageHandler
-                        .getErrorMessage(resProvider, result.errorType)
-                    )
+                        .getErrorMessage(resProvider, result.errorType))
 
                     _loginViewFlipper.postValue(VIEW_FLIPPER_BUTTON)
+                }
+            }
+        }
+    }
+
+    fun sendPasswordResetEmail(email: String) {
+        _forgotPasswordBtnViewFlipper.value = VIEW_FLIPPER_PROGRESS_BAR
+
+        authService.sendPasswordResetEmail(email) { result ->
+
+            _forgotPasswordBtnViewFlipper.value = VIEW_FLIPPER_BUTTON
+
+            when (result) {
+                is ServiceResult.Success ->
+                    _resetPasswordMessage.value = Pair(
+                        MessageType.SUCCESSFUL,
+                        resProvider.getString(R.string.send_reset_password_email_successful))
+
+                is ServiceResult.Error -> {
+                    _resetPasswordMessage.value = when (result.errorType) {
+                        ErrorType.INVALID_EMAIL -> Pair(
+                            MessageType.ERROR,
+                            resProvider.getString(R.string.invalid_email_message))
+
+                        else -> Pair(
+                            MessageType.ERROR,
+                            resProvider.getString(R.string.send_reset_password_email_error))
+                    }
                 }
             }
         }
