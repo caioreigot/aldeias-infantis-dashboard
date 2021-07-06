@@ -21,6 +21,10 @@ import br.org.aldeiasinfantis.dashboard.ui.splash.SplashActivity
 
 class LoginActivity : BaseActivity() {
 
+    companion object {
+        const val FADE_ANIMATION_ENABLED_EXTRA_TAG = "fade_anim_extra"
+    }
+
     private val loginViewModel: LoginViewModel by viewModels()
 
     private lateinit var viewGroup: ViewGroup
@@ -50,19 +54,23 @@ class LoginActivity : BaseActivity() {
         //endregion
 
         val emailReceived = intent.getStringExtra(SignUpActivity.EMAIL_EXTRA_TAG)
+        val animationEnabled = intent.getBooleanExtra(FADE_ANIMATION_ENABLED_EXTRA_TAG, true)
         val errorReceived = intent.getStringExtra(SplashActivity.ERROR_EXTRA_TAG)
 
-        emailReceived?.let { email ->
-            emailET.setText(email)
-            viewGroup.alpha = 1f
-        }
-            ?: viewGroup.animate().apply {
+        if (animationEnabled)
+            viewGroup.animate().apply {
                 interpolator = LinearInterpolator()
                 duration = 300
                 alpha(1f)
                 startDelay = 600
                 start()
             }
+        else
+            viewGroup.alpha = 1f
+
+        emailReceived?.let { email ->
+            emailET.setText(email)
+        }
 
         errorReceived?.let { message ->
             createMessageDialog(

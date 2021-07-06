@@ -12,12 +12,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityOptionsCompat
 import br.org.aldeiasinfantis.dashboard.R
+import br.org.aldeiasinfantis.dashboard.data.local.Preferences
+import br.org.aldeiasinfantis.dashboard.data.model.MessageType
+import br.org.aldeiasinfantis.dashboard.data.model.Singleton
 import br.org.aldeiasinfantis.dashboard.data.model.UserSingleton
 import br.org.aldeiasinfantis.dashboard.ui.information.InformationActivity
+import br.org.aldeiasinfantis.dashboard.ui.login.LoginActivity
 
 class MainActivity : BaseActivity() {
-
-    private var buttons = arrayOfNulls<CardView>(4)
 
     companion object {
         const val intentIDTag = "BUTTON_ID"
@@ -29,6 +31,9 @@ class MainActivity : BaseActivity() {
         lateinit var button4: CardView
     }
 
+    private var buttons = mutableListOf<CardView>()
+
+    private lateinit var logoutBtn: ImageButton
     private lateinit var itemCountTV: TextView
 
     private lateinit var loginLink: TextView
@@ -44,7 +49,9 @@ class MainActivity : BaseActivity() {
         Log.d("MY_DEBUG", "isAdmin: " + UserSingleton.isAdmin.toString())
 
         //region Assignments
-        itemCountTV = findViewById<TextView>(R.id.main_item_count)
+
+        logoutBtn = findViewById(R.id.logout_image_btn)
+        itemCountTV = findViewById(R.id.main_item_count)
         loginLink = findViewById(R.id.loginLink)
         becomeDonor = findViewById(R.id.becomeDonor)
         button1 = findViewById(R.id.acolhimento_casas_lares)
@@ -56,27 +63,27 @@ class MainActivity : BaseActivity() {
         loginLink.movementMethod = LinkMovementMethod.getInstance()
         becomeDonor.movementMethod = LinkMovementMethod.getInstance()
 
-        buttons[0] = button1
-        buttons[1] = button2
-        buttons[2] = button3
+        buttons.apply {
+            add(button1)
+            add(button2)
+            add(button3)
+        }
 
         val itemsCount = findViewById<GridLayout>(R.id.main_grid_layout).childCount
         itemCountTV.text = getString(R.string.information_item_count, itemsCount)
 
         for (i in buttons.indices) {
-            buttons[i]?.let { it ->
-                it.setOnClickListener { buttonCV ->
-                    val id = buttonCV.id
-                    val intent = Intent(this, InformationActivity::class.java)
-                    intent.putExtra(intentIDTag, id)
+            buttons[i].setOnClickListener { buttonCV ->
+                val id = buttonCV.id
+                val intent = Intent(this, InformationActivity::class.java)
+                intent.putExtra(intentIDTag, id)
 
-                    val bundle = ActivityOptionsCompat.makeCustomAnimation(
-                            this@MainActivity,
-                        R.anim.slide_in_up, R.anim.slide_out_up
-                    ).toBundle()
+                val bundle = ActivityOptionsCompat.makeCustomAnimation(
+                    this@MainActivity,
+                    R.anim.slide_in_up, R.anim.slide_out_up
+                ).toBundle()
 
-                    startActivity(intent, bundle)
-                }
+                startActivity(intent, bundle)
             }
         }
 
@@ -85,17 +92,45 @@ class MainActivity : BaseActivity() {
             val choiceDialog = Dialog(this)
             choiceDialog.setContentView(R.layout.dialog_general_info)
 
-            val i = Intent(this, InformationActivity::class.java)
+            val intent = Intent(this, InformationActivity::class.java)
 
             choiceDialog.findViewById<Button>(R.id.mes_anterior).setOnClickListener(
-                GeneralIndicatorsChoiceListener(this, i, choiceDialog, 1)
+                GeneralIndicatorsChoiceListener(this, intent, choiceDialog, 1)
             )
 
             choiceDialog.findViewById<Button>(R.id.ano_anterior).setOnClickListener(
-                GeneralIndicatorsChoiceListener(this, i, choiceDialog, 2)
+                GeneralIndicatorsChoiceListener(this, intent, choiceDialog, 2)
             )
 
             choiceDialog.show()
+        }
+
+        logoutBtn.setOnClickListener {
+            createMessageDialog(
+                this,
+                MessageType.CONFIRMATION,
+                getString(R.string.confirm_logout_message),
+                { Singleton.AUTH.signOut() }
+            ).show()
+        }
+
+        // Responsible for logging out the player and taking it to the login screen
+        Singleton.AUTH.addAuthStateListener { firebaseAuth ->
+            if (firebaseAuth.currentUser == null) {
+                val intent = Intent(this, LoginActivity::class.java)
+                intent.putExtra(LoginActivity.FADE_ANIMATION_ENABLED_EXTRA_TAG, false)
+
+                Preferences(this).clearPreferences()
+                UserSingleton.clear()
+
+                val options = ActivityOptionsCompat.makeCustomAnimation(
+                    this,
+                    R.anim.slide_in_right, R.anim.slide_out_right
+                ).toBundle()
+
+                startActivity(intent, options)
+                finish()
+            }
         }
     }
 
@@ -108,7 +143,7 @@ class MainActivity : BaseActivity() {
         override fun onClick(v: View?) {
             val extras = Bundle()
             extras.putInt(intentIDTag, button4.id)
-            extras.putInt(choiceTag, 1)
+            extras.putInt(choiceTag, choice)
 
             intent.putExtras(extras)
 

@@ -11,6 +11,7 @@
     <string name="empty_field_error_message">Por favor, preencha todos os campos</string>
     <string name="network_exception_message">Erro no processo devido a problemas de conexão</string>
     <string name="login_time_out_message">Não foi possível logar na conta por problemas de conexão</string>
+    <string name="confirm_logout_message">Deseja mesmo sair da conta?</string>
     <string name="auth_invalid_user_message">Login inválido</string>
     <string name="unexpected_error_message">Ocorreu um erro inesperado. Se estiver com problemas, por favor, tente denovo ou reinicie o aplicativo</string>
     <string name="server_error_message">Erro no servidor</string>

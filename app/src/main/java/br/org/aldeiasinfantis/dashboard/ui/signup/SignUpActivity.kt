@@ -107,6 +107,7 @@ class SignUpActivity : BaseActivity() {
                         ).toBundle()
 
                         i.putExtra(EMAIL_EXTRA_TAG, user.email)
+                        i.putExtra(LoginActivity.FADE_ANIMATION_ENABLED_EXTRA_TAG, false)
 
                         startActivity(i, options)
 
