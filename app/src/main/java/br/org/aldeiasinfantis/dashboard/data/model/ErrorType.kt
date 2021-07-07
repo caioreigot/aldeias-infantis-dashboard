@@ -3,6 +3,7 @@ package br.org.aldeiasinfantis.dashboard.data.model
 enum class ErrorType {
     UNEXPECTED_ERROR,
     SERVER_ERROR,
+    PERMISSION_DENIED,
     AUTH_INVALID_USER,
     NETWORK_EXCEPTION,
     LOGIN_TIME_OUT,

@@ -8,13 +8,26 @@
     <string name="email">E-mail</string>
     <string name="send">ENVIAR</string>
     <string name="forgot_password_dialog_text">Insira o e-mail da conta que você esqueceu a senha:</string>
+
+    <!-- General Result Messages -->
     <string name="empty_field_error_message">Por favor, preencha todos os campos</string>
     <string name="network_exception_message">Erro no processo devido a problemas de conexão</string>
+    <string name="permission_denied_message">Permissão negada</string>
     <string name="login_time_out_message">Não foi possível logar na conta por problemas de conexão</string>
     <string name="confirm_logout_message">Deseja mesmo sair da conta?</string>
     <string name="auth_invalid_user_message">Login inválido</string>
-    <string name="unexpected_error_message">Ocorreu um erro inesperado. Se estiver com problemas, por favor, tente denovo ou reinicie o aplicativo</string>
+    <string name="unexpected_error_message">Ocorreu um erro inesperado. Por favor, tente denovo ou reinicie o aplicativo</string>
     <string name="server_error_message">Erro no servidor</string>
+    <string name="connection_error_message">Erro ao carregar informações, deseja tentar novamente?</string>
+    <!-- Information Activity -->
+    <string name="delete_information_confirmation_message">Tem certeza que deseja remover esse dado? Ele será removido para todos os usuários do aplicativo</string>
+    <!-- Sign Up Activity Result Messages -->
+    <string name="signup_success_message">Cadastro realizado com sucesso!</string>
+    <string name="invalid_email_message">Formato de e-mail fornecido não é válido</string>
+    <string name="account_not_found_message">Conta não encontrada (se estiver correta, cheque sua conexão com a internet)</string>
+    <string name="email_already_registered_error_message">E-mail já cadastrado</string>
+    <string name="weak_password_error_message">A senha precisa ter no mínimo %1$d dígitos</string>
+    <string name="registration_successful_made">Cadastro feito com sucesso!</string>
 
     <!-- Forgot Password Dialog -->
     <string name="send_reset_password_email_successful">E-mail para redefinição de senha enviado com sucesso!</string>
@@ -42,13 +55,6 @@
 
     <!-- Sign Up Activity -->
     <string name="name_hint">Nome</string>
-    <!-- Sign Up Activity Result Messages -->
-    <string name="signup_success_message">Cadastro realizado com sucesso!</string>
-    <string name="invalid_email_message">Formato de e-mail fornecido não é válido</string>
-    <string name="account_not_found_message">Conta não encontrada (se estiver correta, cheque sua conexão com a internet)</string>
-    <string name="email_already_registered_error_message">E-mail já cadastrado</string>
-    <string name="weak_password_error_message">A senha precisa ter no mínimo %1$d dígitos</string>
-    <string name="registration_successful_made">Cadastro feito com sucesso!</string>
 
     <string name="acolhimento_casas_lares">ACOLHIMENTO EM CASAS LARES</string>
     <string name="fortalecimento_familiar">FORTALECIMENTO FAMILIAR</string>
@@ -60,7 +66,6 @@
     <string name="last_year">ANO ANTERIOR</string>
     <string name="information_item_count">%1$d ITENS</string>
     <string name="error">Erro</string>
-    <string name="connection_error_message">Erro ao carregar informações, deseja tentar novamente?</string>
 
     <string name="login_link">Já é um doador? Acesse o <a href="https://aldeias.portaldodoador.org/login">Portal do Doador</a></string>
     <string name="become_donor">Torne-se um doador! Clique <a href="https://doe.aldeiasinfantis.org.br/?utm_source=app&amp;utm_medium=botao-doacao&amp;utm_campaign=aplicativo-aldeias">Aqui</a></string>

@@ -1,11 +1,10 @@
 package br.org.aldeiasinfantis.dashboard.data.remote
 
+import android.app.Service
+import android.util.Log
 import br.org.aldeiasinfantis.dashboard.data.model.*
 import br.org.aldeiasinfantis.dashboard.data.repository.DatabaseRepository
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 
 class DatabaseService : DatabaseRepository {
 
@@ -66,6 +65,13 @@ class DatabaseService : DatabaseRepository {
                     InformationType.TEXT -> {
                         for (info in snapshot.children) {
                             val infoText: Information? = info.getValue(Information::class.java)
+                            info.key?.let { key -> infoText?.uid = key }
+
+                            infoText?.let { itInfoText ->
+                                val fullPath = info.ref.root.toString()
+                                val path = info.ref.toString().substring(fullPath.length)
+                                itInfoText.path = path
+                            }
 
                             infoText?.let { informationData.add(it) }
                         }
@@ -74,33 +80,56 @@ class DatabaseService : DatabaseRepository {
                     InformationType.VALUE -> {
                         for (info in snapshot.children) {
                             val infoValue: Information? = info.getValue(Information::class.java)
-                            infoValue?.uid = info.key ?: ""
+                            info.key?.let { key -> infoValue?.uid = key }
+
+                            infoValue?.let { itInfoValue ->
+                                val fullPath = info.ref.root.toString()
+                                val path = info.ref.toString().substring(fullPath.length)
+                                itInfoValue.path = path
+                            }
 
                             infoValue?.let { informationData.add(it) }
                         }
                     }
 
                     InformationType.PERCENTAGE -> {
-                        // Cada info dentro de "mes/ano anterior"
+                        // Each info within "previous month/year"
                         for (info in snapshot.children) {
                             for (infoChild in info.children) {
                                 if (infoChild.key == Global.DatabaseNames.INFORMATION_HEADER) {
-                                    val infoPercentage: Information? =
-                                        info.getValue(Information::class.java)
+                                    val infoPercentage: Information? = info.getValue(Information::class.java)
+
+                                    infoChild.key?.let { key -> infoPercentage?.uid = key }
+
+                                    infoPercentage?.let { itInfoPercentage ->
+                                        val fullPath = info.ref.root.toString()
+                                        val path = info.ref.toString().substring(fullPath.length)
+                                        itInfoPercentage.path = path
+                                    }
+
                                     infoPercentage?.let { informationData.add(it) }
                                 } else {
-                                    // Cada filho dentro de "infos"
+                                    // Each child inside "infos"
                                     for (infosChild in infoChild.children) {
                                         val subInfoPercentage: Information? = infosChild.getValue(
                                             Information::class.java
                                         )
+
+                                        infosChild.key?.let { key -> subInfoPercentage?.uid = key }
+
+                                        subInfoPercentage?.let { itInfoPercentage ->
+                                            val fullPath = info.ref.root.toString()
+                                            val path = info.ref.toString().substring(fullPath.length)
+                                            itInfoPercentage.path = path
+                                        }
+
                                         subInfoPercentage?.let { subInformationData.add(it) }
                                     }
 
-                                    // Adicionando as informações de "infos" para um índice do "pai"
+                                    // Adding the "sub information" to parent index
                                     subInformationParent.add(subInformationData.toMutableList())
 
-                                    // Limpando após adicioná-la ao "pai"
+                                    // Cleaning up after adding it to the parent
                                     subInformationData.clear()
                                 }
                             }
@@ -119,5 +148,24 @@ class DatabaseService : DatabaseRepository {
                 )
             }
         })
+    }
+
+    override fun deleteItem(
+        path: String,
+        callback: (result: ServiceResult) -> Unit
+    ) {
+        val targetReference = Singleton.DATABASE.getReference(path)
+
+        targetReference.removeValue()
+            .addOnSuccessListener { callback(ServiceResult.Success) }
+            .addOnFailureListener { e ->
+                when (e.message) {
+                    "Firebase Database error: Permission denied" ->
+                        callback(ServiceResult.Error(ErrorType.PERMISSION_DENIED))
+
+                    else ->
+                        callback(ServiceResult.Error(ErrorType.UNEXPECTED_ERROR))
+                }
+            }
     }
 }

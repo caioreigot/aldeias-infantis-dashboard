@@ -20,4 +20,9 @@ interface DatabaseRepository {
             result: ServiceResult
         ) -> Unit
     )
+
+    fun deleteItem(
+        path: String,
+        callback: (result: ServiceResult) -> Unit
+    )
 }

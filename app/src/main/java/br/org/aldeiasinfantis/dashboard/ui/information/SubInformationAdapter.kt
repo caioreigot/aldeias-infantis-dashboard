@@ -15,8 +15,8 @@ import br.org.aldeiasinfantis.dashboard.data.model.Information
 import br.org.aldeiasinfantis.dashboard.data.model.InformationType
 
 class SubInformationAdapter(
-    val subInformationData: MutableList<Information>,
     val informationType: InformationType,
+    val subInformationData: MutableList<Information>,
     val context: Context
 ) : RecyclerView.Adapter<SubInformationAdapter.InformationViewHolder>() {
 
@@ -48,13 +48,13 @@ class SubInformationAdapter(
 
                     itemTopic.text = info.header
 
-                    // Deixar os valores positivos em azul (por padrão é vermelho)
+                    // Leave positive values blue (by default it is red)
                     if (info.percentage[0] != '-')
                         itemPercentage.setTextColor(Color.parseColor(context.getString(R.color.primaryBlue)))
 
                     itemPercentage.text = info.percentage
 
-                    // Se for o ultimo item, deixar as bordas arredondadas
+                    // If it is the last item, then leave the edges rounded
                     if (position == subInformationData.size - 1) {
                         val leftItemPart = itemView.findViewById<LinearLayout>(R.id.left_item)
                         val rightItemPart = itemView.findViewById<LinearLayout>(R.id.right_item)

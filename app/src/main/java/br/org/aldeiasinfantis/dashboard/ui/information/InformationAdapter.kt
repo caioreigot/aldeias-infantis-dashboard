@@ -12,13 +12,24 @@ import br.org.aldeiasinfantis.dashboard.data.model.InformationType
 
 class InformationAdapter(
     val informationData: MutableList<Information>,
-    val subInformationParent: MutableList<MutableList<Information>>,
     val informationType: InformationType,
+    val subInformationParent: MutableList<MutableList<Information>>,
+    val scrollToPosition: (position: Int) -> Unit,
+    val deleteDatabaseItem: (path: String) -> Unit,
     val context: Context
 ) : RecyclerView.Adapter<InformationAdapter.InformationViewHolder>() {
 
+    private var mRecentlyDeletedItem: Information? = null
+    private var mRecentlyDeletedItemPosition = -1
+
     inner class InformationViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+
+        private var uid: String = ""
+
         fun bind(info: Information, position: Int) {
+
+            uid = info.uid
+
             when (informationType) {
                 InformationType.TEXT -> {
                     val header: TextView = itemView.findViewById(R.id.information_header)
@@ -40,15 +51,13 @@ class InformationAdapter(
 
                 InformationType.PERCENTAGE -> {
                     val header: TextView = itemView.findViewById(R.id.information_header)
-
                     header.text = info.header
 
-                    // Passando o adapter para RecyclerView de cada item
-                    val subRecyclerView = itemView.findViewById<RecyclerView>(R.id.percentage_recycle_view)
+                    val subRecyclerView: RecyclerView = itemView.findViewById(R.id.percentage_recycle_view)
 
                     subRecyclerView.adapter = SubInformationAdapter(
-                        subInformationParent[position],
                         InformationType.PERCENTAGE,
+                        subInformationParent[position],
                         context
                     )
                 }
@@ -75,4 +84,34 @@ class InformationAdapter(
         return informationData.size
     }
 
+    fun itemSwiped(position: Int) {
+        mRecentlyDeletedItem = informationData[position]
+        mRecentlyDeletedItemPosition = position
+
+        informationData.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+    fun deleteItem() {
+        mRecentlyDeletedItem?.path?.let {
+            deleteDatabaseItem(it)
+        }
+    }
+
+    fun undoDelete() {
+        mRecentlyDeletedItem?.let { recentlyDeletedItem ->
+            informationData.add(
+                mRecentlyDeletedItemPosition,
+                recentlyDeletedItem
+            )
+
+            notifyItemInserted(mRecentlyDeletedItemPosition)
+
+            if (mRecentlyDeletedItemPosition == 0 ||
+                mRecentlyDeletedItemPosition == informationData.size - 1)
+            {
+                scrollToPosition(mRecentlyDeletedItemPosition)
+            }
+        }
+    }
 }

@@ -13,7 +13,10 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="25dp">
+        android:paddingTop="25dp"
+        android:paddingBottom="25dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp">
 
         <ImageView
             android:id="@+id/image_view"
@@ -36,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            tools:text="Um erro inesperado ocorreu durante o processo, por favor, reinicie o aplicativo"
+            tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
             android:textColor="@color/blackBrighter2"
             android:textSize="20sp" />
 

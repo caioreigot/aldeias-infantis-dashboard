@@ -20,11 +20,11 @@ object Global {
         const val USERS_PARENT = "users"
         const val ADMINS_PARENT = "admins"
 
-        const val ACOLHIMENTO_EM_CASAS_LARES = "acolhimento em casas lares"
-        const val FORTALECIMENTO_FAMILIAR = "fortalecimento familiar"
-        const val INDICADORES_GERAIS = "indicadores gerais"
-        const val INDICADORES_GERAIS_ANO = "ano anterior"
-        const val INDICADORES_GERAIS_MES = "mes anterior"
+        const val ACOLHIMENTO_EM_CASAS_LARES = "acolhimento_em_casas_lares"
+        const val FORTALECIMENTO_FAMILIAR = "fortalecimento_familiar"
+        const val INDICADORES_GERAIS = "indicadores_gerais"
+        const val INDICADORES_GERAIS_ANO = "ano_anterior"
+        const val INDICADORES_GERAIS_MES = "mes_anterior"
         const val JUVENTUDES = "juventudes"
 
         const val INFORMATION_HEADER = "indicador"

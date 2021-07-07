@@ -1,10 +1,13 @@
 package br.org.aldeiasinfantis.dashboard.ui.information
 
+import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import br.org.aldeiasinfantis.dashboard.data.helper.ErrorMessageHandler
 import br.org.aldeiasinfantis.dashboard.data.helper.ResourceProvider
 import br.org.aldeiasinfantis.dashboard.data.helper.SingleLiveEvent
+import br.org.aldeiasinfantis.dashboard.data.model.ErrorType
 import br.org.aldeiasinfantis.dashboard.data.model.Information
 import br.org.aldeiasinfantis.dashboard.data.model.InformationType
 import br.org.aldeiasinfantis.dashboard.data.model.ServiceResult
@@ -16,10 +19,16 @@ import javax.inject.Inject
 @HiltViewModel
 class InformationViewModel @Inject constructor(
     private val resProvider: ResourceProvider,
-    private val database: DatabaseRepository
+    private val databaseService: DatabaseRepository
 ) : ViewModel() {
 
-    val errorMessage: SingleLiveEvent<String> = SingleLiveEvent<String>()
+    private val _errorMessage: SingleLiveEvent<String> = SingleLiveEvent<String>()
+    val errorMessage: LiveData<String>
+        get() = _errorMessage
+
+    private val _showDeletingDialog: MutableLiveData<Boolean> = MutableLiveData()
+    val showDeletingDialog: LiveData<Boolean>
+        get() = _showDeletingDialog
 
     val informationDataPair: MutableLiveData
         <Pair
@@ -33,7 +42,7 @@ class InformationViewModel @Inject constructor(
         informationType: InformationType,
         targetReference: DatabaseReference
     ) {
-        database.fetchDatabaseInformation(informationType, targetReference) {
+        databaseService.fetchDatabaseInformation(informationType, targetReference) {
             informationData, subInformationParent, result ->
 
             when (result) {
@@ -41,9 +50,26 @@ class InformationViewModel @Inject constructor(
                     informationDataPair.value = Pair(informationData, subInformationParent)
 
                 is ServiceResult.Error -> {
-                    errorMessage.value = ErrorMessageHandler
+                    _errorMessage.value = ErrorMessageHandler
                         .getErrorMessage(resProvider, result.errorType)
                 }
+            }
+        }
+    }
+
+    fun deleteItem(path: String) {
+        _showDeletingDialog.value = true
+
+        databaseService.deleteItem(path) { result ->
+            _showDeletingDialog.value = false
+
+            _errorMessage.value = when (result) {
+                /*is ServiceResult.Success -> {}*/
+
+                is ServiceResult.Error ->
+                    ErrorMessageHandler.getErrorMessage(resProvider, result.errorType)
+
+                else -> null
             }
         }
     }

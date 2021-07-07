@@ -12,26 +12,28 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.org.aldeiasinfantis.dashboard.R
-import br.org.aldeiasinfantis.dashboard.data.helper.Utils
 import br.org.aldeiasinfantis.dashboard.data.model.Information
 import br.org.aldeiasinfantis.dashboard.data.model.InformationType
+import br.org.aldeiasinfantis.dashboard.data.model.MessageType
 import br.org.aldeiasinfantis.dashboard.data.model.Singleton
 import br.org.aldeiasinfantis.dashboard.ui.BaseActivity
 import br.org.aldeiasinfantis.dashboard.ui.MainActivity
 import com.google.firebase.database.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Math.abs
-import kotlin.system.exitProcess
+import java.util.*
 
 @AndroidEntryPoint
 class InformationActivity : BaseActivity() {
 
     private val informationViewModel: InformationViewModel by viewModels()
+
+    private var adapter: InformationAdapter? = null
 
     private var idReceived: Int = -1
 
@@ -49,6 +51,8 @@ class InformationActivity : BaseActivity() {
 
     private var alreadyCalled: Boolean = false
     private var fetchingInformation: Boolean = false
+
+    private var loadingDialog: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,14 +74,13 @@ class InformationActivity : BaseActivity() {
 
         // Se ID < 0, então ele não foi encontrado na intent
         if (idReceived < 0) {
-            val dialog = Dialog(this)
+            createMessageDialog(
+                this,
+                MessageType.ERROR,
+                getString(R.string.unexpected_error_message),
+                { finish() }
+            )
 
-            fun clickListener(v: View) {
-                finish()
-                exitProcess(0)
-            }
-
-            // Todo: dialog de erro
             return
         }
 
@@ -88,6 +91,32 @@ class InformationActivity : BaseActivity() {
         })
 
         displayRequestInformation(idReceived)
+
+        informationViewModel.showDeletingDialog.observe(this, {
+            it?.let { showDialog ->
+                if (!showDialog) {
+                    loadingDialog?.dismiss()
+                    return@observe
+                }
+
+                loadingDialog = Dialog(this)
+
+                loadingDialog?.apply {
+                    setContentView(R.layout.dialog_loading)
+                    show()
+                }
+            }
+        })
+
+        informationViewModel.errorMessage.observe(this, {
+            it?.let { message ->
+                createMessageDialog(
+                    this,
+                    MessageType.ERROR,
+                    message
+                ).show()
+            }
+        })
     }
 
     private fun displayRequestInformation(idReceived: Int) {
@@ -158,15 +187,27 @@ class InformationActivity : BaseActivity() {
     ) {
         fetchingInformation = false
 
-        // Atualizando/alimentando a RecyclerView com os itens
-        recyclerViewMain.adapter = InformationAdapter(
+        adapter = InformationAdapter(
             informationData,
-            subInformationParent,
             currentInformationType,
+            subInformationParent,
+            ::scrollRecyclerViewTo,
+            ::deleteDatabaseItem,
             this
         )
 
-        // Se o refresh button estiver rodando (animado), cancelar
+        recyclerViewMain.adapter = adapter
+
+        val helper = ItemTouchHelper(
+            ItemTouchHelper(0,
+                androidx.recyclerview.widget.ItemTouchHelper.LEFT
+                        or androidx.recyclerview.widget.ItemTouchHelper.RIGHT
+            )
+        )
+
+        helper.attachToRecyclerView(recyclerViewMain)
+
+        // If refresh button is running (animated), then cancel
         infoRefreshImage.animation?.cancel()
 
         infoProgressBar.visibility = View.GONE
@@ -202,6 +243,40 @@ class InformationActivity : BaseActivity() {
             }, 600)
         }
     }
+
+    inner class ItemTouchHelper(
+        dragDirs: Int, swipeDirs: Int
+    ) : androidx.recyclerview.widget.ItemTouchHelper.SimpleCallback(
+        dragDirs, swipeDirs
+    ) {
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder)
+        : Boolean { return false }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            adapter?.let { itAdapter ->
+                val position = viewHolder.adapterPosition
+
+                itAdapter.itemSwiped(position)
+
+                createMessageDialog(
+                    this@InformationActivity,
+                    MessageType.CONFIRMATION,
+                    getString(R.string.delete_information_confirmation_message),
+                    { itAdapter.deleteItem() },
+                    { itAdapter.undoDelete() }
+                ).show()
+            }
+        }
+    }
+
+    private fun scrollRecyclerViewTo(position: Int) =
+        recyclerViewMain.scrollToPosition(position)
+
+    private fun deleteDatabaseItem(path: String) =
+        informationViewModel.deleteItem(path)
 
     override fun finish() {
         super.finish()

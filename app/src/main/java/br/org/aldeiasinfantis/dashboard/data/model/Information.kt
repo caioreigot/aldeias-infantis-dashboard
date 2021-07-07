@@ -5,6 +5,8 @@ import com.google.firebase.database.PropertyName
 data class Information (
     var uid: String = "",
 
+    var path: String = "",
+
     @get:PropertyName(Global.DatabaseNames.INFORMATION_HEADER)
     @set:PropertyName(Global.DatabaseNames.INFORMATION_HEADER)
     var header: String = "",
@@ -25,20 +27,3 @@ data class Information (
     @set:PropertyName(Global.DatabaseNames.INFORMATION_PERCENTAGE)
     var percentage: String = ""
 )
-
-class InformationBuilder {
-    var uid: String = ""
-    var header: String = ""
-    var content: String = ""
-    var value: Int = -1
-    var competence: String = ""
-    var percentage: String = ""
-
-    fun build(): Information {
-        return Information(uid, header, content, value, competence, percentage)
-    }
-}
-
-fun information(block: InformationBuilder.() -> Unit): Information {
-    return InformationBuilder().apply(block).build()
-}
