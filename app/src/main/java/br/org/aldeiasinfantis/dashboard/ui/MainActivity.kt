@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.cardview.widget.CardView
@@ -65,7 +64,7 @@ class MainActivity : BaseActivity() {
         }
 
         val itemsCount = findViewById<GridLayout>(R.id.main_grid_layout).childCount
-        itemCountTV.text = getString(R.string.information_item_count, itemsCount)
+        itemCountTV.text = getString(R.string.information_items_count, itemsCount)
 
         for (i in buttons.indices) {
             buttons[i].setOnClickListener { buttonCV ->

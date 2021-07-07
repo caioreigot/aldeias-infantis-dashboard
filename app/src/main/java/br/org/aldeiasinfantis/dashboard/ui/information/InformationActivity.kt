@@ -239,7 +239,11 @@ class InformationActivity : BaseActivity() {
 
         infoProgressBar.visibility = View.GONE
 
-        infoItemCount.text = getString(R.string.information_item_count, informationData.size)
+        infoItemCount.text =
+            if (informationData.size <= 1)
+                getString(R.string.information_item_count, informationData.size)
+            else
+                getString(R.string.information_items_count, informationData.size)
 
         infoRefreshButton.visibility = View.VISIBLE
         infoRefreshImage.visibility = View.VISIBLE
@@ -328,7 +332,13 @@ class InformationActivity : BaseActivity() {
     private fun refreshItemCount() {
         val value = adapter?.informationData?.size
 
-        value?.let { infoItemCount.text = getString(R.string.information_item_count, it) }
+        value?.let {
+            infoItemCount.text =
+                if (value <= 1)
+                    getString(R.string.information_item_count, value)
+                else
+                    getString(R.string.information_items_count, value)
+        }
     }
 
     private fun deleteDatabaseItem(path: String) =
