@@ -25,4 +25,12 @@ interface DatabaseRepository {
         path: String,
         callback: (result: ServiceResult) -> Unit
     )
+
+    fun addValueItem(
+        referenceToAdd: DatabaseReference,
+        header: String,
+        value: String,
+        competence: String,
+        callback: (result: ServiceResult) -> Unit
+    )
 }

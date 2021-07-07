@@ -2,19 +2,20 @@
 <resources>
     <color name="primaryBlue">#28ACE2</color>
     <color name="primaryBluePressed">#46C0F3</color>
-    <color name="primaryBlueBrighter">#2EC4FF</color>
+    <color name="primaryBlueLighter">#2EC4FF</color>
     <color name="transparent">#00FFFFFF</color>
 
     <color name="black">#FF000000</color>
-    <color name="blackBrighter1">#121212</color>
-    <color name="blackBrighter2">#555555</color>
+    <color name="blackLighter1">#121212</color>
+    <color name="blackLighter2">#555555</color>
 
     <color name="errorIcon">#FA3232</color>
-    <color name="errorIconBrighter">#FF5656</color>
+    <color name="errorIconLighter">#FF5656</color>
 
     <color name="successIcon">#37E725</color>
-    <color name="successIconBrighter">#4CF83C</color>
+    <color name="successIconLighter">#4CF83C</color>
 
     <color name="white">#FFFFFFFF</color>
-    <color name="white_translucent">#32FFFFFF</color>
+    <color name="whiteHintTranslucent">#80FFFFFF</color>
+    <color name="whiteTranslucent">#32FFFFFF</color>
 </resources>

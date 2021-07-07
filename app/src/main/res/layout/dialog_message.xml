@@ -30,17 +30,18 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             tools:text="Ops!"
-            android:textColor="@color/blackBrighter1"
+            android:textColor="@color/blackLighter1"
             android:textSize="26sp" />
 
         <TextView
             android:id="@+id/content_tv"
+            android:maxWidth="400dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:gravity="center"
             tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-            android:textColor="@color/blackBrighter2"
+            android:textColor="@color/blackLighter2"
             android:textSize="20sp" />
 
     </LinearLayout>
@@ -49,14 +50,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="1">
+        android:weightSum="100">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/negative_btn"
             android:visibility="gone"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_height="60dp"
+            android:layout_weight="49.8"
+            android:stateListAnimator="@null"
             android:background="@drawable/button_message_red_bg"
             android:padding="14dp"
             android:gravity="center"
@@ -68,15 +70,17 @@
         <View
             android:id="@+id/buttons_divider"
             android:visibility="gone"
-            android:layout_width="1dp"
+            android:layout_width="0dp"
+            android:layout_weight="0.4"
             android:layout_height="match_parent"
             android:background="@color/white"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/positive_btn"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_height="60dp"
+            android:layout_weight="100"
+            android:stateListAnimator="@null"
             android:background="@drawable/button_message_red_bg"
             android:padding="14dp"
             android:gravity="center"

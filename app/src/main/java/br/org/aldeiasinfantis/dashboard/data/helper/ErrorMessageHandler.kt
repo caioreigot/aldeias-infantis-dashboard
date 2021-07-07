@@ -9,6 +9,7 @@ object ErrorMessageHandler {
         return when (errorType) {
             ErrorType.UNEXPECTED_ERROR -> resProvider.getString(R.string.unexpected_error_message)
             ErrorType.SERVER_ERROR -> resProvider.getString(R.string.server_error_message)
+            ErrorType.PERMISSION_DENIED -> resProvider.getString(R.string.permission_denied_message)
             ErrorType.NETWORK_EXCEPTION -> resProvider.getString(R.string.network_exception_message)
             ErrorType.LOGIN_TIME_OUT -> resProvider.getString(R.string.login_time_out_message)
             ErrorType.AUTH_INVALID_USER -> resProvider.getString(R.string.auth_invalid_user_message)

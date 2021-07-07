@@ -4,6 +4,7 @@ import android.app.Service
 import android.util.Log
 import br.org.aldeiasinfantis.dashboard.data.model.*
 import br.org.aldeiasinfantis.dashboard.data.repository.DatabaseRepository
+import br.org.aldeiasinfantis.dashboard.ui.information.add.AddItemViewModel
 import com.google.firebase.database.*
 
 class DatabaseService : DatabaseRepository {
@@ -167,5 +168,39 @@ class DatabaseService : DatabaseRepository {
                         callback(ServiceResult.Error(ErrorType.UNEXPECTED_ERROR))
                 }
             }
+    }
+
+    override fun addValueItem(
+        referenceToAdd: DatabaseReference,
+        header: String,
+        value: String,
+        competence: String,
+        callback: (result: ServiceResult) -> Unit
+    ) {
+        val key = referenceToAdd.push().key
+
+        key?.let { uid ->
+            with (referenceToAdd.child(uid)) {
+                child(Global.DatabaseNames.INFORMATION_HEADER).setValue(header)
+                child(Global.DatabaseNames.INFORMATION_VALUE).setValue(value.toInt())
+                child(Global.DatabaseNames.INFORMATION_COMPETENCE).setValue(competence)
+            }
+                .addOnCompleteListener { task ->
+                    when (task.isSuccessful) {
+                        true -> callback(ServiceResult.Success)
+
+                        false -> {
+                            when (task.exception?.message) {
+                                "Firebase Database error: Permission denied" ->
+                                    callback(ServiceResult.Error(ErrorType.PERMISSION_DENIED))
+
+                                else ->
+                                    callback(ServiceResult.Error(ErrorType.SERVER_ERROR))
+                            }
+                        }
+                    }
+                }
+        }
+            ?: callback(ServiceResult.Error(ErrorType.SERVER_ERROR))
     }
 }

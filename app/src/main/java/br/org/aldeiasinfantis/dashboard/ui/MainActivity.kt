@@ -8,7 +8,6 @@ import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.View
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityOptionsCompat
 import br.org.aldeiasinfantis.dashboard.R
@@ -43,10 +42,6 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_Main)
         setContentView(R.layout.activity_main)
-
-        Log.d("MY_DEBUG", "name: " + UserSingleton.name)
-        Log.d("MY_DEBUG", "email: " + UserSingleton.email)
-        Log.d("MY_DEBUG", "isAdmin: " + UserSingleton.isAdmin.toString())
 
         //region Assignments
 
@@ -106,12 +101,13 @@ class MainActivity : BaseActivity() {
         }
 
         logoutBtn.setOnClickListener {
-            createMessageDialog(
-                this,
+            val messageDialog = createMessageDialog(
                 MessageType.CONFIRMATION,
                 getString(R.string.confirm_logout_message),
                 { Singleton.AUTH.signOut() }
-            ).show()
+            )
+
+            messageDialog.show(supportFragmentManager, messageDialog.tag)
         }
 
         // Responsible for logging out the player and taking it to the login screen

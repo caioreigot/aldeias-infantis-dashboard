@@ -30,6 +30,10 @@ class InformationViewModel @Inject constructor(
     val showDeletingDialog: LiveData<Boolean>
         get() = _showDeletingDialog
 
+    private val _refreshInformation: SingleLiveEvent<Unit> = SingleLiveEvent()
+    val refreshInformation: LiveData<Unit>
+        get() = _refreshInformation
+
     val informationDataPair: MutableLiveData
         <Pair
             <
@@ -66,8 +70,10 @@ class InformationViewModel @Inject constructor(
             _errorMessage.value = when (result) {
                 /*is ServiceResult.Success -> {}*/
 
-                is ServiceResult.Error ->
+                is ServiceResult.Error -> {
+                    _refreshInformation.call()
                     ErrorMessageHandler.getErrorMessage(resProvider, result.errorType)
+                }
 
                 else -> null
             }

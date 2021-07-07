@@ -1,6 +1,7 @@
 package br.org.aldeiasinfantis.dashboard.ui.information
 
 import android.app.Dialog
+import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
@@ -13,16 +14,17 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.org.aldeiasinfantis.dashboard.R
-import br.org.aldeiasinfantis.dashboard.data.model.Information
-import br.org.aldeiasinfantis.dashboard.data.model.InformationType
-import br.org.aldeiasinfantis.dashboard.data.model.MessageType
-import br.org.aldeiasinfantis.dashboard.data.model.Singleton
+import br.org.aldeiasinfantis.dashboard.data.helper.ResourceProvider
+import br.org.aldeiasinfantis.dashboard.data.model.*
 import br.org.aldeiasinfantis.dashboard.ui.BaseActivity
 import br.org.aldeiasinfantis.dashboard.ui.MainActivity
+import br.org.aldeiasinfantis.dashboard.ui.information.add.AddValueItemDialog
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Math.abs
@@ -37,8 +39,8 @@ class InformationActivity : BaseActivity() {
 
     private var idReceived: Int = -1
 
-    private lateinit var currentInformationType: InformationType
-    private lateinit var selectorReference: DatabaseReference
+    private lateinit var mCurrentInformationType: InformationType
+    private lateinit var mCurrentReference: DatabaseReference
 
     private lateinit var recyclerViewMain: RecyclerView
     private lateinit var infoGroupName: TextView
@@ -46,6 +48,7 @@ class InformationActivity : BaseActivity() {
     private lateinit var infoProgressBar: ProgressBar
     private lateinit var infoRefreshButton: CardView
     private lateinit var infoRefreshImage: ImageView
+    private lateinit var addInformationFab: FloatingActionButton
 
     private lateinit var velocity: VelocityTracker
 
@@ -65,6 +68,7 @@ class InformationActivity : BaseActivity() {
         infoItemCount = findViewById(R.id.info_item_count)
         infoRefreshButton = findViewById(R.id.info_refresh_button)
         infoRefreshImage = findViewById(R.id.info_refresh_image)
+        addInformationFab = findViewById(R.id.add_information_floating_btn)
         velocity = VelocityTracker.obtain()
         //endregion
 
@@ -72,51 +76,72 @@ class InformationActivity : BaseActivity() {
 
         recyclerViewMain.layoutManager = LinearLayoutManager(this)
 
-        // Se ID < 0, então ele não foi encontrado na intent
+        // If ID < 0, then it was not found in intent
         if (idReceived < 0) {
             createMessageDialog(
-                this,
                 MessageType.ERROR,
                 getString(R.string.unexpected_error_message),
+                null,
+                null,
                 { finish() }
-            )
+            ).apply {
+                show(supportFragmentManager, this.tag)
+            }
 
             return
         }
 
-        informationViewModel.informationDataPair.observe(this, {
-            it?.let { informationPair ->
-                loadUIAndRecyclerView(informationPair.first, informationPair.second)
-            }
-        })
+        //region Observers
+        with (informationViewModel) {
+            val thisActivity = this@InformationActivity
+
+            informationDataPair.observe(thisActivity, {
+                it?.let { informationPair ->
+                    loadUIAndRecyclerView(informationPair.first, informationPair.second)
+                }
+            })
+
+            showDeletingDialog.observe(thisActivity, {
+                it?.let { showDialog ->
+                    if (!showDialog) {
+                        loadingDialog?.dismiss()
+                        return@observe
+                    }
+
+                    loadingDialog = Dialog(thisActivity)
+
+                    loadingDialog?.apply {
+                        setContentView(R.layout.dialog_loading)
+                        show()
+                    }
+                }
+            })
+
+            errorMessage.observe(thisActivity, {
+                it?.let { message ->
+                    createMessageDialog(
+                        MessageType.ERROR,
+                        message
+                    ).apply {
+                        show(supportFragmentManager, this.tag)
+                    }
+                }
+            })
+
+            refreshInformation.observe(thisActivity, {
+                refreshInformation(0)
+            })
+        }
+        //endregion
 
         displayRequestInformation(idReceived)
 
-        informationViewModel.showDeletingDialog.observe(this, {
-            it?.let { showDialog ->
-                if (!showDialog) {
-                    loadingDialog?.dismiss()
-                    return@observe
-                }
+        // Position matters (below displayRequestInformation)
+        if (UserSingleton.isAdmin) {
+            addInformationFab.visibility = View.VISIBLE
 
-                loadingDialog = Dialog(this)
-
-                loadingDialog?.apply {
-                    setContentView(R.layout.dialog_loading)
-                    show()
-                }
-            }
-        })
-
-        informationViewModel.errorMessage.observe(this, {
-            it?.let { message ->
-                createMessageDialog(
-                    this,
-                    MessageType.ERROR,
-                    message
-                ).show()
-            }
-        })
+            addInformationFab.setOnClickListener(AddInformationClickListener(this))
+        }
     }
 
     private fun displayRequestInformation(idReceived: Int) {
@@ -124,57 +149,57 @@ class InformationActivity : BaseActivity() {
             MainActivity.button1.id -> {
                 infoGroupName.text = getString(R.string.acolhimento_casas_lares)
 
-                // Referência do respectivo indicador e o tipo de informação
-                selectorReference = Singleton.DB_ACOLHIMENTO_CASAS_LARES_REF
-                currentInformationType = InformationType.VALUE
+                // Reference of the respective indicator and the type of information
+                mCurrentReference = Singleton.DB_ACOLHIMENTO_CASAS_LARES_REF
+                mCurrentInformationType = InformationType.VALUE
 
-                informationViewModel.fetchDatabaseInformation(currentInformationType, selectorReference)
+                informationViewModel.fetchDatabaseInformation(mCurrentInformationType, mCurrentReference)
             }
 
             MainActivity.button2.id -> {
                 infoGroupName.text = getString(R.string.fortalecimento_familiar)
 
-                // Referência do respectivo indicador e o tipo de informação
-                selectorReference = Singleton.DB_FORTALECIMENTO_FAMILIAR_REF
-                currentInformationType = InformationType.VALUE
+                // Reference of the respective indicator and the type of information
+                mCurrentReference = Singleton.DB_FORTALECIMENTO_FAMILIAR_REF
+                mCurrentInformationType = InformationType.VALUE
 
-                informationViewModel.fetchDatabaseInformation(currentInformationType, selectorReference)
+                informationViewModel.fetchDatabaseInformation(mCurrentInformationType, mCurrentReference)
             }
 
             MainActivity.button3.id -> {
                 infoGroupName.text = getString(R.string.juventudes)
 
-                // Referência do respectivo indicador e o tipo de informação
-                selectorReference = Singleton.DB_JUVENTUDES_REF
-                currentInformationType = InformationType.VALUE
+                // Reference of the respective indicator and the type of information
+                mCurrentReference = Singleton.DB_JUVENTUDES_REF
+                mCurrentInformationType = InformationType.VALUE
 
-                informationViewModel.fetchDatabaseInformation(currentInformationType, selectorReference)
+                informationViewModel.fetchDatabaseInformation(mCurrentInformationType, mCurrentReference)
             }
 
             MainActivity.button4.id -> {
                 val choiceIdReceived = intent.getIntExtra(MainActivity.choiceTag, -1)
 
                 when (choiceIdReceived) {
-                    // ID 1 = Mes anterior
+                    // ID 1 = MES ANTERIOR
                     1 -> {
                         infoGroupName.text = getString(R.string.indicadores_gerais_mes)
 
-                        // Referência do respectivo indicador e o tipo de informação
-                        selectorReference = Singleton.DB_INDICADORES_GERAIS_MES_REF
-                        currentInformationType = InformationType.PERCENTAGE
+                        // Reference of the respective indicator and the type of information
+                        mCurrentReference = Singleton.DB_INDICADORES_GERAIS_MES_REF
+                        mCurrentInformationType = InformationType.PERCENTAGE
 
-                        informationViewModel.fetchDatabaseInformation(currentInformationType, selectorReference)
+                        informationViewModel.fetchDatabaseInformation(mCurrentInformationType, mCurrentReference)
                     }
 
-                    // ID 2 = Ano anterior
+                    // ID 2 = ANO ANTERIOR
                     2 -> {
                         infoGroupName.text = getString(R.string.indicadores_gerais_ano)
 
-                        // Referência do respectivo indicador e o tipo de informação
-                        selectorReference = Singleton.DB_INDICADORES_GERAIS_ANO_REF
-                        currentInformationType = InformationType.PERCENTAGE
+                        // Reference of the respective indicator and the type of information
+                        mCurrentReference = Singleton.DB_INDICADORES_GERAIS_ANO_REF
+                        mCurrentInformationType = InformationType.PERCENTAGE
 
-                        informationViewModel.fetchDatabaseInformation(currentInformationType, selectorReference)
+                        informationViewModel.fetchDatabaseInformation(mCurrentInformationType, mCurrentReference)
                     }
                 }
             }
@@ -189,7 +214,7 @@ class InformationActivity : BaseActivity() {
 
         adapter = InformationAdapter(
             informationData,
-            currentInformationType,
+            mCurrentInformationType,
             subInformationParent,
             ::scrollRecyclerViewTo,
             ::deleteDatabaseItem,
@@ -198,14 +223,16 @@ class InformationActivity : BaseActivity() {
 
         recyclerViewMain.adapter = adapter
 
-        val helper = ItemTouchHelper(
-            ItemTouchHelper(0,
-                androidx.recyclerview.widget.ItemTouchHelper.LEFT
-                        or androidx.recyclerview.widget.ItemTouchHelper.RIGHT
+        if (UserSingleton.isAdmin) {
+            val helper = ItemTouchHelper(
+                ItemTouchHelper(0,
+                    androidx.recyclerview.widget.ItemTouchHelper.LEFT
+                            or androidx.recyclerview.widget.ItemTouchHelper.RIGHT
+                )
             )
-        )
 
-        helper.attachToRecyclerView(recyclerViewMain)
+            helper.attachToRecyclerView(recyclerViewMain)
+        }
 
         // If refresh button is running (animated), then cancel
         infoRefreshImage.animation?.cancel()
@@ -226,22 +253,25 @@ class InformationActivity : BaseActivity() {
         rotateAnimation.duration = 1200
 
         infoRefreshButton.setOnClickListener {
-            if (fetchingInformation)
-                return@setOnClickListener
-
-            fetchingInformation = true
-
             infoRefreshImage.startAnimation(rotateAnimation)
-
-            // Clear adapter
-            recyclerViewMain.adapter = null
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                informationViewModel.fetchDatabaseInformation(
-                    currentInformationType, selectorReference
-                )
-            }, 600)
+            refreshInformation(600)
         }
+    }
+
+    private fun refreshInformation(delayInMillis: Long = 0) {
+        if (fetchingInformation)
+            return
+
+        fetchingInformation = true
+
+        // Clear adapter
+        recyclerViewMain.adapter = null
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            informationViewModel.fetchDatabaseInformation(
+                mCurrentInformationType, mCurrentReference
+            )
+        }, delayInMillis)
     }
 
     inner class ItemTouchHelper(
@@ -260,14 +290,34 @@ class InformationActivity : BaseActivity() {
                 val position = viewHolder.adapterPosition
 
                 itAdapter.itemSwiped(position)
+                refreshItemCount()
 
                 createMessageDialog(
-                    this@InformationActivity,
                     MessageType.CONFIRMATION,
                     getString(R.string.delete_information_confirmation_message),
-                    { itAdapter.deleteItem() },
-                    { itAdapter.undoDelete() }
-                ).show()
+                    // Positive OnClickListener
+                    {
+                        itAdapter.deleteItem()
+                        refreshItemCount()
+                    },
+
+                    // Negative OnClickListener
+                    {
+                        itAdapter.undoDelete()
+                        refreshItemCount()
+                    },
+
+                    // onDismiss Dialog Callback
+                    { choice ->
+                        // if user closed the dialog without choosing an option
+                        if (choice == null) {
+                            itAdapter.undoDelete()
+                            refreshItemCount()
+                        }
+                    }
+                ).apply {
+                    show(supportFragmentManager, this.tag)
+                }
             }
         }
     }
@@ -275,8 +325,60 @@ class InformationActivity : BaseActivity() {
     private fun scrollRecyclerViewTo(position: Int) =
         recyclerViewMain.scrollToPosition(position)
 
+    private fun refreshItemCount() {
+        val value = adapter?.informationData?.size
+
+        value?.let { infoItemCount.text = getString(R.string.information_item_count, it) }
+    }
+
     private fun deleteDatabaseItem(path: String) =
         informationViewModel.deleteItem(path)
+
+    inner class AddInformationClickListener(
+        private val context: Context,
+    ) : View.OnClickListener {
+
+        override fun onClick(v: View?) {
+            when (mCurrentInformationType) {
+                InformationType.VALUE -> {
+                    val activity = (context as FragmentActivity)
+
+                    val addValueItemDialog = AddValueItemDialog(
+                        ResourceProvider(context),
+                        mCurrentReference,
+                        ::refreshInformation,
+                        ::showMessageCallback
+                    )
+
+                    addValueItemDialog.show(activity.supportFragmentManager, addValueItemDialog.tag)
+                }
+
+                InformationType.PERCENTAGE -> {
+
+                }
+
+                InformationType.TEXT -> {/*TODO*/}
+            }
+        }
+    }
+
+    private fun showMessageCallback(
+        messageType: MessageType,
+        content: String,
+        positiveOnClickListener: (() -> Unit)? = null,
+        negativeOnClickListener: (() -> Unit)? = null,
+        dismissCallback: ((choice: Boolean?) -> Unit)? = null
+    ) {
+        createMessageDialog(
+            messageType,
+            content,
+            positiveOnClickListener,
+            negativeOnClickListener,
+            dismissCallback
+        ).apply {
+            show(supportFragmentManager, this.tag)
+        }
+    }
 
     override fun finish() {
         super.finish()

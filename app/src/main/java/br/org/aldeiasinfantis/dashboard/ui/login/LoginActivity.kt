@@ -73,11 +73,12 @@ class LoginActivity : BaseActivity() {
         }
 
         errorReceived?.let { message ->
-            createMessageDialog(
-                this,
+            val messageDialog = createMessageDialog(
                 MessageType.ERROR,
                 message
-            ).show()
+            )
+
+            messageDialog.show(supportFragmentManager, messageDialog.tag)
         }
 
         loginBtnCV.setOnClickListener {
@@ -111,11 +112,12 @@ class LoginActivity : BaseActivity() {
 
         loginViewModel.errorMessage.observe(this, {
             it?.let { message ->
-                createMessageDialog(
-                    this,
+                val messageDialog = createMessageDialog(
                     MessageType.ERROR,
                     message
-                ).show()
+                )
+
+                messageDialog.show(supportFragmentManager, messageDialog.tag)
             }
         })
 
@@ -131,11 +133,12 @@ class LoginActivity : BaseActivity() {
         })
 
         loginViewModel.resetPasswordMessage.observe(this, { (messageType, message) ->
-            createMessageDialog(
-                this,
+            val messageDialog = createMessageDialog(
                 messageType,
                 message
-            ).show()
+            )
+
+            messageDialog.show(supportFragmentManager, messageDialog.tag)
         })
 
         /*val sharedElementEnterTransition: Transition = window.sharedElementEnterTransition

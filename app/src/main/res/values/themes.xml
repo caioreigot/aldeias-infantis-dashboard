@@ -16,7 +16,7 @@
         <item name="colorPrimaryDark">@color/primaryBlue</item>
         <item name="android:windowBackground">@color/primaryBlue</item>
         <item name="colorAccent">@color/white</item>
-        <item name="android:textColorHighlight">@color/white_translucent</item>
+        <item name="android:textColorHighlight">@color/whiteTranslucent</item>
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowEnterTransition">@android:transition/no_transition</item>
         <item name="android:windowExitTransition">@android:transition/no_transition</item>

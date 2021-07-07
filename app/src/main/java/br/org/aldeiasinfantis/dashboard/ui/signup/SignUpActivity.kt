@@ -74,48 +74,56 @@ class SignUpActivity : BaseActivity() {
             }
         })
 
-        signUpViewModel.errorMessage.observe(this, {
-            it?.let { message ->
-                createMessageDialog(
-                    this,
-                    MessageType.ERROR,
-                    message
-                ).show()
-            }
-        })
+        //region Observers
+        with (signUpViewModel) {
+            val thisActivity = this@SignUpActivity
 
-        signUpViewModel.signUpViewFlipper.observe(this, {
-            it?.let { childToDisplay ->
-                signUpViewFlipper.displayedChild = childToDisplay
-            }
-        })
+            errorMessage.observe(thisActivity, {
+                it?.let { message ->
+                    val messageDialog = createMessageDialog(
+                        MessageType.ERROR,
+                        message
+                    )
 
-        signUpViewModel.registrationMade.observe(this, {
-            it?.let { user ->
-                createMessageDialog(
-                    this,
-                    MessageType.SUCCESSFUL,
-                    getString(R.string.registration_successful_made),
-                    null,
-                    null,
-                    {
-                        val i = Intent(this, LoginActivity::class.java)
+                    messageDialog.show(supportFragmentManager, messageDialog.tag)
+                }
+            })
 
-                        val options = ActivityOptionsCompat.makeCustomAnimation(
-                            this,
-                            R.anim.slide_in_right, R.anim.slide_out_right
-                        ).toBundle()
+            signUpViewFlipper.observe(thisActivity, {
+                it?.let { childToDisplay ->
+                    thisActivity.signUpViewFlipper.displayedChild = childToDisplay
+                }
+            })
 
-                        i.putExtra(EMAIL_EXTRA_TAG, user.email)
-                        i.putExtra(LoginActivity.FADE_ANIMATION_ENABLED_EXTRA_TAG, false)
+            registrationMade.observe(thisActivity, {
+                it?.let { user ->
+                    val messageDialog = createMessageDialog(
+                        MessageType.SUCCESSFUL,
+                        getString(R.string.registration_successful_made),
+                        null,
+                        null,
+                        {
+                            val i = Intent(thisActivity, LoginActivity::class.java)
 
-                        startActivity(i, options)
+                            val options = ActivityOptionsCompat.makeCustomAnimation(
+                                thisActivity,
+                                R.anim.slide_in_right, R.anim.slide_out_right
+                            ).toBundle()
 
-                        supportFinishAfterTransition()
-                    }
-                ).show()
-            }
-        })
+                            i.putExtra(EMAIL_EXTRA_TAG, user.email)
+                            i.putExtra(LoginActivity.FADE_ANIMATION_ENABLED_EXTRA_TAG, false)
+
+                            startActivity(i, options)
+
+                            supportFinishAfterTransition()
+                        }
+                    )
+
+                    messageDialog.show(supportFragmentManager, messageDialog.tag)
+                }
+            })
+        }
+        //endregion
     }
 
     class PasswordVisibilityButtonListener(var editText: EditText) : View.OnClickListener {

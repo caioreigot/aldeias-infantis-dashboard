@@ -12,11 +12,11 @@ import br.org.aldeiasinfantis.dashboard.data.model.InformationType
 
 class InformationAdapter(
     val informationData: MutableList<Information>,
-    val informationType: InformationType,
-    val subInformationParent: MutableList<MutableList<Information>>,
-    val scrollToPosition: (position: Int) -> Unit,
-    val deleteDatabaseItem: (path: String) -> Unit,
-    val context: Context
+    private val informationType: InformationType,
+    private val subInformationParent: MutableList<MutableList<Information>>,
+    private val scrollToPosition: (position: Int) -> Unit,
+    private val deleteDatabaseItem: (path: String) -> Unit,
+    private val context: Context
 ) : RecyclerView.Adapter<InformationAdapter.InformationViewHolder>() {
 
     private var mRecentlyDeletedItem: Information? = null

@@ -8,6 +8,20 @@
     android:background="@color/white"
     tools:context=".ui.MainActivity">
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_information_floating_btn"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="18dp"
+        android:layout_marginBottom="18dp"
+        android:src="@drawable/ic_baseline_add_24"
+        app:backgroundTint="@color/primaryBlueLighter"
+        app:rippleColor="@color/white"
+        app:tint="@color/white" />
+
     <!-- Top Bar View Group -->
     <RelativeLayout
         android:id="@+id/info_top_bar"

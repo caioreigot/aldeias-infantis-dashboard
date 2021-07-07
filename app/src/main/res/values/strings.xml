@@ -3,11 +3,16 @@
 
     <!-- Main Activity -->
     <string name="dashboard_header">DASHBOARD</string>
+    
+    <!-- Add Information Dialog -->
+    <string name="competence">competência</string>
+    <string name="value_caps_lock">VALOR</string>
+    <string name="header_caps_lock">CABEÇALHO</string>
 
     <!-- Commons -->
     <string name="email">E-mail</string>
     <string name="send">ENVIAR</string>
-    <string name="forgot_password_dialog_text">Insira o e-mail da conta que você esqueceu a senha:</string>
+    <string name="add_caps_lock">ADICIONAR</string>
 
     <!-- General Result Messages -->
     <string name="empty_field_error_message">Por favor, preencha todos os campos</string>
@@ -19,7 +24,7 @@
     <string name="unexpected_error_message">Ocorreu um erro inesperado. Por favor, tente denovo ou reinicie o aplicativo</string>
     <string name="server_error_message">Erro no servidor</string>
     <string name="connection_error_message">Erro ao carregar informações, deseja tentar novamente?</string>
-    <!-- Information Activity -->
+    <!-- Information Activity Result Messages -->
     <string name="delete_information_confirmation_message">Tem certeza que deseja remover esse dado? Ele será removido para todos os usuários do aplicativo</string>
     <!-- Sign Up Activity Result Messages -->
     <string name="signup_success_message">Cadastro realizado com sucesso!</string>
@@ -28,8 +33,11 @@
     <string name="email_already_registered_error_message">E-mail já cadastrado</string>
     <string name="weak_password_error_message">A senha precisa ter no mínimo %1$d dígitos</string>
     <string name="registration_successful_made">Cadastro feito com sucesso!</string>
+    <!-- Add Item Result Messages -->
+    <string name="please_enter_an_integer">Por favor, insira um número inteiro como valor</string>
 
     <!-- Forgot Password Dialog -->
+    <string name="forgot_password_dialog_text">Insira o e-mail da conta que você esqueceu a senha:</string>
     <string name="send_reset_password_email_successful">E-mail para redefinição de senha enviado com sucesso!</string>
     <string name="send_reset_password_email_error">E-mail não encontrado</string>
 
