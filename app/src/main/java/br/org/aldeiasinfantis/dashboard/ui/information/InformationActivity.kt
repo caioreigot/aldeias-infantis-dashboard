@@ -6,7 +6,9 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.*
+import android.view.MotionEvent
+import android.view.VelocityTracker
+import android.view.View
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
 import android.widget.ImageView
@@ -25,9 +27,9 @@ import br.org.aldeiasinfantis.dashboard.ui.BaseActivity
 import br.org.aldeiasinfantis.dashboard.ui.MainActivity
 import br.org.aldeiasinfantis.dashboard.ui.information.add.AddValueItemDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.firebase.database.*
+import com.google.firebase.database.DatabaseReference
+import kotlin.math.abs
 import dagger.hilt.android.AndroidEntryPoint
-import java.lang.Math.abs
 import java.util.*
 
 @AndroidEntryPoint
@@ -248,7 +250,7 @@ class InformationActivity : BaseActivity() {
         infoRefreshButton.visibility = View.VISIBLE
         infoRefreshImage.visibility = View.VISIBLE
 
-        // Animação do "refresh button"
+        // Animation of "refresh button"
         val rotateAnimation = RotateAnimation(0.0F, 720.0F,
                 Animation.RELATIVE_TO_SELF, 0.5F,
                 Animation.RELATIVE_TO_SELF, 0.5f)
@@ -395,13 +397,14 @@ class InformationActivity : BaseActivity() {
         overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down)
     }
 
-    var y1: Float = 0F; var y2: Float = 0F
+    private var y1: Float = 0F
+    private var y2: Float = 0F
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val height = Resources.getSystem().displayMetrics.heightPixels
 
-        // MIN_DISTANCE = width * x% of Screen Width
-        val MIN_DISTANCE = (height * 0.20)
+        // minDistance = width * x% of Screen Width
+        val minDistance = (height * 0.20)
 
         when (event.action) {
             MotionEvent.ACTION_DOWN -> y1 = event.y
@@ -411,7 +414,7 @@ class InformationActivity : BaseActivity() {
 
                 val deltaY = y2 - y1
 
-                if (abs(deltaY) > MIN_DISTANCE)
+                if (abs(deltaY) > minDistance)
                     super.onBackPressed()
             }
 
