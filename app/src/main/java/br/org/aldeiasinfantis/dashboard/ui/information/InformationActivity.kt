@@ -6,10 +6,12 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.MotionEvent
 import android.view.VelocityTracker
 import android.view.View
 import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.view.animation.RotateAnimation
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -28,9 +30,9 @@ import br.org.aldeiasinfantis.dashboard.ui.MainActivity
 import br.org.aldeiasinfantis.dashboard.ui.information.add.AddValueItemDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.DatabaseReference
-import kotlin.math.abs
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
+import kotlin.math.abs
 
 @AndroidEntryPoint
 class InformationActivity : BaseActivity() {
@@ -54,14 +56,13 @@ class InformationActivity : BaseActivity() {
 
     private lateinit var velocity: VelocityTracker
 
-    private var alreadyCalled: Boolean = false
-    private var fetchingInformation: Boolean = false
+    private var mFetchingInformation: Boolean = false
 
-    private var loadingDialog: Dialog? = null
+    private var mLoadingDialog: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_informations)
+        setContentView(R.layout.activity_information)
 
         //region Assignments
         recyclerViewMain = findViewById(R.id.recycler_view_main)
@@ -106,13 +107,13 @@ class InformationActivity : BaseActivity() {
             showDeletingDialog.observe(thisActivity, {
                 it?.let { showDialog ->
                     if (!showDialog) {
-                        loadingDialog?.dismiss()
+                        mLoadingDialog?.dismiss()
                         return@observe
                     }
 
-                    loadingDialog = Dialog(thisActivity)
+                    mLoadingDialog = Dialog(thisActivity)
 
-                    loadingDialog?.apply {
+                    mLoadingDialog?.apply {
                         setContentView(R.layout.dialog_loading)
                         show()
                     }
@@ -212,7 +213,7 @@ class InformationActivity : BaseActivity() {
         informationData: MutableList<Information>,
         subInformationParent: MutableList<MutableList<Information>>,
     ) {
-        fetchingInformation = false
+        mFetchingInformation = false
 
         adapter = InformationAdapter(
             informationData,
@@ -225,6 +226,8 @@ class InformationActivity : BaseActivity() {
 
         recyclerViewMain.adapter = adapter
 
+        Log.d("MY_DEBUG", "adapter attached!")
+
         if (UserSingleton.isAdmin) {
             val helper = ItemTouchHelper(
                 ItemTouchHelper(0,
@@ -234,6 +237,8 @@ class InformationActivity : BaseActivity() {
             )
 
             helper.attachToRecyclerView(recyclerViewMain)
+
+            recyclerViewMain.addOnScrollListener(RecyclerViewOnScrollListener(this))
         }
 
         // If refresh button is running (animated), then cancel
@@ -265,10 +270,10 @@ class InformationActivity : BaseActivity() {
     }
 
     private fun refreshInformation(delayInMillis: Long = 0) {
-        if (fetchingInformation)
+        if (mFetchingInformation)
             return
 
-        fetchingInformation = true
+        mFetchingInformation = true
 
         // Clear adapter
         recyclerViewMain.adapter = null
@@ -374,6 +379,67 @@ class InformationActivity : BaseActivity() {
         }
     }
 
+    inner class RecyclerViewOnScrollListener(context: Context) : RecyclerView.OnScrollListener() {
+
+        private var itsInside = true
+        private var animating = false
+
+        private val fabExit: Animation = AnimationUtils.loadAnimation(
+            context, R.anim.fab_exit)
+
+        private val fabEnter: Animation = AnimationUtils.loadAnimation(
+            context, R.anim.fab_enter)
+
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+
+            // Scrolling up
+            if (dy < 0 && !itsInside && !animating) {
+                fabEnter.setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationEnd(animation: Animation?) {
+                        itsInside = true
+                        animating = false
+
+                        addInformationFab.isEnabled = true
+                        addInformationFab.isClickable = true
+                    }
+
+                    override fun onAnimationStart(animation: Animation?) {
+                        addInformationFab.isEnabled = true
+                        animating = true
+                    }
+
+                    override fun onAnimationRepeat(animation: Animation?) {}
+                })
+
+                addInformationFab.startAnimation(fabEnter)
+            }
+
+            if (!recyclerView.canScrollVertically(1) &&
+                recyclerView.canScrollVertically(-1) &&
+                itsInside &&
+                !animating
+            ) {
+                fabExit.setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationEnd(animation: Animation?) {
+                        addInformationFab.isEnabled = false
+                        itsInside = false
+                        animating = false
+                    }
+
+                    override fun onAnimationStart(animation: Animation?) {
+                        addInformationFab.isClickable = false
+                        animating = true
+                    }
+
+                    override fun onAnimationRepeat(animation: Animation?) {}
+                })
+
+                addInformationFab.startAnimation(fabExit)
+            }
+        }
+    }
+
     private fun showMessageCallback(
         messageType: MessageType,
         content: String,
@@ -397,6 +463,7 @@ class InformationActivity : BaseActivity() {
         overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down)
     }
 
+    private var alreadyCalled = false
     private var y1: Float = 0F
     private var y2: Float = 0F
 
