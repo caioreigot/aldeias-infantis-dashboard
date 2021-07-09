@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -72,6 +73,17 @@ class MessageDialog(
 
                 /*positiveBtn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14F)
                 negativeBtn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14F)*/
+
+                val dialogWidth: Int =
+                    if (resources.displayMetrics.widthPixels <= 800)
+                        (resources.displayMetrics.widthPixels * 0.9).toInt()
+                    else
+                        800
+
+                dialog?.window?.setLayout(
+                    dialogWidth,
+                    WindowManager.LayoutParams.WRAP_CONTENT
+                )
 
                 positiveBtn.layoutParams = LinearLayout.LayoutParams(
                     0,

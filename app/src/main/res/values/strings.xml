@@ -32,7 +32,7 @@
     <string name="server_error_message">Erro no servidor</string>
     <string name="connection_error_message">Erro ao carregar informações, deseja tentar novamente?</string>
     <!-- Information Activity Result Messages -->
-    <string name="delete_information_confirmation_message">Tem certeza que deseja remover esse dado? Ele será removido para todos os usuários do aplicativo</string>
+    <string name="delete_information_confirmation_message">Este dado será excluido para todos os usuários do aplicativo, deseja continuar?</string>
     <!-- Sign Up Activity Result Messages -->
     <string name="signup_success_message">Cadastro realizado com sucesso!</string>
     <string name="invalid_email_message">Formato de e-mail fornecido não é válido</string>

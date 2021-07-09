@@ -371,7 +371,12 @@ class InformationActivity : BaseActivity() {
                 }
 
                 InformationType.PERCENTAGE -> {
-
+                    createMessageDialog(
+                        MessageType.ERROR,
+                        "Este recurso que permite adicionar informações aos indicadores gerais ainda está em desenvolvimento"
+                    ).apply {
+                        show(supportFragmentManager, this.tag)
+                    }
                 }
 
                 InformationType.TEXT -> {/*TODO*/}
