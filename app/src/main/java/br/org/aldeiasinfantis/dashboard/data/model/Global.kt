@@ -2,9 +2,12 @@ package br.org.aldeiasinfantis.dashboard.data.model
 
 object Global {
 
-    const val LOGIN_ATTEMPT_DELAY_IN_MILLIS: Long = 1500L
     const val SPLASH_SCREEN_DURATION_IN_MILLIS: Long = 1200L
+    const val LOGIN_ATTEMPT_DELAY_IN_MILLIS: Long = 1500L
+    const val AUTH_TIME_OUT_IN_MILLIS: Long = 8000L
+    const val GET_USER_INFO_TIME_OUT_IN_MILLIS: Long = 5000L
     const val MAX_LOGIN_ATTEMPTS: Int = 5
+
     const val PASSWORD_MINIMUM_LENGTH: Int = 6
 
     object DatabaseNames {

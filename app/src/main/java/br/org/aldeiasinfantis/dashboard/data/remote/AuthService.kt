@@ -6,19 +6,16 @@ import br.org.aldeiasinfantis.dashboard.data.model.Global
 import br.org.aldeiasinfantis.dashboard.data.model.ServiceResult
 import br.org.aldeiasinfantis.dashboard.data.model.Singleton
 import br.org.aldeiasinfantis.dashboard.data.repository.AuthRepository
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.FirebaseNetworkException
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import java.util.concurrent.ExecutionException
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeoutException
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withTimeout
 
 class AuthService : AuthRepository {
 
-    override fun loginUser(
+    override suspend fun loginUser(
         email: String,
         password: String,
         callback: (result: ServiceResult) -> Unit
@@ -33,41 +30,29 @@ class AuthService : AuthRepository {
             return
         }
 
-        val runnable = Runnable {
-            val task: Task<AuthResult> = Singleton.AUTH
-                .signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener { callback(ServiceResult.Success) }
-
+        withTimeout(Global.AUTH_TIME_OUT_IN_MILLIS) {
             try {
-                Tasks.await(task, 10, TimeUnit.SECONDS)
-            } catch (e: ExecutionException) {
-                when (e.cause) {
-                    // Errors related to Firebase Auth
-                    is FirebaseAuthException -> {
-                        when (e.cause) {
-                            is FirebaseAuthInvalidUserException ->
-                                callback(ServiceResult.Error(ErrorType.AUTH_INVALID_USER))
+                Singleton.AUTH
+                    .signInWithEmailAndPassword(email, password)
+                    .await()
 
-                            else ->
-                                callback(ServiceResult.Error(ErrorType.UNEXPECTED_ERROR))
-                        }
-                    }
-
-                    is TimeoutException ->
-                        callback(ServiceResult.Error(ErrorType.NETWORK_EXCEPTION))
+                callback(ServiceResult.Success)
+            } catch (e: Exception) {
+                when (e) {
+                    is TimeoutCancellationException ->
+                        callback(ServiceResult.Error(ErrorType.LOGIN_TIME_OUT))
 
                     is FirebaseNetworkException ->
                         callback(ServiceResult.Error(ErrorType.NETWORK_EXCEPTION))
+
+                    is FirebaseAuthInvalidUserException ->
+                        callback(ServiceResult.Error(ErrorType.AUTH_INVALID_USER))
 
                     else ->
                         callback(ServiceResult.Error(ErrorType.UNEXPECTED_ERROR))
                 }
             }
         }
-
-        // Thread to try sign in user
-        val thread = Thread(runnable)
-        thread.start()
     }
 
     override fun registerUser(

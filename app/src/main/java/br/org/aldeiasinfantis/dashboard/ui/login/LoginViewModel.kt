@@ -3,6 +3,7 @@ package br.org.aldeiasinfantis.dashboard.ui.login
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import br.org.aldeiasinfantis.dashboard.R
 import br.org.aldeiasinfantis.dashboard.data.helper.ErrorMessageHandler
 import br.org.aldeiasinfantis.dashboard.data.helper.ResourceProvider
@@ -15,6 +16,7 @@ import br.org.aldeiasinfantis.dashboard.data.model.User
 import br.org.aldeiasinfantis.dashboard.data.repository.AuthRepository
 import br.org.aldeiasinfantis.dashboard.data.repository.DatabaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -55,42 +57,44 @@ class LoginViewModel @Inject constructor(
 
         _loginViewFlipper.value = VIEW_FLIPPER_PROGRESS_BAR
 
-        authService.loginUser(email, password) { result ->
+        viewModelScope.launch {
 
-            when (result) {
+            authService.loginUser(email, password) { result ->
 
-                // If the user logs in, send the user information to view change activity
-                is ServiceResult.Success -> {
-                    databaseService.getLoggedUserInformation { user, databaseResult ->
-                        when (databaseResult) {
-                            is ServiceResult.Success -> {
-                                user?.let { itUser ->
-                                    _loggedUserInformation.value = Pair(itUser, password)
-                                } ?: run {
-                                    _errorMessage.value =
-                                        ErrorMessageHandler
-                                            .getErrorMessage(resProvider, ErrorType.UNEXPECTED_ERROR)
+                viewModelScope.launch {
+                    when (result) {
+                        /* If the user logs in, send the user information to view change activity */
+                        is ServiceResult.Success -> {
+                            databaseService.getLoggedUserInformation { user, databaseResult ->
+                                when (databaseResult) {
+                                    is ServiceResult.Success -> {
+                                        user?.let { itUser ->
+                                            _loggedUserInformation.value = Pair(itUser, password)
+                                        } ?: run {
+                                            _errorMessage.value =
+                                                ErrorMessageHandler
+                                                    .getErrorMessage(resProvider, ErrorType.UNEXPECTED_ERROR)
+                                        }
+                                    }
+
+                                    is ServiceResult.Error -> {
+                                        _errorMessage.value =
+                                            ErrorMessageHandler
+                                                .getErrorMessage(resProvider, databaseResult.errorType)
+                                    }
                                 }
-                            }
 
-                            is ServiceResult.Error -> {
-                                _loggedUserInformation.value = null
-
-                                _errorMessage.value =
-                                    ErrorMessageHandler
-                                        .getErrorMessage(resProvider, databaseResult.errorType)
+                                _loginViewFlipper.value = VIEW_FLIPPER_BUTTON
                             }
                         }
 
-                        _loginViewFlipper.value = VIEW_FLIPPER_BUTTON
+                        is ServiceResult.Error -> {
+                            _errorMessage.value = ErrorMessageHandler
+                                .getErrorMessage(resProvider, result.errorType)
+
+                            _loginViewFlipper.value = VIEW_FLIPPER_BUTTON
+                        }
                     }
-                }
-
-                is ServiceResult.Error -> {
-                    _errorMessage.postValue(ErrorMessageHandler
-                        .getErrorMessage(resProvider, result.errorType))
-
-                    _loginViewFlipper.postValue(VIEW_FLIPPER_BUTTON)
                 }
             }
         }

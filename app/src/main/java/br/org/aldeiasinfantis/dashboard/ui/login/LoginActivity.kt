@@ -8,6 +8,7 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ViewFlipper
+import androidx.activity.contextaware.withContextAvailable
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityOptionsCompat
@@ -18,6 +19,8 @@ import br.org.aldeiasinfantis.dashboard.ui.BaseActivity
 import br.org.aldeiasinfantis.dashboard.ui.MainActivity
 import br.org.aldeiasinfantis.dashboard.ui.signup.SignUpActivity
 import br.org.aldeiasinfantis.dashboard.ui.splash.SplashActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.withContext
 
 class LoginActivity : BaseActivity() {
 

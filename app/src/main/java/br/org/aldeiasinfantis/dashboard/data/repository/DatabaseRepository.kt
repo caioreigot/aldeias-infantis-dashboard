@@ -7,7 +7,7 @@ import br.org.aldeiasinfantis.dashboard.data.model.User
 import com.google.firebase.database.DatabaseReference
 
 interface DatabaseRepository {
-    fun getLoggedUserInformation(
+    suspend fun getLoggedUserInformation(
         callback: (User?, ServiceResult) -> Unit
     )
 

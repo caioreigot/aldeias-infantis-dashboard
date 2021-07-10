@@ -1,32 +1,35 @@
 package br.org.aldeiasinfantis.dashboard.data.remote
 
-import android.app.Service
-import android.util.Log
 import br.org.aldeiasinfantis.dashboard.data.model.*
 import br.org.aldeiasinfantis.dashboard.data.repository.DatabaseRepository
-import br.org.aldeiasinfantis.dashboard.ui.information.add.AddItemViewModel
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.withTimeout
 
 class DatabaseService : DatabaseRepository {
 
-    override fun getLoggedUserInformation(
+    override suspend fun getLoggedUserInformation(
         callback: (User?, ServiceResult) -> Unit
     ) {
-        Singleton.AUTH.currentUser?.let { currentUser ->
-            val loggedUserReference = Singleton.DB_USERS_REF.child(currentUser.uid)
+        withTimeout(Global.GET_USER_INFO_TIME_OUT_IN_MILLIS) {
+            try {
+                Singleton.AUTH.currentUser?.let { currentUser ->
+                    Singleton.DB_ADMINS_REF
+                        .addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(adminsSnapshot: DataSnapshot) {
+                                val isUserAdmin = adminsSnapshot.child(currentUser.uid).exists()
 
-            Singleton.DB_ADMINS_REF
-                .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(adminsSnapshot: DataSnapshot) {
-                        val isUserAdmin = adminsSnapshot.child(currentUser.uid).exists()
+                                getUserObject(currentUser) { user, result ->
+                                    val resultObject =
+                                        if (result is ServiceResult.Error)
+                                            ServiceResult.Error(result.errorType)
+                                        else
+                                            ServiceResult.Success
 
-                        loggedUserReference.addListenerForSingleValueEvent(object :
-                            ValueEventListener {
-                            override fun onDataChange(userSnapshot: DataSnapshot) {
-                                val user: User? = userSnapshot.getValue(User::class.java)
-                                user?.isAdmin = isUserAdmin
-
-                                callback(user, ServiceResult.Success)
+                                    user?.isAdmin = isUserAdmin
+                                    callback(user, resultObject)
+                                }
                             }
 
                             override fun onCancelled(error: DatabaseError) {
@@ -34,16 +37,32 @@ class DatabaseService : DatabaseRepository {
                                 return
                             }
                         })
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        callback(null, ServiceResult.Error(ErrorType.SERVER_ERROR))
-                        return
-                    }
-                })
-
-            return
+                }
+                    ?: callback(null, ServiceResult.Error(ErrorType.NETWORK_EXCEPTION))
+            } catch (e: Exception) {
+                if (e is TimeoutCancellationException) {
+                    callback(null, ServiceResult.Error(ErrorType.NETWORK_EXCEPTION))
+                }
+            }
         }
+    }
+
+    private fun getUserObject(
+        currentUser: FirebaseUser,
+        callback: (User?, ServiceResult) -> Unit
+    ) {
+        val loggedUserReference = Singleton.DB_USERS_REF.child(currentUser.uid)
+
+        loggedUserReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(userSnapshot: DataSnapshot) {
+                val user = userSnapshot.getValue(User::class.java)
+                callback(user, ServiceResult.Success)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                callback(null, ServiceResult.Error(ErrorType.SERVER_ERROR))
+            }
+        })
     }
 
     override fun fetchDatabaseInformation(
