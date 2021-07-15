@@ -53,7 +53,7 @@ class InformationAdapter(
                     val header: TextView = itemView.findViewById(R.id.information_header)
                     header.text = info.header
 
-                    val subRecyclerView: RecyclerView = itemView.findViewById(R.id.percentage_recycle_view)
+                    val subRecyclerView: RecyclerView = itemView.findViewById(R.id.percentage_recycler_view)
 
                     subRecyclerView.adapter = SubInformationAdapter(
                         InformationType.PERCENTAGE,

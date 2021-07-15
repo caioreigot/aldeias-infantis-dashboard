@@ -1,5 +1,6 @@
 package br.org.aldeiasinfantis.dashboard.data.repository
 
+import android.view.View
 import br.org.aldeiasinfantis.dashboard.data.model.Information
 import br.org.aldeiasinfantis.dashboard.data.model.InformationType
 import br.org.aldeiasinfantis.dashboard.data.model.ServiceResult
@@ -31,6 +32,13 @@ interface DatabaseRepository {
         header: String,
         value: String,
         competence: String,
+        callback: (result: ServiceResult) -> Unit
+    )
+
+    fun addPercentageItem(
+        referenceToAdd: DatabaseReference,
+        header: String,
+        subViews: MutableList<View>,
         callback: (result: ServiceResult) -> Unit
     )
 }

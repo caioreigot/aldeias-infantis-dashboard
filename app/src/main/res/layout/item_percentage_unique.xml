@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <LinearLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:background="@color/white"/>
-    </LinearLayout>
+        android:layout_height="3dp"
+        android:background="@color/white" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,49 +27,43 @@
             android:padding="10dp">
 
             <TextView
-                android:id="@+id/item_topic"
+                android:id="@+id/item_indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="RECEITAS NACIONAIS"
                 android:textAllCaps="true"
+                android:textColor="@color/white"
                 android:textSize="24sp"
-                android:textColor="@color/white"/>
+                tools:text="RECEITAS NACIONAIS" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="1dp"
+        <View
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.01">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"/>
-
-        </LinearLayout>
+            android:layout_weight="0.01"
+            android:background="@color/white" />
 
         <LinearLayout
             android:id="@+id/right_item"
-            android:layout_width="1dp"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.29"
-            android:padding="10dp"
             android:background="@color/white"
-            android:backgroundTint="@color/white">
+            android:backgroundTint="@color/white"
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/item_percentage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                tools:text="-1,6%"
-                android:textSize="26sp"
                 android:maxLines="1"
-                app:autoSizeTextType="uniform"
-                app:autoSizeMinTextSize="6sp"
-                app:autoSizeMaxTextSize="26sp"
                 android:textColor="@android:color/holo_red_light"
-                android:textStyle="bold"/>
+                android:textSize="26sp"
+                android:textStyle="bold"
+                app:autoSizeMaxTextSize="26sp"
+                app:autoSizeMinTextSize="6sp"
+                app:autoSizeTextType="uniform"
+                tools:text="-1,6%" />
         </LinearLayout>
 
     </LinearLayout>

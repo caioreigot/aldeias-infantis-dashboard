@@ -1,5 +1,8 @@
 package br.org.aldeiasinfantis.dashboard.data.remote
 
+import android.view.View
+import android.widget.EditText
+import br.org.aldeiasinfantis.dashboard.R
 import br.org.aldeiasinfantis.dashboard.data.model.*
 import br.org.aldeiasinfantis.dashboard.data.repository.DatabaseRepository
 import com.google.firebase.auth.FirebaseUser
@@ -219,6 +222,51 @@ class DatabaseService : DatabaseRepository {
                         }
                     }
                 }
+        }
+            ?: callback(ServiceResult.Error(ErrorType.SERVER_ERROR))
+    }
+
+    override fun addPercentageItem(
+        referenceToAdd: DatabaseReference,
+        header: String,
+        subViews: MutableList<View>,
+        callback: (result: ServiceResult) -> Unit
+    ) {
+        val key = referenceToAdd.push().key
+
+        key?.let { uid ->
+            with (referenceToAdd.child(uid)) {
+                child(Global.DatabaseNames.INFORMATION_HEADER).setValue(header)
+
+                // Another node
+                val infosRef = child(Global.DatabaseNames.INDICADORES_GERAIS_SUB_INFO)
+
+                for (i in subViews.indices) {
+                    val subKey = infosRef.push().key
+
+                    subKey?.let { uid ->
+                        with (infosRef.child(uid)) {
+                            child(Global.DatabaseNames.INFORMATION_HEADER).setValue(subViews[i].findViewById<EditText>(R.id.item_indicator).text.toString())
+                            child(Global.DatabaseNames.INFORMATION_PERCENTAGE).setValue(subViews[i].findViewById<EditText>(R.id.item_percentage).text.toString())
+                        }
+                            .addOnCompleteListener { task ->
+                                when (task.isSuccessful) {
+                                    true -> callback(ServiceResult.Success)
+
+                                    false -> {
+                                        when (task.exception?.message) {
+                                            "Firebase Database error: Permission denied" ->
+                                                callback(ServiceResult.Error(ErrorType.PERMISSION_DENIED))
+
+                                            else ->
+                                                callback(ServiceResult.Error(ErrorType.SERVER_ERROR))
+                                        }
+                                    }
+                                }
+                            }
+                    }
+                }
+            }
         }
             ?: callback(ServiceResult.Error(ErrorType.SERVER_ERROR))
     }

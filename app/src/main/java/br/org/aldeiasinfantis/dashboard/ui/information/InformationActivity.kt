@@ -27,6 +27,7 @@ import br.org.aldeiasinfantis.dashboard.data.helper.ResourceProvider
 import br.org.aldeiasinfantis.dashboard.data.model.*
 import br.org.aldeiasinfantis.dashboard.ui.BaseActivity
 import br.org.aldeiasinfantis.dashboard.ui.MainActivity
+import br.org.aldeiasinfantis.dashboard.ui.information.add.percentage.AddPercentageItemDialog
 import br.org.aldeiasinfantis.dashboard.ui.information.add.AddValueItemDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.DatabaseReference
@@ -356,10 +357,10 @@ class InformationActivity : BaseActivity() {
     ) : View.OnClickListener {
 
         override fun onClick(v: View?) {
+            val activity = (context as FragmentActivity)
+
             when (mCurrentInformationType) {
                 InformationType.VALUE -> {
-                    val activity = (context as FragmentActivity)
-
                     val addValueItemDialog = AddValueItemDialog(
                         ResourceProvider(context),
                         mCurrentReference,
@@ -371,12 +372,21 @@ class InformationActivity : BaseActivity() {
                 }
 
                 InformationType.PERCENTAGE -> {
-                    createMessageDialog(
+                    val addPercentageItemDialog = AddPercentageItemDialog(
+                        ResourceProvider(context),
+                        mCurrentReference,
+                        ::refreshInformation,
+                        ::showMessageCallback
+                    )
+
+                    addPercentageItemDialog.show(activity.supportFragmentManager, addPercentageItemDialog.tag)
+
+/*                    createMessageDialog(
                         MessageType.ERROR,
                         "Este recurso que permite adicionar informações aos indicadores gerais ainda está em desenvolvimento"
                     ).apply {
                         show(supportFragmentManager, this.tag)
-                    }
+                    }*/
                 }
 
                 InformationType.TEXT -> {/*TODO*/}

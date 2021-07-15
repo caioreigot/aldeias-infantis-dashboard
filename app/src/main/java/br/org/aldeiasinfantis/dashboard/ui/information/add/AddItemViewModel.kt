@@ -1,6 +1,7 @@
 package br.org.aldeiasinfantis.dashboard.ui.information.add
 
 import android.text.TextUtils
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -74,6 +75,26 @@ class AddItemViewModel @Inject constructor(
                 is ServiceResult.Error ->
                     _errorMessage.value =
                         ErrorMessageHandler.getErrorMessage(resProvider, result.errorType)
+            }
+        }
+    }
+
+    fun addPercentageItem(
+        referenceToAdd: DatabaseReference,
+        header: String,
+        subViews: MutableList<View>,
+    ) {
+        _viewFlipperChildToDisplay.value = VIEW_FLIPPER_PROGRESS_BAR
+
+        if (TextUtils.isEmpty(header)) {
+            _errorMessage.value = resProvider.getString(R.string.empty_field_error_message)
+            return
+        }
+
+        databaseService.addPercentageItem(referenceToAdd, header, subViews) { result ->
+            when (result) {
+                is ServiceResult.Success -> {}
+                is ServiceResult.Error -> {}
             }
         }
     }

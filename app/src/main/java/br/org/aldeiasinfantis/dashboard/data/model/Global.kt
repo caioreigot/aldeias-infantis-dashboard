@@ -28,6 +28,7 @@ object Global {
         const val INDICADORES_GERAIS = "indicadores_gerais"
         const val INDICADORES_GERAIS_ANO = "ano_anterior"
         const val INDICADORES_GERAIS_MES = "mes_anterior"
+        const val INDICADORES_GERAIS_SUB_INFO = "infos"
         const val JUVENTUDES = "juventudes"
 
         const val INFORMATION_HEADER = "indicador"

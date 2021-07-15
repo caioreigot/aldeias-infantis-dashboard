@@ -43,7 +43,7 @@ class SubInformationAdapter(
                 }
 
                 InformationType.PERCENTAGE -> {
-                    val itemTopic: TextView = itemView.findViewById(R.id.item_topic)
+                    val itemTopic: TextView = itemView.findViewById(R.id.item_indicator)
                     val itemPercentage: TextView = itemView.findViewById(R.id.item_percentage)
 
                     itemTopic.text = info.header
