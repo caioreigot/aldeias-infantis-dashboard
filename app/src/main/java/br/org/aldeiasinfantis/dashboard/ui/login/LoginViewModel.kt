@@ -58,44 +58,45 @@ class LoginViewModel @Inject constructor(
         _loginViewFlipper.value = VIEW_FLIPPER_PROGRESS_BAR
 
         viewModelScope.launch {
-
             authService.loginUser(email, password) { result ->
+                when (result) {
+                    /* If the user logs in, send the user information to view change activity */
+                    is ServiceResult.Success ->
+                        getLoggedUserInformation(password)
 
-                viewModelScope.launch {
-                    when (result) {
-                        /* If the user logs in, send the user information to view change activity */
-                        is ServiceResult.Success -> {
-                            databaseService.getLoggedUserInformation { user, databaseResult ->
-                                when (databaseResult) {
-                                    is ServiceResult.Success -> {
-                                        user?.let { itUser ->
-                                            _loggedUserInformation.value = Pair(itUser, password)
-                                        } ?: run {
-                                            _errorMessage.value =
-                                                ErrorMessageHandler
-                                                    .getErrorMessage(resProvider, ErrorType.UNEXPECTED_ERROR)
-                                        }
-                                    }
+                    is ServiceResult.Error -> {
+                        _errorMessage.value = ErrorMessageHandler
+                            .getErrorMessage(resProvider, result.errorType)
 
-                                    is ServiceResult.Error -> {
-                                        _errorMessage.value =
-                                            ErrorMessageHandler
-                                                .getErrorMessage(resProvider, databaseResult.errorType)
-                                    }
-                                }
-
-                                _loginViewFlipper.value = VIEW_FLIPPER_BUTTON
-                            }
-                        }
-
-                        is ServiceResult.Error -> {
-                            _errorMessage.value = ErrorMessageHandler
-                                .getErrorMessage(resProvider, result.errorType)
-
-                            _loginViewFlipper.value = VIEW_FLIPPER_BUTTON
-                        }
+                        _loginViewFlipper.value = VIEW_FLIPPER_BUTTON
                     }
                 }
+            }
+        }
+    }
+
+    private fun getLoggedUserInformation(password: String) {
+        viewModelScope.launch {
+            databaseService.getLoggedUserInformation { user, databaseResult ->
+                when (databaseResult) {
+                    is ServiceResult.Success -> {
+                        user?.let { itUser ->
+                            _loggedUserInformation.value = Pair(itUser, password)
+                        } ?: run {
+                            _errorMessage.value =
+                                ErrorMessageHandler
+                                    .getErrorMessage(resProvider, ErrorType.UNEXPECTED_ERROR)
+                        }
+                    }
+
+                    is ServiceResult.Error -> {
+                        _errorMessage.value =
+                            ErrorMessageHandler
+                                .getErrorMessage(resProvider, databaseResult.errorType)
+                    }
+                }
+
+                _loginViewFlipper.value = VIEW_FLIPPER_BUTTON
             }
         }
     }

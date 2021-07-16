@@ -33,7 +33,6 @@ class MainActivity : BaseActivity() {
 
     private lateinit var logoutBtn: ImageButton
     private lateinit var itemCountTV: TextView
-
     private lateinit var loginLink: TextView
     private lateinit var becomeDonor: TextView
 
@@ -43,7 +42,6 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
 
         //region Assignments
-
         logoutBtn = findViewById(R.id.logout_image_btn)
         itemCountTV = findViewById(R.id.main_item_count)
         loginLink = findViewById(R.id.loginLink)
