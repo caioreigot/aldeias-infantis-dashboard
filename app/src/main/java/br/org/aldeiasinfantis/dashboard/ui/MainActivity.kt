@@ -86,17 +86,15 @@ class MainActivity : BaseActivity() {
             val choiceDialog = Dialog(this)
             choiceDialog.setContentView(R.layout.dialog_general_info)
 
-            val intent = Intent(this, InformationActivity::class.java)
+            choiceDialog.apply {
+                findViewById<Button>(R.id.mes_anterior).setOnClickListener(
+                    GeneralIndicatorsChoiceListener(choiceDialog, 1)
+                )
 
-            choiceDialog.findViewById<Button>(R.id.mes_anterior).setOnClickListener(
-                GeneralIndicatorsChoiceListener(this, intent, choiceDialog, 1)
-            )
-
-            choiceDialog.findViewById<Button>(R.id.ano_anterior).setOnClickListener(
-                GeneralIndicatorsChoiceListener(this, intent, choiceDialog, 2)
-            )
-
-            choiceDialog.show()
+                findViewById<Button>(R.id.ano_anterior).setOnClickListener(
+                    GeneralIndicatorsChoiceListener(choiceDialog, 2)
+                )
+            }.show()
         }
 
         logoutBtn.setOnClickListener {
@@ -129,16 +127,18 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    class GeneralIndicatorsChoiceListener(
-        private val context: Context,
-        private val intent: Intent,
+    inner class GeneralIndicatorsChoiceListener(
         private val choiceDialog: Dialog,
         private val choice: Int
     ) : View.OnClickListener {
         override fun onClick(v: View?) {
-            val extras = Bundle()
-            extras.putInt(intentIDTag, button4.id)
-            extras.putInt(choiceTag, choice)
+            val context = this@MainActivity
+            val intent = Intent(context, InformationActivity::class.java)
+
+            val extras = Bundle().apply {
+                putInt(intentIDTag, button4.id)
+                putInt(choiceTag, choice)
+            }
 
             intent.putExtras(extras)
 
@@ -151,5 +151,4 @@ class MainActivity : BaseActivity() {
             choiceDialog.dismiss()
         }
     }
-
 }
