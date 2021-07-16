@@ -39,8 +39,6 @@ class AuthService : AuthRepository {
 
                 callback(ServiceResult.Success)
             } catch (e: Exception) {
-                println("[DEBUG] Erro ao logar no AuthService: $e")
-
                 when (e) {
                     is TimeoutCancellationException ->
                         callback(ServiceResult.Error(ErrorType.LOGIN_TIME_OUT))
