@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.ViewFlipper
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -40,24 +41,28 @@ class AddPercentageItemDialog @Inject constructor(
 
     private lateinit var recyclerView: RecyclerView
     private var adapter: AddPercentageItemAdapter? = null
+
     private lateinit var informationHeader: EditText
     private lateinit var plusAddBtn: ImageButton
     private lateinit var addToDashboardBtn: TextView
+    private lateinit var viewFlipper: ViewFlipper
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         //region Assignments
-        recyclerView = view.findViewById(R.id.recycler_view)
+        with (view) {
+            recyclerView = view.findViewById(R.id.recycler_view)
+            informationHeader = findViewById(R.id.information_header)
+            plusAddBtn = findViewById(R.id.plus_add_btn_iv)
+            addToDashboardBtn = findViewById(R.id.add_to_dashboard_btn_tv)
+            viewFlipper = findViewById(R.id.add_view_flipper)
+        }
 
         adapter = AddPercentageItemAdapter(
             INITIAL_SIZE,
             ::scrollRecyclerViewTo
         )
-
-        informationHeader = view.findViewById(R.id.information_header)
-        plusAddBtn = view.findViewById(R.id.plus_add_btn_iv)
-        addToDashboardBtn = view.findViewById(R.id.add_to_dashboard_btn_tv)
         //endregion
 
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -82,15 +87,21 @@ class AddPercentageItemDialog @Inject constructor(
             adapter?.let { itAdapter ->
                 for (i in itAdapter.views.indices) {
                     println("[DEBUG] views[$i]: ${itAdapter.views[i].findViewById<EditText>(R.id.item_indicator).text}")
-
-                    addItemViewModel.addPercentageItem(
-                        referenceToAdd,
-                        informationHeader.text.toString(),
-                        itAdapter.views
-                    )
                 }
+
+                addItemViewModel.addPercentageItem(
+                    referenceToAdd,
+                    informationHeader.text.toString(),
+                    itAdapter.views
+                )
             }
         }
+
+        addItemViewModel.viewFlipperChildToDisplay.observe(viewLifecycleOwner, {
+            it?.let { childToDisplay ->
+                viewFlipper.displayedChild = childToDisplay
+            }
+        })
     }
 
     private fun scrollRecyclerViewTo(position: Int) =

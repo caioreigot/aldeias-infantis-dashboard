@@ -75,22 +75,35 @@
             android:layout_height="3dp"
             android:background="@color/white" />
 
-        <TextView
-            android:id="@+id/add_to_dashboard_btn_tv"
+        <ViewFlipper
+            android:id="@+id/add_view_flipper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="20dp"
-            android:layout_marginBottom="8dp"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="@string/add_caps_lock"
-            android:textColor="@color/white"
-            android:textSize="24sp" />
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/add_to_dashboard_btn_tv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/add_caps_lock"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:indeterminate="true"
+                android:indeterminateDrawable="@drawable/progress_bar_white"/>
+
+        </ViewFlipper>
 
     </LinearLayout>
 

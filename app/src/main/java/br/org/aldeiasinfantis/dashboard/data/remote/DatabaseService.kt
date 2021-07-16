@@ -246,8 +246,13 @@ class DatabaseService : DatabaseRepository {
 
                     subKey?.let { uid ->
                         with (infosRef.child(uid)) {
-                            child(Global.DatabaseNames.INFORMATION_HEADER).setValue(subViews[i].findViewById<EditText>(R.id.item_indicator).text.toString())
-                            child(Global.DatabaseNames.INFORMATION_PERCENTAGE).setValue(subViews[i].findViewById<EditText>(R.id.item_percentage).text.toString())
+                            with (subViews[i]) {
+                                val infoHeader = findViewById<EditText>(R.id.item_indicator).text.toString()
+                                val infoPercentage = findViewById<EditText>(R.id.item_percentage).text.toString()
+
+                                child(Global.DatabaseNames.INFORMATION_HEADER).setValue(infoHeader)
+                                child(Global.DatabaseNames.INFORMATION_PERCENTAGE).setValue(infoPercentage)
+                            }
                         }
                             .addOnCompleteListener { task ->
                                 when (task.isSuccessful) {

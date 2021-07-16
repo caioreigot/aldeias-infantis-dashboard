@@ -39,14 +39,18 @@ class MessageDialog(
 
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        image = view.findViewById(R.id.image_view)
-        titleTV = view.findViewById(R.id.title_tv)
-        contentTV = view.findViewById(R.id.content_tv)
+        //region Assignments
+        with (view) {
+            image = findViewById(R.id.image_view)
+            titleTV = findViewById(R.id.title_tv)
+            contentTV = findViewById(R.id.content_tv)
 
-        negativeBtn = view.findViewById(R.id.negative_btn)
-        positiveBtn = view.findViewById(R.id.positive_btn)
+            negativeBtn = findViewById(R.id.negative_btn)
+            positiveBtn = findViewById(R.id.positive_btn)
 
-        dividerView = view.findViewById(R.id.buttons_divider)
+            dividerView = findViewById(R.id.buttons_divider)
+        }
+        //endregion
 
         when (messageType) {
             MessageType.SUCCESSFUL -> {

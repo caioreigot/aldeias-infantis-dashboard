@@ -43,11 +43,15 @@ class AddValueItemDialog @Inject constructor(
 
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        headerET = view.findViewById(R.id.information_header_et)
-        valueET = view.findViewById(R.id.information_value_et)
-        competenceET = view.findViewById(R.id.information_date_et)
-        addBtnCV = view.findViewById(R.id.add_btn_cv)
-        viewFlipper = view.findViewById(R.id.add_view_flipper)
+        //region Assignments
+        with (view) {
+            headerET = findViewById(R.id.information_header_et)
+            valueET = findViewById(R.id.information_value_et)
+            competenceET = findViewById(R.id.information_date_et)
+            addBtnCV = findViewById(R.id.add_btn_cv)
+            viewFlipper = findViewById(R.id.add_view_flipper)
+        }
+        //endregion
 
         addBtnCV.setOnClickListener {
             addItemViewModel.addValueItem(

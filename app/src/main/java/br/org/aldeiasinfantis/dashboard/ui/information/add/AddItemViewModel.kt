@@ -92,9 +92,11 @@ class AddItemViewModel @Inject constructor(
         }
 
         databaseService.addPercentageItem(referenceToAdd, header, subViews) { result ->
+            _viewFlipperChildToDisplay.value = VIEW_FLIPPER_BUTTON
+
             when (result) {
-                is ServiceResult.Success -> {}
-                is ServiceResult.Error -> {}
+                is ServiceResult.Success -> {/*TODO*/}
+                is ServiceResult.Error -> {/*TODO*/}
             }
         }
     }
