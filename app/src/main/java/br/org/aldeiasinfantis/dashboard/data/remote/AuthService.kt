@@ -8,6 +8,7 @@ import br.org.aldeiasinfantis.dashboard.data.model.Singleton
 import br.org.aldeiasinfantis.dashboard.data.repository.AuthRepository
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.tasks.await
@@ -38,6 +39,8 @@ class AuthService : AuthRepository {
 
                 callback(ServiceResult.Success)
             } catch (e: Exception) {
+                println("[DEBUG] Erro ao logar no AuthService: $e")
+
                 when (e) {
                     is TimeoutCancellationException ->
                         callback(ServiceResult.Error(ErrorType.LOGIN_TIME_OUT))
@@ -46,6 +49,9 @@ class AuthService : AuthRepository {
                         callback(ServiceResult.Error(ErrorType.NETWORK_EXCEPTION))
 
                     is FirebaseAuthInvalidUserException ->
+                        callback(ServiceResult.Error(ErrorType.AUTH_INVALID_USER))
+
+                    is FirebaseAuthInvalidCredentialsException ->
                         callback(ServiceResult.Error(ErrorType.AUTH_INVALID_USER))
 
                     else ->
