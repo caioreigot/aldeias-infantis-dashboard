@@ -76,10 +76,24 @@ class AddPercentageItemDialog @Inject constructor(
 
         addToDashboardBtn.setOnClickListener {
             mAdapter?.let { itAdapter ->
+                val adapterViewsTreated = mutableListOf<View>()
+
+                for (i in itAdapter.views.indices) {
+                    with (itAdapter.views[i]) {
+                        val percentageText = findViewById<EditText>(R.id.item_percentage).text
+                        val lastChar = percentageText[percentageText.length - 1]
+
+                        if (lastChar != '%')
+                            percentageText.insert(percentageText.length, "%")
+
+                        adapterViewsTreated.add(this)
+                    }
+                }
+
                 addItemViewModel.addPercentageItem(
                     referenceToAdd,
                     informationHeader.text.toString(),
-                    itAdapter.views
+                    adapterViewsTreated
                 )
             }
         }
