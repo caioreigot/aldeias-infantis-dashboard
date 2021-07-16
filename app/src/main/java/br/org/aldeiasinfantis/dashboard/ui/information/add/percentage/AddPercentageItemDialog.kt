@@ -4,10 +4,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.TextView
-import android.widget.ViewFlipper
+import android.widget.*
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -16,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import br.org.aldeiasinfantis.dashboard.R
 import br.org.aldeiasinfantis.dashboard.data.helper.ResourceProvider
 import br.org.aldeiasinfantis.dashboard.data.model.MessageType
-import br.org.aldeiasinfantis.dashboard.data.model.Singleton
 import br.org.aldeiasinfantis.dashboard.ui.information.add.AddItemViewModel
 import com.google.firebase.database.DatabaseReference
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,7 +36,7 @@ class AddPercentageItemDialog @Inject constructor(
     private val INITIAL_SIZE = 1
 
     private lateinit var recyclerView: RecyclerView
-    private var adapter: AddPercentageItemAdapter? = null
+    private var mAdapter: AddPercentageItemAdapter? = null
 
     private lateinit var informationHeader: EditText
     private lateinit var plusAddBtn: ImageButton
@@ -58,17 +54,12 @@ class AddPercentageItemDialog @Inject constructor(
             addToDashboardBtn = findViewById(R.id.add_to_dashboard_btn_tv)
             viewFlipper = findViewById(R.id.add_view_flipper)
         }
-
-        adapter = AddPercentageItemAdapter(
-            INITIAL_SIZE,
-            ::scrollRecyclerViewTo
-        )
         //endregion
 
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = adapter
+        recyclerView.assignPercentageAdapter()
 
         val helper = ItemTouchHelper(
             ItemTouchHelper(0,
@@ -80,15 +71,11 @@ class AddPercentageItemDialog @Inject constructor(
         helper.attachToRecyclerView(recyclerView)
 
         plusAddBtn.setOnClickListener {
-            adapter?.insertItem()
+            mAdapter?.insertItem()
         }
 
         addToDashboardBtn.setOnClickListener {
-            adapter?.let { itAdapter ->
-                for (i in itAdapter.views.indices) {
-                    println("[DEBUG] views[$i]: ${itAdapter.views[i].findViewById<EditText>(R.id.item_indicator).text}")
-                }
-
+            mAdapter?.let { itAdapter ->
                 addItemViewModel.addPercentageItem(
                     referenceToAdd,
                     informationHeader.text.toString(),
@@ -102,6 +89,23 @@ class AddPercentageItemDialog @Inject constructor(
                 viewFlipper.displayedChild = childToDisplay
             }
         })
+
+        addItemViewModel.notifyItemAdded.observe(viewLifecycleOwner, {
+            informationHeader.text.clear()
+            recyclerView.assignPercentageAdapter()
+
+            refreshInformation()
+        })
+    }
+
+    private fun RecyclerView.assignPercentageAdapter() {
+        val adapter = AddPercentageItemAdapter(
+            INITIAL_SIZE,
+            ::scrollRecyclerViewTo
+        )
+
+        this.adapter = adapter
+        mAdapter = adapter
     }
 
     private fun scrollRecyclerViewTo(position: Int) =
@@ -119,7 +123,7 @@ class AddPercentageItemDialog @Inject constructor(
         { return false }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            adapter?.let { itAdapter ->
+            mAdapter?.let { itAdapter ->
                 val position = viewHolder.adapterPosition
                 itAdapter.itemSwiped(position)
             }

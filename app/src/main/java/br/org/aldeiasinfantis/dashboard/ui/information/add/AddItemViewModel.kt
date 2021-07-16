@@ -95,8 +95,11 @@ class AddItemViewModel @Inject constructor(
             _viewFlipperChildToDisplay.value = VIEW_FLIPPER_BUTTON
 
             when (result) {
-                is ServiceResult.Success -> {/*TODO*/}
-                is ServiceResult.Error -> {/*TODO*/}
+                is ServiceResult.Success -> _notifyItemAdded.call()
+
+                is ServiceResult.Error ->
+                    _errorMessage.value =
+                        ErrorMessageHandler.getErrorMessage(resProvider, result.errorType)
             }
         }
     }
