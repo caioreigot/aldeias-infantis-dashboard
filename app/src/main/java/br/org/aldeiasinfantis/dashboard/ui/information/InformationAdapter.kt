@@ -93,7 +93,7 @@ class InformationAdapter(
     }
 
     fun deleteItem() {
-        mRecentlyDeletedItem?.path?.let {
+        mRecentlyDeletedItem?.let {
             deleteDatabaseItem(it)
         }
     }
