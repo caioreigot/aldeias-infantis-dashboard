@@ -17,12 +17,14 @@ import br.org.aldeiasinfantis.dashboard.data.model.InformationType
 class SubInformationAdapter(
     val informationType: InformationType,
     val subInformationData: MutableList<Information>,
-    val context: Context
 ) : RecyclerView.Adapter<SubInformationAdapter.InformationViewHolder>() {
 
     @SuppressLint("ResourceType")
-    inner class InformationViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        fun bind(info: Information, position: Int) {
+    inner class InformationViewHolder(
+        itemView: View,
+        private val ctx: Context) : RecyclerView.ViewHolder(itemView)
+    {
+        fun bind(info: Information) {
             with (itemView) {
                 when (informationType) {
                     InformationType.TEXT -> {
@@ -51,22 +53,24 @@ class SubInformationAdapter(
 
                         // Leave positive values blue (by default it is red)
                         if (info.percentage[0] != '-')
-                            itemPercentage.setTextColor(Color.parseColor(context.getString(R.color.primaryBlue)))
+                            itemPercentage.setTextColor(
+                                Color.parseColor(ctx.getString(R.color.primaryBlue))
+                            )
 
                         itemPercentage.text = info.percentage
 
                         // If it is the last item, then leave the edges rounded
-                        if (position == subInformationData.size - 1) {
+                        if (adapterPosition == subInformationData.size - 1) {
                             val leftItemPart = findViewById<LinearLayout>(R.id.left_item)
                             val rightItemPart = findViewById<LinearLayout>(R.id.right_item)
 
                             leftItemPart.background = ContextCompat.getDrawable(
-                                context,
+                                ctx,
                                 R.drawable.bottom_left_rounded
                             )
 
                             rightItemPart.background = ContextCompat.getDrawable(
-                                context,
+                                ctx,
                                 R.drawable.bottom_right_rounded
                             )
                         }
@@ -83,15 +87,14 @@ class SubInformationAdapter(
             InformationType.PERCENTAGE -> R.layout.item_percentage_unique
         }
 
-        val view = LayoutInflater.from(parent.context).inflate(layoutToInflate, parent, false)
-        return InformationViewHolder(view)
+        val inflater = LayoutInflater.from(parent.context)
+        val view = inflater.inflate(layoutToInflate, parent, false)
+        return InformationViewHolder(view, parent.context)
     }
 
     override fun onBindViewHolder(holder: InformationViewHolder, position: Int) {
-        holder.bind(subInformationData[position], position)
+        holder.bind(subInformationData[position])
     }
 
-    override fun getItemCount(): Int {
-        return subInformationData.size
-    }
+    override fun getItemCount(): Int = subInformationData.size
 }

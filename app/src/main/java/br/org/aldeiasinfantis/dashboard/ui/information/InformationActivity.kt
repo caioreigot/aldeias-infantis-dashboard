@@ -222,7 +222,6 @@ class InformationActivity : BaseActivity() {
             subInformationParent,
             ::scrollRecyclerViewTo,
             ::deleteDatabaseItem,
-            this
         )
 
         recyclerViewMain.adapter = adapter

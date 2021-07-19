@@ -1,6 +1,5 @@
 package br.org.aldeiasinfantis.dashboard.ui.information
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,6 @@ class InformationAdapter(
     private val subInformationParent: MutableList<MutableList<Information>>,
     private val scrollToPosition: (position: Int) -> Unit,
     private val deleteDatabaseItem: (path: String) -> Unit,
-    private val context: Context
 ) : RecyclerView.Adapter<InformationAdapter.InformationViewHolder>() {
 
     private var mRecentlyDeletedItem: Information? = null
@@ -58,7 +56,6 @@ class InformationAdapter(
                     subRecyclerView.adapter = SubInformationAdapter(
                         InformationType.PERCENTAGE,
                         subInformationParent[adapterPosition],
-                        context
                     )
                 }
             }
@@ -72,7 +69,8 @@ class InformationAdapter(
             InformationType.PERCENTAGE -> R.layout.item_percentage
         }
 
-        val view = LayoutInflater.from(parent.context).inflate(layoutToInflate, parent, false)
+        val inflater = LayoutInflater.from(parent.context)
+        val view = inflater.inflate(layoutToInflate, parent, false)
         return InformationViewHolder(view)
     }
 
@@ -80,9 +78,7 @@ class InformationAdapter(
         holder.bind(informationData[position])
     }
 
-    override fun getItemCount(): Int {
-        return informationData.size
-    }
+    override fun getItemCount(): Int = informationData.size
 
     fun itemSwiped(position: Int) {
         mRecentlyDeletedItem = informationData[position]
