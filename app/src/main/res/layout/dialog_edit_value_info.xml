@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:padding="8dp"
+    tools:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/information_item_bg">
+
+        <RelativeLayout
+            android:id="@+id/information_top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/information_item_top_bar"
+            android:padding="10dp">
+
+            <EditText
+                android:id="@+id/information_header_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@color/transparent"
+                android:hint="@string/header_caps_lock"
+                android:inputType="textMultiLine"
+                android:maxLines="4"
+                android:padding="4dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/whiteHintTranslucent"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/information_value_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/information_top_bar"
+            android:background="@color/transparent"
+            android:backgroundTint="@color/white"
+            android:gravity="center"
+            android:hint="@string/value_caps_lock"
+            android:inputType="number"
+            android:paddingStart="14dp"
+            android:paddingTop="24dp"
+            android:paddingEnd="14dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/whiteHintTranslucent"
+            android:textSize="56sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/information_date_et"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/information_value_et"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:background="@color/transparent"
+            android:gravity="end"
+            android:hint="@string/competence"
+            android:inputType="textMultiLine"
+            android:maxLines="2"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="10dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/whiteHintTranslucent"
+            android:textSize="22sp" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/add_btn_cv"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_below="@id/information_date_et"
+            android:layout_marginTop="5dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            app:cardBackgroundColor="@color/primaryBlue"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp">
+
+            <ViewFlipper
+                android:id="@+id/add_view_flipper"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/ic_baseline_check_24" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/save_caps_lock"
+                        android:textColor="@color/white"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    android:indeterminateDrawable="@drawable/progress_bar_white"
+                    android:layout_gravity="center"/>
+
+            </ViewFlipper>
+
+        </androidx.cardview.widget.CardView>
+
+    </RelativeLayout>
+
+</LinearLayout>

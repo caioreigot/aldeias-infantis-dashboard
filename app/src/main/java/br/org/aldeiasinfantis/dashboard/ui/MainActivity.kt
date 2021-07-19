@@ -8,6 +8,7 @@ import android.text.method.LinkMovementMethod
 import android.view.View
 import android.widget.*
 import androidx.cardview.widget.CardView
+import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import br.org.aldeiasinfantis.dashboard.R
 import br.org.aldeiasinfantis.dashboard.data.local.Preferences
@@ -75,7 +76,7 @@ class MainActivity : BaseActivity() {
                     R.anim.slide_in_up, R.anim.slide_out_up
                 ).toBundle()
 
-                startActivity(intent, bundle)
+                ActivityCompat.startActivity(this, intent, bundle)
             }
         }
 
@@ -119,8 +120,13 @@ class MainActivity : BaseActivity() {
                     R.anim.slide_in_right, R.anim.slide_out_right
                 ).toBundle()
 
-                startActivity(intent, options)
-                finish()
+                try {
+                    ActivityCompat.startActivity(this, intent, options)
+                } catch(e: Throwable) {
+                    startActivity(intent)
+                }
+
+                supportFinishAfterTransition()
             }
         }
     }

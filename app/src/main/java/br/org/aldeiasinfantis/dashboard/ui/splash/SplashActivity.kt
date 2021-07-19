@@ -4,12 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import br.org.aldeiasinfantis.dashboard.R
 import br.org.aldeiasinfantis.dashboard.data.helper.ErrorMessageHandler
@@ -94,7 +94,7 @@ class SplashActivity : AppCompatActivity() {
             i.putExtra(ERROR_EXTRA_TAG, message)
         }
 
-        startActivity(i, options)
+        ActivityCompat.startActivity(this, i, options)
         supportFinishAfterTransition()
     }
 
@@ -106,7 +106,7 @@ class SplashActivity : AppCompatActivity() {
             R.anim.slide_in_left, R.anim.slide_out_left
         ).toBundle()
 
-        startActivity(i, options)
+        ActivityCompat.startActivity(this, i, options)
         supportFinishAfterTransition()
     }
 }

@@ -1,13 +1,18 @@
 package br.org.aldeiasinfantis.dashboard.ui.information
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.HorizontalScrollView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import br.org.aldeiasinfantis.dashboard.R
 import br.org.aldeiasinfantis.dashboard.data.model.Information
 import br.org.aldeiasinfantis.dashboard.data.model.InformationType
+import br.org.aldeiasinfantis.dashboard.data.model.UserSingleton
 
 class InformationAdapter(
     val informationData: MutableList<Information>,
@@ -15,18 +20,32 @@ class InformationAdapter(
     private val subInformationParent: MutableList<MutableList<Information>>,
     private val scrollToPosition: (position: Int) -> Unit,
     private val deleteDatabaseItem: (path: String) -> Unit,
+    private val showEditDialog: (info: Information) -> Unit
 ) : RecyclerView.Adapter<InformationAdapter.InformationViewHolder>() {
 
     private var mRecentlyDeletedItem: Information? = null
     private var mRecentlyDeletedItemPosition = -1
 
-    inner class InformationViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class InformationViewHolder(
+        itemView: View,
+    ) : RecyclerView.ViewHolder(itemView) {
 
         private var uid: String = ""
 
         fun bind(info: Information) {
 
             uid = info.uid
+
+            //region Edit Click Listener
+            if (UserSingleton.isAdmin) {
+                itemView.setOnClickListener {
+                    showEditDialog(info)
+                }
+
+                itemView.findViewById<TextView>(R.id.information_value)
+                    .setOnClickListener { itemView.performClick() }
+            }
+            //endregion
 
             when (informationType) {
                 InformationType.TEXT -> {

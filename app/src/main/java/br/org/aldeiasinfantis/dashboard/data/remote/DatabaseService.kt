@@ -239,13 +239,13 @@ class DatabaseService : DatabaseRepository {
                 child(Global.DatabaseNames.INFORMATION_HEADER).setValue(header)
 
                 // Another node
-                val infosRef = child(Global.DatabaseNames.INDICADORES_GERAIS_SUB_INFO)
+                val infoRef = child(Global.DatabaseNames.INDICADORES_GERAIS_SUB_INFO)
 
                 for (i in subViews.indices) {
-                    val subKey = infosRef.push().key
+                    val subKey = infoRef.push().key
 
                     subKey?.let { uid ->
-                        with (infosRef.child(uid)) {
+                        with (infoRef.child(uid)) {
                             with (subViews[i]) {
                                 val infoHeader = findViewById<EditText>(R.id.item_indicator).text.toString()
                                 val infoPercentage = findViewById<EditText>(R.id.item_percentage).text.toString()
@@ -274,5 +274,31 @@ class DatabaseService : DatabaseRepository {
             }
         }
             ?: callback(ServiceResult.Error(ErrorType.SERVER_ERROR))
+    }
+
+    override fun editValueItem(
+        path: String,
+        header: String,
+        value: Int,
+        competence: String,
+        callback: (result: ServiceResult) -> Unit
+    ) {
+        val targetReference = Singleton.DATABASE.getReference(path)
+
+        with (targetReference) {
+            child(Global.DatabaseNames.INFORMATION_HEADER).setValue(header)
+            child(Global.DatabaseNames.INFORMATION_VALUE).setValue(value)
+            child(Global.DatabaseNames.INFORMATION_COMPETENCE).setValue(competence)
+        }
+            .addOnSuccessListener { callback(ServiceResult.Success) }
+            .addOnFailureListener { e ->
+                when (e.message) {
+                    "Firebase Database error: Permission denied" ->
+                        callback(ServiceResult.Error(ErrorType.PERMISSION_DENIED))
+
+                    else ->
+                        callback(ServiceResult.Error(ErrorType.UNEXPECTED_ERROR))
+                }
+            }
     }
 }

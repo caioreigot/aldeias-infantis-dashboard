@@ -29,6 +29,7 @@ import br.org.aldeiasinfantis.dashboard.ui.BaseActivity
 import br.org.aldeiasinfantis.dashboard.ui.MainActivity
 import br.org.aldeiasinfantis.dashboard.ui.information.add.percentage.AddPercentageItemDialog
 import br.org.aldeiasinfantis.dashboard.ui.information.add.AddValueItemDialog
+import br.org.aldeiasinfantis.dashboard.ui.information.edit.EditValueItemDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.DatabaseReference
 import dagger.hilt.android.AndroidEntryPoint
@@ -222,6 +223,7 @@ class InformationActivity : BaseActivity() {
             subInformationParent,
             ::scrollRecyclerViewTo,
             ::deleteDatabaseItem,
+            ::showEditDialog
         )
 
         recyclerViewMain.adapter = adapter
@@ -348,6 +350,12 @@ class InformationActivity : BaseActivity() {
 
     private fun deleteDatabaseItem(path: String) =
         informationViewModel.deleteItem(path)
+
+    private fun showEditDialog(info: Information) {
+        EditValueItemDialog(info, ::refreshInformation, ::showMessageCallback).apply {
+            show(supportFragmentManager, tag)
+        }
+    }
 
     inner class AddInformationClickListener(
         private val context: Context,

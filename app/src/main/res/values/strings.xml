@@ -21,6 +21,7 @@
     <string name="email">E-mail</string>
     <string name="send">ENVIAR</string>
     <string name="add_caps_lock">ADICIONAR</string>
+    <string name="save_caps_lock">SALVAR</string>
 
     <!-- General Result Messages -->
     <string name="empty_field_error_message">Por favor, preencha todos os campos</string>
@@ -57,6 +58,9 @@
     <string name="message_dialog_close">Fechar</string>
     <string name="dialog_cancel_button">Cancelar</string>
     <string name="dialog_yes_button">Sim</string>
+
+    <!-- Toast Messages -->
+    <string name="item_successfully_edited_toast">Salvo com sucesso</string>
 
     <!-- Login Activity -->
     <string name="login_company_name">Aldeias Infantis</string>

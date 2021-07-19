@@ -148,6 +148,11 @@ class SignUpActivity : BaseActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        // To support reverse transitions when user clicks the device back button
+        supportFinishAfterTransition()
+    }
+
     override fun finish() {
         super.finish()
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right)

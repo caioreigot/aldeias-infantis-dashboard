@@ -1,6 +1,8 @@
 package br.org.aldeiasinfantis.dashboard.ui.login
 
+import android.app.Activity
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
@@ -10,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.ViewFlipper
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
+import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import br.org.aldeiasinfantis.dashboard.R
 import br.org.aldeiasinfantis.dashboard.data.model.MessageType
@@ -94,14 +97,7 @@ class LoginActivity : BaseActivity() {
         }
 
         createAccountBtnCV.setOnClickListener {
-            val i = Intent(this, SignUpActivity::class.java)
-
-            val options = ActivityOptionsCompat.makeCustomAnimation(
-                this,
-                R.anim.slide_in_left, R.anim.slide_out_left
-            ).toBundle()
-
-            startActivity(i, options)
+            changeToSignUpActivity()
         }
 
         loginViewModel.loginViewFlipper.observe(this, {
@@ -156,20 +152,21 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun changeToMainActivity() {
-        val i = Intent(this, MainActivity::class.java)
+        startActivityWithAnimation(MainActivity::class.java)
+    }
 
+    private fun changeToSignUpActivity() {
+        startActivityWithAnimation(SignUpActivity::class.java)
+    }
+
+    private fun <T> startActivityWithAnimation(targetActivity: Class<T>) {
         val options = ActivityOptionsCompat.makeCustomAnimation(
             this,
             R.anim.slide_in_left, R.anim.slide_out_left
         ).toBundle()
 
-        startActivity(i, options)
+        val i = Intent(this, targetActivity)
 
-        supportFinishAfterTransition()
-    }
-
-    override fun onBackPressed() {
-        // To support reverse transitions when user clicks the device back button
-        supportFinishAfterTransition()
+        ActivityCompat.startActivity(this, i, options)
     }
 }

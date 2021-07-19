@@ -41,4 +41,12 @@ interface DatabaseRepository {
         subViews: MutableList<View>,
         callback: (result: ServiceResult) -> Unit
     )
+
+    fun editValueItem(
+        path: String,
+        header: String,
+        value: Int,
+        competence: String,
+        callback: (result: ServiceResult) -> Unit
+    )
 }
