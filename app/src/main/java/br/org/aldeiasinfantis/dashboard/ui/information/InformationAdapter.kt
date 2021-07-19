@@ -26,7 +26,7 @@ class InformationAdapter(
 
         private var uid: String = ""
 
-        fun bind(info: Information, position: Int) {
+        fun bind(info: Information) {
 
             uid = info.uid
 
@@ -57,7 +57,7 @@ class InformationAdapter(
 
                     subRecyclerView.adapter = SubInformationAdapter(
                         InformationType.PERCENTAGE,
-                        subInformationParent[position],
+                        subInformationParent[adapterPosition],
                         context
                     )
                 }
@@ -77,7 +77,7 @@ class InformationAdapter(
     }
 
     override fun onBindViewHolder(holder: InformationViewHolder, position: Int) {
-        holder.bind(informationData[position], position)
+        holder.bind(informationData[position])
     }
 
     override fun getItemCount(): Int {
@@ -94,7 +94,7 @@ class InformationAdapter(
 
     fun deleteItem() {
         mRecentlyDeletedItem?.let {
-            deleteDatabaseItem(it)
+            deleteDatabaseItem(it.path)
         }
     }
 
