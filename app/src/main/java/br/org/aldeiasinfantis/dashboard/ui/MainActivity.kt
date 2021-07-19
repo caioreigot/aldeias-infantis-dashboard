@@ -1,7 +1,6 @@
 package br.org.aldeiasinfantis.dashboard.ui
 
 import android.app.Dialog
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.method.LinkMovementMethod

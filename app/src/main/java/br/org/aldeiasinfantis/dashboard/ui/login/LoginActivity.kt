@@ -1,8 +1,6 @@
 package br.org.aldeiasinfantis.dashboard.ui.login
 
-import android.app.Activity
 import android.content.Intent
-import android.content.res.Resources
 import android.os.Bundle
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
