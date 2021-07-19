@@ -227,8 +227,6 @@ class InformationActivity : BaseActivity() {
 
         recyclerViewMain.adapter = adapter
 
-        Log.d("MY_DEBUG", "adapter attached!")
-
         if (UserSingleton.isAdmin) {
             val helper = ItemTouchHelper(
                 ItemTouchHelper(0,
@@ -362,7 +360,6 @@ class InformationActivity : BaseActivity() {
             when (mCurrentInformationType) {
                 InformationType.VALUE -> {
                     val addValueItemDialog = AddValueItemDialog(
-                        ResourceProvider(context),
                         mCurrentReference,
                         ::refreshInformation,
                         ::showMessageCallback
@@ -373,7 +370,6 @@ class InformationActivity : BaseActivity() {
 
                 InformationType.PERCENTAGE -> {
                     val addPercentageItemDialog = AddPercentageItemDialog(
-                        ResourceProvider(context),
                         mCurrentReference,
                         ::refreshInformation,
                         ::showMessageCallback

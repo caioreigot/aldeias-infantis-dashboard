@@ -19,7 +19,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class AddValueItemDialog @Inject constructor(
-    private val resProvider: ResourceProvider,
     private val referenceToAdd: DatabaseReference,
     private val refreshInformation: (() -> Unit),
     private val showMessageCallback: (
@@ -82,7 +81,9 @@ class AddValueItemDialog @Inject constructor(
                     showMessageCallback(
                         MessageType.ERROR,
                         message,
-                        null, null, null
+                        null,
+                        null,
+                        null
                     )
 
                     dismiss()

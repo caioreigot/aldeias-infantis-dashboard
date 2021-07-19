@@ -20,7 +20,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class AddPercentageItemDialog @Inject constructor(
-    private val resProvider: ResourceProvider,
     private val referenceToAdd: DatabaseReference,
     private val refreshInformation: (() -> Unit),
     private val showMessageCallback: (
@@ -109,6 +108,20 @@ class AddPercentageItemDialog @Inject constructor(
             recyclerView.assignPercentageAdapter()
 
             refreshInformation()
+        })
+
+        addItemViewModel.errorMessage.observe(viewLifecycleOwner, {
+            it?.let { message ->
+                showMessageCallback(
+                    MessageType.ERROR,
+                    message,
+                    null,
+                    null,
+                    null
+                )
+
+                dismiss()
+            }
         })
     }
 
