@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/primaryBluePressed"/>
+            <corners
+                android:bottomLeftRadius="20dp"
+                android:bottomRightRadius="20dp"/>
+        </shape>
+    </item>
+
+    <item
+        android:gravity="center"
+        android:drawable="@drawable/ic_baseline_edit_24"
+        android:top="20dp"
+        android:bottom="20dp"
+        android:right="50dp"
+        android:left="50dp">
+    </item>
+
+</layer-list>
+

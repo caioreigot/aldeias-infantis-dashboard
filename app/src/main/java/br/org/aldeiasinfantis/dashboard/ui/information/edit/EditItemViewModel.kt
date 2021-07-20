@@ -1,6 +1,7 @@
 package br.org.aldeiasinfantis.dashboard.ui.information.edit
 
 import android.text.TextUtils
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,7 @@ import br.org.aldeiasinfantis.dashboard.R
 import br.org.aldeiasinfantis.dashboard.data.helper.ErrorMessageHandler
 import br.org.aldeiasinfantis.dashboard.data.helper.ResourceProvider
 import br.org.aldeiasinfantis.dashboard.data.helper.SingleLiveEvent
+import br.org.aldeiasinfantis.dashboard.data.model.Information
 import br.org.aldeiasinfantis.dashboard.data.model.ServiceResult
 import br.org.aldeiasinfantis.dashboard.data.repository.DatabaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -77,28 +79,28 @@ class EditItemViewModel @Inject constructor(
         }
     }
 
-//    fun editPercentageItem(
-//        referenceToEdit: DatabaseReference,
-//        header: String,
-//        subViews: MutableList<View>,
-//    ) {
-//        _viewFlipperChildToDisplay.value = VIEW_FLIPPER_PROGRESS_BAR
-//
-//        if (TextUtils.isEmpty(header)) {
-//            _errorMessage.value = resProvider.getString(R.string.empty_field_error_message)
-//            return
-//        }
-//
-//        databaseService.editPercentageItem(referenceToEdit, header, subViews) { result ->
-//            _viewFlipperChildToDisplay.value = VIEW_FLIPPER_BUTTON
-//
-//            when (result) {
-//                is ServiceResult.Success -> _notifyItemEdited.call()
-//
-//                is ServiceResult.Error ->
-//                    _errorMessage.value =
-//                        ErrorMessageHandler.getErrorMessage(resProvider, result.errorType)
-//            }
-//        }
-//    }
+    fun editPercentageItem(
+        path: String,
+        header: String,
+        subInfo: MutableList<Information>,
+    ) {
+        _viewFlipperChildToDisplay.value = VIEW_FLIPPER_PROGRESS_BAR
+
+        if (TextUtils.isEmpty(header)) {
+            _errorMessage.value = resProvider.getString(R.string.empty_field_error_message)
+            return
+        }
+
+        databaseService.editPercentageItem(path, header, subInfo) { result ->
+            _viewFlipperChildToDisplay.value = VIEW_FLIPPER_BUTTON
+
+            when (result) {
+                is ServiceResult.Success -> _notifyItemEdited.call()
+
+                is ServiceResult.Error ->
+                    _errorMessage.value =
+                        ErrorMessageHandler.getErrorMessage(resProvider, result.errorType)
+            }
+        }
+    }
 }

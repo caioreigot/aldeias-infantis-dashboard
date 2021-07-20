@@ -30,6 +30,7 @@ import br.org.aldeiasinfantis.dashboard.ui.MainActivity
 import br.org.aldeiasinfantis.dashboard.ui.information.add.percentage.AddPercentageItemDialog
 import br.org.aldeiasinfantis.dashboard.ui.information.add.AddValueItemDialog
 import br.org.aldeiasinfantis.dashboard.ui.information.edit.EditValueItemDialog
+import br.org.aldeiasinfantis.dashboard.ui.information.edit.percentage.EditPercentageItemDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.DatabaseReference
 import dagger.hilt.android.AndroidEntryPoint
@@ -230,9 +231,8 @@ class InformationActivity : BaseActivity() {
 
         if (UserSingleton.isAdmin) {
             val helper = ItemTouchHelper(
-                ItemTouchHelper(0,
-                    androidx.recyclerview.widget.ItemTouchHelper.LEFT
-                            or androidx.recyclerview.widget.ItemTouchHelper.RIGHT
+                InformationItemTouchHelper(0,
+                    ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
                 )
             )
 
@@ -285,9 +285,9 @@ class InformationActivity : BaseActivity() {
         }, delayInMillis)
     }
 
-    inner class ItemTouchHelper(
+    inner class InformationItemTouchHelper(
         dragDirs: Int, swipeDirs: Int
-    ) : androidx.recyclerview.widget.ItemTouchHelper.SimpleCallback(
+    ) : ItemTouchHelper.SimpleCallback(
         dragDirs, swipeDirs
     ) {
         override fun onMove(
@@ -351,9 +351,21 @@ class InformationActivity : BaseActivity() {
     private fun deleteDatabaseItem(path: String) =
         informationViewModel.deleteItem(path)
 
-    private fun showEditDialog(info: Information) {
-        EditValueItemDialog(info, ::refreshInformation, ::showMessageCallback).apply {
-            show(supportFragmentManager, tag)
+    private fun showEditDialog(
+        info: Information,
+        subInfo: MutableList<Information>?,
+        infoType: InformationType
+    ) {
+        when (infoType) {
+            InformationType.VALUE ->
+                EditValueItemDialog(info, ::refreshInformation, ::showMessageCallback)
+                    .apply { show(supportFragmentManager, tag) }
+
+            InformationType.PERCENTAGE ->
+                EditPercentageItemDialog(info, subInfo, ::refreshInformation, ::showMessageCallback)
+                    .apply { show(supportFragmentManager, tag) }
+
+            InformationType.TEXT -> {}
         }
     }
 

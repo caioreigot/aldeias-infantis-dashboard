@@ -3,6 +3,7 @@ package br.org.aldeiasinfantis.dashboard.ui.information
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import br.org.aldeiasinfantis.dashboard.R
 import br.org.aldeiasinfantis.dashboard.data.model.Information
 import br.org.aldeiasinfantis.dashboard.data.model.InformationType
+import br.org.aldeiasinfantis.dashboard.data.model.UserSingleton
 
 class SubInformationAdapter(
     val informationType: InformationType,
@@ -22,7 +24,8 @@ class SubInformationAdapter(
     @SuppressLint("ResourceType")
     inner class InformationViewHolder(
         itemView: View,
-        private val ctx: Context) : RecyclerView.ViewHolder(itemView)
+        private val ctx: Context
+    ) : RecyclerView.ViewHolder(itemView)
     {
         fun bind(info: Information) {
             with (itemView) {
@@ -52,7 +55,7 @@ class SubInformationAdapter(
                         itemTopic.text = info.header
 
                         // Leave positive values blue (by default it is red)
-                        if (info.percentage[0] != '-')
+                        if (!TextUtils.isEmpty(info.percentage) && info.percentage[0] != '-')
                             itemPercentage.setTextColor(
                                 Color.parseColor(ctx.getString(R.color.primaryBlue))
                             )
@@ -60,7 +63,7 @@ class SubInformationAdapter(
                         itemPercentage.text = info.percentage
 
                         // If it is the last item, then leave the edges rounded
-                        if (adapterPosition == subInformationData.size - 1) {
+                        if (adapterPosition == subInformationData.size - 1 && !UserSingleton.isAdmin) {
                             val leftItemPart = findViewById<LinearLayout>(R.id.left_item)
                             val rightItemPart = findViewById<LinearLayout>(R.id.right_item)
 

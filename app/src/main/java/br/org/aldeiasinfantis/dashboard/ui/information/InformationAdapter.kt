@@ -1,13 +1,10 @@
 package br.org.aldeiasinfantis.dashboard.ui.information
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.HorizontalScrollView
+import android.widget.Button
 import android.widget.TextView
-import androidx.cardview.widget.CardView
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import br.org.aldeiasinfantis.dashboard.R
 import br.org.aldeiasinfantis.dashboard.data.model.Information
@@ -20,7 +17,10 @@ class InformationAdapter(
     private val subInformationParent: MutableList<MutableList<Information>>,
     private val scrollToPosition: (position: Int) -> Unit,
     private val deleteDatabaseItem: (path: String) -> Unit,
-    private val showEditDialog: (info: Information) -> Unit
+    private val showEditDialog: (
+        info: Information,
+        subInfo: MutableList<Information>?,
+        infoType: InformationType) -> Unit
 ) : RecyclerView.Adapter<InformationAdapter.InformationViewHolder>() {
 
     private var mRecentlyDeletedItem: Information? = null
@@ -35,17 +35,6 @@ class InformationAdapter(
         fun bind(info: Information) {
 
             uid = info.uid
-
-            //region Edit Click Listener
-            if (UserSingleton.isAdmin) {
-                itemView.setOnClickListener {
-                    showEditDialog(info)
-                }
-
-                itemView.findViewById<TextView>(R.id.information_value)
-                    .setOnClickListener { itemView.performClick() }
-            }
-            //endregion
 
             when (informationType) {
                 InformationType.TEXT -> {
@@ -64,6 +53,18 @@ class InformationAdapter(
                     header.text = info.header
                     value.text = info.value.toString()
                     date.text = info.competence
+
+                    if (UserSingleton.isAdmin) {
+                        val editBtn: Button = itemView.findViewById(R.id.edit_btn)
+                        editBtn.visibility = View.VISIBLE
+                        editBtn.setOnClickListener {
+                            showEditDialog(
+                                info,
+                                null,
+                                informationType
+                            )
+                        }
+                    }
                 }
 
                 InformationType.PERCENTAGE -> {
@@ -76,6 +77,18 @@ class InformationAdapter(
                         InformationType.PERCENTAGE,
                         subInformationParent[adapterPosition],
                     )
+
+                    if (UserSingleton.isAdmin) {
+                        val editBtn: Button = itemView.findViewById(R.id.edit_btn)
+                        editBtn.visibility = View.VISIBLE
+                        editBtn.setOnClickListener {
+                            showEditDialog(
+                                info,
+                                subInformationParent[adapterPosition],
+                                informationType
+                            )
+                        }
+                    }
                 }
             }
         }

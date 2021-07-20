@@ -15,20 +15,28 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_height="80dp"
         android:background="@color/secondaryBlue"
+        android:orientation="horizontal"
         android:weightSum="1">
 
         <EditText
             android:id="@+id/item_indicator"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="0.7"
-            android:layout_height="wrap_content"
-            android:padding="15dp"
             android:backgroundTint="@color/transparent"
+            android:fadeScrollbars="false"
             android:hint="@string/indicator_caps_lock"
             android:inputType="textMultiLine"
+            android:maxLines="2"
+            android:nestedScrollingEnabled="true"
+            android:paddingStart="15dp"
+            android:paddingTop="5dp"
+            android:paddingEnd="15dp"
+            android:paddingBottom="5dp"
+            android:scrollbarStyle="outsideInset"
+            android:scrollbars="vertical"
             android:textColor="@color/white"
             android:textColorHint="@color/whiteHintTranslucent"
             android:textSize="24sp" />
@@ -49,6 +57,7 @@
                 android:gravity="center"
                 android:hint="%"
                 android:textColor="@color/primaryBlue"
+                android:textColorHighlight="@color/primaryBlueTextHighlight"
                 android:textColorHint="@drawable/percentage_hint_selector"
                 android:textCursorDrawable="@null"
                 android:textSize="22sp"

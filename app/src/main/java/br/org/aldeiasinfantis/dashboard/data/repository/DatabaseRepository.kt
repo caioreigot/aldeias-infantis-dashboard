@@ -49,4 +49,11 @@ interface DatabaseRepository {
         competence: String,
         callback: (result: ServiceResult) -> Unit
     )
+
+    fun editPercentageItem(
+        path: String,
+        header: String,
+        subInfo: MutableList<Information>,
+        callback: (result: ServiceResult) -> Unit
+    )
 }

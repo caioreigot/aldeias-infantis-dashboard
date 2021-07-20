@@ -1,4 +1,4 @@
-package br.org.aldeiasinfantis.dashboard.ui.information.add.percentage
+package br.org.aldeiasinfantis.dashboard.ui.information.edit.percentage
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -8,21 +8,26 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
 import br.org.aldeiasinfantis.dashboard.R
+import br.org.aldeiasinfantis.dashboard.data.model.Information
 
-class AddPercentageItemAdapter(
-    var itemsSize: Int,
+
+class EditPercentageItemAdapter(
+    private val informationData: MutableList<Information>,
     private val scrollToPosition: (position: Int) -> Unit,
-) : RecyclerView.Adapter<AddPercentageItemAdapter.InformationViewHolder>() {
+) : RecyclerView.Adapter<EditPercentageItemAdapter.InformationViewHolder>() {
 
-    val views: MutableList<View> = mutableListOf()
+    private val views: MutableList<View> = mutableListOf()
 
-    inner class InformationViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class InformationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private var index = 0
+        private var indicatorET: EditText = itemView.findViewById(R.id.item_indicator)
+        private var percentageET: EditText = itemView.findViewById(R.id.item_percentage)
 
-        fun bind(position: Int) {
-            index = position
-            views.add(position, itemView)
+        fun bind(info: Information) {
+            indicatorET.setText(info.header)
+            percentageET.setText(info.percentage)
+
+            views.add(itemView)
         }
     }
 
@@ -56,24 +61,34 @@ class AddPercentageItemAdapter(
     }
 
     override fun onBindViewHolder(holder: InformationViewHolder, position: Int) {
-        holder.bind(position)
+        holder.bind(informationData[position])
     }
 
-    override fun getItemCount(): Int {
-        return itemsSize
+    override fun getItemCount(): Int = informationData.size
+
+    fun getData(): MutableList<Information> {
+        val list = mutableListOf<Information>()
+
+        for (i in views.indices) {
+            list.add(Information(
+                header = views[i].findViewById<EditText>(R.id.item_indicator).text.toString(),
+                percentage = views[i].findViewById<EditText>(R.id.item_percentage).text.toString()
+            ))
+        }
+
+        return list
     }
 
     fun itemSwiped(position: Int) {
-        itemsSize--
+        informationData.removeAt(position)
         views.removeAt(position)
         notifyItemRemoved(position)
     }
 
     fun insertItem() {
-        itemsSize++
-
-        val position = itemsSize - 1
-        notifyItemInserted(position)
+        val position = informationData.size
+        informationData.add(position, Information())
         scrollToPosition(position)
+        notifyItemInserted(position)
     }
 }

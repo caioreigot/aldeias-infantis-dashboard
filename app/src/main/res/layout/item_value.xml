@@ -80,6 +80,15 @@
             android:layout_alignParentEnd="true"
             android:layout_below="@id/information_value_scroll_view"/>
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/edit_btn"
+            android:stateListAnimator="@null"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/information_date"
+            android:background="@drawable/edit_information_bottom_part"
+            android:visibility="gone" />
+
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

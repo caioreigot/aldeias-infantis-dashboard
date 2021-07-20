@@ -1,5 +1,6 @@
 package br.org.aldeiasinfantis.dashboard.data.remote
 
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import br.org.aldeiasinfantis.dashboard.R
@@ -43,9 +44,10 @@ class DatabaseService : DatabaseRepository {
                 }
                     ?: callback(null, ServiceResult.Error(ErrorType.NETWORK_EXCEPTION))
             } catch (e: Exception) {
-                if (e is TimeoutCancellationException) {
+                Log.e("Database Exception", "getLoggedUserInformation: $e")
+
+                if (e is TimeoutCancellationException)
                     callback(null, ServiceResult.Error(ErrorType.NETWORK_EXCEPTION))
-                }
             }
         }
     }
@@ -63,6 +65,7 @@ class DatabaseService : DatabaseRepository {
             }
 
             override fun onCancelled(error: DatabaseError) {
+                Log.e("Database Exception", "onCancelled triggered: ${error.message}")
                 callback(null, ServiceResult.Error(ErrorType.SERVER_ERROR))
             }
         })
@@ -182,6 +185,8 @@ class DatabaseService : DatabaseRepository {
         targetReference.removeValue()
             .addOnSuccessListener { callback(ServiceResult.Success) }
             .addOnFailureListener { e ->
+                Log.e("Database Exception", "Exception: $e")
+
                 when (e.message) {
                     "Firebase Database error: Permission denied" ->
                         callback(ServiceResult.Error(ErrorType.PERMISSION_DENIED))
@@ -238,7 +243,7 @@ class DatabaseService : DatabaseRepository {
             with (referenceToAdd.child(uid)) {
                 child(Global.DatabaseNames.INFORMATION_HEADER).setValue(header)
 
-                // Another node
+                // Another "info" node (sub info)
                 val infoRef = child(Global.DatabaseNames.INDICADORES_GERAIS_SUB_INFO)
 
                 for (i in subViews.indices) {
@@ -259,6 +264,8 @@ class DatabaseService : DatabaseRepository {
                                     true -> callback(ServiceResult.Success)
 
                                     false -> {
+                                        Log.e("Database Exception", "Exception: ${task.exception}")
+
                                         when (task.exception?.message) {
                                             "Firebase Database error: Permission denied" ->
                                                 callback(ServiceResult.Error(ErrorType.PERMISSION_DENIED))
@@ -272,8 +279,7 @@ class DatabaseService : DatabaseRepository {
                     }
                 }
             }
-        }
-            ?: callback(ServiceResult.Error(ErrorType.SERVER_ERROR))
+        } ?: callback(ServiceResult.Error(ErrorType.SERVER_ERROR))
     }
 
     override fun editValueItem(
@@ -292,6 +298,8 @@ class DatabaseService : DatabaseRepository {
         }
             .addOnSuccessListener { callback(ServiceResult.Success) }
             .addOnFailureListener { e ->
+                Log.e("Database Exception", "Exception: $e")
+
                 when (e.message) {
                     "Firebase Database error: Permission denied" ->
                         callback(ServiceResult.Error(ErrorType.PERMISSION_DENIED))
@@ -300,5 +308,53 @@ class DatabaseService : DatabaseRepository {
                         callback(ServiceResult.Error(ErrorType.UNEXPECTED_ERROR))
                 }
             }
+    }
+
+    override fun editPercentageItem(
+        path: String,
+        header: String,
+        subInfo: MutableList<Information>,
+        callback: (result: ServiceResult) -> Unit
+    ) {
+
+        val targetReference = Singleton.DATABASE.getReference(path)
+
+        with (targetReference) {
+            child(Global.DatabaseNames.INFORMATION_HEADER).setValue(header)
+
+            // Another "info" node (sub info)
+            val infoRef = child(Global.DatabaseNames.INDICADORES_GERAIS_SUB_INFO)
+            infoRef.removeValue()
+
+            for (i in subInfo.indices) {
+                val subKey = infoRef.push().key
+
+                subKey?.let { ref ->
+                    with (infoRef.child(ref)) {
+                        with (subInfo[i]) {
+                            child(Global.DatabaseNames.INFORMATION_HEADER).setValue(subInfo[i].header)
+                            child(Global.DatabaseNames.INFORMATION_PERCENTAGE).setValue(subInfo[i].percentage)
+                        }
+                    }
+                        .addOnCompleteListener { task ->
+                            when (task.isSuccessful) {
+                                true -> callback(ServiceResult.Success)
+
+                                false -> {
+                                    Log.e("Database Exception", "Exception: ${task.exception}")
+
+                                    when (task.exception?.message) {
+                                        "Firebase Database error: Permission denied" ->
+                                            callback(ServiceResult.Error(ErrorType.PERMISSION_DENIED))
+
+                                        else ->
+                                            callback(ServiceResult.Error(ErrorType.SERVER_ERROR))
+                                    }
+                                }
+                            }
+                        }
+                }
+            }
+        }
     }
 }
