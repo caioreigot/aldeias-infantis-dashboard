@@ -17,6 +17,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import br.org.aldeiasinfantis.dashboard.R
 import br.org.aldeiasinfantis.dashboard.data.local.Preferences
+import br.org.aldeiasinfantis.dashboard.data.model.IndicatorsChoice
 import br.org.aldeiasinfantis.dashboard.data.model.MessageType
 import br.org.aldeiasinfantis.dashboard.data.model.Singleton
 import br.org.aldeiasinfantis.dashboard.data.model.UserSingleton
@@ -163,10 +164,12 @@ class MainActivity : BaseActivity() {
         }
 
         with (mainViewModel) {
+            val thisActivity = this@MainActivity
+
             getGeneralIndicatorsComparative(Singleton.DB_INDICADORES_GERAIS_MES_REF)
             getGeneralIndicatorsComparative(Singleton.DB_INDICADORES_GERAIS_ANO_REF)
 
-            comparativeMonth.observe(this@MainActivity, {
+            comparativeMonth.observe(thisActivity, {
                 it?.let { comparative ->
                     mComparativeMonth = comparative
 
@@ -179,7 +182,7 @@ class MainActivity : BaseActivity() {
                 }
             })
 
-            comparativeYear.observe(this@MainActivity, {
+            comparativeYear.observe(thisActivity, {
                 it?.let { comparative ->
                     mComparativeYear = comparative
 
@@ -188,6 +191,17 @@ class MainActivity : BaseActivity() {
 
                         if (mGeneralIndicatorsButtonClicked)
                             showGeneralIndicatorsChoiceDialog()
+                    }
+                }
+            })
+
+            errorMessage.observe(thisActivity, {
+                it?.let { message ->
+                    createMessageDialog(
+                        MessageType.ERROR,
+                        message
+                    ).apply {
+                        show(supportFragmentManager, tag)
                     }
                 }
             })
@@ -206,19 +220,23 @@ class MainActivity : BaseActivity() {
 
                 lastMonthButton.apply {
                     text = mComparativeMonth
-                    setOnClickListener(GeneralIndicatorsChoiceListener(choiceDialog, 1))
+
+                    setOnClickListener(GeneralIndicatorsChoiceListener(
+                        choiceDialog, IndicatorsChoice.MES_ANTERIOR.ordinal)
+                    )
                 }
 
                 lastYearButton.apply {
                     text = mComparativeYear
-                    setOnClickListener(GeneralIndicatorsChoiceListener(choiceDialog, 2))
+
+                    setOnClickListener(GeneralIndicatorsChoiceListener(
+                        choiceDialog, IndicatorsChoice.ANO_ANTERIOR.ordinal)
+                    )
                 }
 
                 window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             }.show()
         } else {
-            println("[DEBUG] Chamando recursivamente...")
-
             // Call this function recursively
             Handler(Looper.getMainLooper()).postDelayed(
                 { showGeneralIndicatorsChoiceDialog() }, 1000

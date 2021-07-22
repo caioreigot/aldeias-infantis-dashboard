@@ -10,7 +10,6 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_information_floating_btn"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -18,6 +17,7 @@
         android:layout_marginEnd="18dp"
         android:layout_marginBottom="18dp"
         android:src="@drawable/ic_baseline_add_24"
+        android:visibility="gone"
         app:backgroundTint="@color/primaryBlueLighter"
         app:rippleColor="@color/white"
         app:tint="@color/white" />
@@ -32,60 +32,60 @@
             android:id="@+id/info_blue_top_bar"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:background="@color/primaryBlue"/>
+            android:background="@color/primaryBlue" />
 
         <!-- Refresh Button -->
         <RelativeLayout
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_alignParentEnd="true"
+            android:layout_gravity="center"
             android:layout_marginTop="70dp"
-            android:layout_marginEnd="8dp"
-            android:layout_gravity="center">
+            android:layout_marginEnd="8dp">
 
             <ImageView
                 android:id="@+id/info_refresh_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitXY"
                 android:background="@color/transparent"
+                android:scaleType="fitXY"
+                android:visibility="gone"
                 app:srcCompat="@drawable/ic_baseline_refresh_24"
-                app:tint="@color/primaryBlue"
-                android:visibility="gone"/>
+                app:tint="@color/primaryBlue" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/info_refresh_button"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                app:cardCornerRadius="22dp"
-                app:cardElevation="0dp"
                 android:backgroundTint="@color/transparent"
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?android:attr/selectableItemBackground"
-                android:visibility="gone">
-            </androidx.cardview.widget.CardView>
+                android:visibility="gone"
+                app:cardCornerRadius="22dp"
+                app:cardElevation="0dp" />
 
         </RelativeLayout>
 
         <TextView
             android:id="@+id/info_group_name_tv"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:gravity="center"
-            tools:text="ACOLHIMENTO EM CASAS LARES"
+            android:layout_marginStart="12dp"
             android:layout_marginTop="17dp"
             android:layout_marginEnd="12dp"
-            android:layout_marginStart="12dp"
-            android:textStyle="bold"
-            android:textSize="20sp"
+            android:gravity="center"
             android:maxLines="1"
-            app:autoSizeTextType="uniform"
-            app:autoSizeMinTextSize="1sp"
+            android:text="@string/loading_ellipsis"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
             app:autoSizeMaxTextSize="40sp"
-            android:textColor="@color/white"/>
+            app:autoSizeMinTextSize="1sp"
+            app:autoSizeTextType="uniform"
+            tools:ignore="RelativeOverlap" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -97,15 +97,15 @@
                 android:id="@+id/info_item_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/information_item_count_bg"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
                 android:paddingLeft="30dp"
+                android:paddingTop="10dp"
                 android:paddingRight="30dp"
-                android:textSize="22sp"
+                android:paddingBottom="10dp"
                 android:textColor="@color/primaryBlue"
-                android:textStyle="bold"
-                android:layout_marginTop="8dp"/>
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <ProgressBar
                 android:id="@+id/information_progress_bar"
@@ -115,7 +115,7 @@
                 android:layout_marginTop="24dp"
                 android:indeterminate="true"
                 android:indeterminateTint="@color/primaryBlue"
-                android:visibility="visible"/>
+                android:visibility="visible" />
         </RelativeLayout>
 
     </RelativeLayout>
@@ -126,8 +126,8 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/info_top_bar"
         android:background="@color/white"
-        tools:listitem="@layout/item_value"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="2"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        tools:listitem="@layout/item_value" />
 
 </RelativeLayout>

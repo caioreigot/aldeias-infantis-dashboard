@@ -7,6 +7,7 @@
     <string name="fortalecimento_familiar">FORTALECIMENTO FAMILIAR</string>
     <string name="juventudes">JUVENTUDES</string>
     <string name="indicadores_gerais">INDICADORES GERAIS</string>
+    <string name="general_info_title">COMPARATIVO DE:</string>
     <string name="last_month">MÊS ANTERIOR</string>
     <string name="last_year">ANO ANTERIOR</string>
 
@@ -85,5 +86,4 @@
 
     <string name="login_link">Já é um doador? Acesse o <a href="https://aldeias.portaldodoador.org/login">Portal do Doador</a></string>
     <string name="become_donor">Torne-se um doador! Clique <a href="https://doe.aldeiasinfantis.org.br/?utm_source=app&amp;utm_medium=botao-doacao&amp;utm_campaign=aplicativo-aldeias">Aqui</a></string>
-    <string name="general_info_title">COMPARATIVO DE:</string>
 </resources>

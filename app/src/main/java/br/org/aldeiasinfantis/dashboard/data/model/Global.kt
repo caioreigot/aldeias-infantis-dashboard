@@ -37,6 +37,8 @@ object Global {
 
         const val JUVENTUDES = "juventudes"
 
+        const val PARENT_INDICATOR_HEADER = "titulo"
+
         const val INFORMATION_HEADER = "indicador"
         const val INFORMATION_CONTENT = "conteudo"
         const val INFORMATION_COMPETENCE = "competencia"

@@ -105,6 +105,9 @@ class DatabaseService : DatabaseRepository {
 
                     InformationType.VALUE -> {
                         for (info in snapshot.children) {
+                            if (info.key == Global.DatabaseNames.PARENT_INDICATOR_HEADER)
+                                continue
+
                             val infoValue: Information? = info.getValue(Information::class.java)
                             info.key?.let { key -> infoValue?.uid = key }
 
@@ -121,6 +124,12 @@ class DatabaseService : DatabaseRepository {
                     InformationType.PERCENTAGE -> {
                         // Each info within "previous month/year"
                         for (info in snapshot.children) {
+                            if (info.key == Global.DatabaseNames.PARENT_INDICATOR_HEADER ||
+                                info.key == Global.DatabaseNames.INDICADORES_GERAIS_COMPARATIVO)
+                            {
+                                continue
+                            }
+
                             for (infoChild in info.children) {
                                 if (infoChild.key == Global.DatabaseNames.INFORMATION_HEADER) {
                                     val infoPercentage: Information? = info.getValue(Information::class.java)
@@ -364,6 +373,23 @@ class DatabaseService : DatabaseRepository {
     ) {
         reference
             .child(Global.DatabaseNames.INDICADORES_GERAIS_COMPARATIVO)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    callback(snapshot.value.toString(), ServiceResult.Success)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    callback("", ServiceResult.Error(ErrorType.SERVER_ERROR))
+                }
+            })
+    }
+
+    override fun fetchInformationTitle(
+        reference: DatabaseReference,
+        callback: (title: String, result: ServiceResult) -> Unit
+    ) {
+        reference
+            .child(Global.DatabaseNames.PARENT_INDICATOR_HEADER)
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     callback(snapshot.value.toString(), ServiceResult.Success)

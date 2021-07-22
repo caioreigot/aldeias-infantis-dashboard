@@ -108,6 +108,12 @@ class InformationActivity : BaseActivity() {
         with (informationViewModel) {
             val thisActivity = this@InformationActivity
 
+            indicatorTitle.observe(thisActivity, {
+                it?.let { title ->
+                    infoGroupName.text = title
+                }
+            })
+
             informationDataPair.observe(thisActivity, {
                 it?.let { informationPair ->
                     loadUIAndRecyclerView(informationPair.first, informationPair.second)
@@ -159,7 +165,7 @@ class InformationActivity : BaseActivity() {
     private fun displayRequestInformation(idReceived: Int) {
         when (idReceived) {
             MainActivity.button1.id -> {
-                infoGroupName.text = getString(R.string.acolhimento_casas_lares)
+                informationViewModel.fetchInformationTitle(Singleton.DB_ACOLHIMENTO_CASAS_LARES_REF)
 
                 // Reference of the respective indicator and the type of information
                 mCurrentReference = Singleton.DB_ACOLHIMENTO_CASAS_LARES_REF
@@ -169,7 +175,7 @@ class InformationActivity : BaseActivity() {
             }
 
             MainActivity.button2.id -> {
-                infoGroupName.text = getString(R.string.fortalecimento_familiar)
+                informationViewModel.fetchInformationTitle(Singleton.DB_FORTALECIMENTO_FAMILIAR_REF)
 
                 // Reference of the respective indicator and the type of information
                 mCurrentReference = Singleton.DB_FORTALECIMENTO_FAMILIAR_REF
@@ -179,7 +185,7 @@ class InformationActivity : BaseActivity() {
             }
 
             MainActivity.button3.id -> {
-                infoGroupName.text = getString(R.string.juventudes)
+                informationViewModel.fetchInformationTitle(Singleton.DB_JUVENTUDES_REF)
 
                 // Reference of the respective indicator and the type of information
                 mCurrentReference = Singleton.DB_JUVENTUDES_REF
@@ -189,12 +195,9 @@ class InformationActivity : BaseActivity() {
             }
 
             MainActivity.button4.id -> {
-                val choiceIdReceived = intent.getIntExtra(MainActivity.CHOICE_TAG, -1)
-
-                when (choiceIdReceived) {
-                    // ID 1 = MES ANTERIOR
-                    1 -> {
-                        infoGroupName.text = getString(R.string.indicadores_gerais_mes)
+                when (intent.getIntExtra(MainActivity.CHOICE_TAG, -1)) {
+                    IndicatorsChoice.MES_ANTERIOR.ordinal -> {
+                        informationViewModel.fetchInformationTitle(Singleton.DB_INDICADORES_GERAIS_MES_REF)
 
                         // Reference of the respective indicator and the type of information
                         mCurrentReference = Singleton.DB_INDICADORES_GERAIS_MES_REF
@@ -203,9 +206,8 @@ class InformationActivity : BaseActivity() {
                         informationViewModel.fetchDatabaseInformation(mCurrentInformationType, mCurrentReference)
                     }
 
-                    // ID 2 = ANO ANTERIOR
-                    2 -> {
-                        infoGroupName.text = getString(R.string.indicadores_gerais_ano)
+                    IndicatorsChoice.ANO_ANTERIOR.ordinal -> {
+                        informationViewModel.fetchInformationTitle(Singleton.DB_INDICADORES_GERAIS_ANO_REF)
 
                         // Reference of the respective indicator and the type of information
                         mCurrentReference = Singleton.DB_INDICADORES_GERAIS_ANO_REF

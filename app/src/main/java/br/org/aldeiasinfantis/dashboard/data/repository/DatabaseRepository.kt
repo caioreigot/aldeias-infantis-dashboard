@@ -64,4 +64,12 @@ interface DatabaseRepository {
             result: ServiceResult
         ) -> Unit
     )
+
+    fun fetchInformationTitle(
+        reference: DatabaseReference,
+        callback: (
+            title: String,
+            result: ServiceResult
+        ) -> Unit
+    )
 }

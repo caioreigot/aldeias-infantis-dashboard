@@ -23,10 +23,6 @@ class MainViewModel @Inject constructor(
     val errorMessage: LiveData<String>
         get() = _errorMessage
 
-    private val _showLoadingDialog: MutableLiveData<Boolean> = MutableLiveData()
-    val showLoadingDialog: LiveData<Boolean>
-        get() = _showLoadingDialog
-
     private val _comparativeMonth: MutableLiveData<String> = MutableLiveData()
     val comparativeMonth: LiveData<String>
         get() = _comparativeMonth
@@ -36,11 +32,7 @@ class MainViewModel @Inject constructor(
         get() = _comparativeYear
 
     fun getGeneralIndicatorsComparative(reference: DatabaseReference) {
-        _showLoadingDialog.value = true
-
         databaseService.fetchGeneralIndicatorsComparative(reference) { comparative, result ->
-            _showLoadingDialog.value = false
-
             when (result) {
                 is ServiceResult.Success -> {
                     when (reference) {

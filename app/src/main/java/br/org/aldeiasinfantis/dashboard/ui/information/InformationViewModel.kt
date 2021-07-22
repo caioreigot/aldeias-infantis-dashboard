@@ -32,6 +32,10 @@ class InformationViewModel @Inject constructor(
     val refreshInformation: LiveData<Unit>
         get() = _refreshInformation
 
+    private val _indicatorTitle: SingleLiveEvent<String> = SingleLiveEvent()
+    val indicatorTitle: LiveData<String>
+        get() = _indicatorTitle
+
     val informationDataPair: MutableLiveData
         <Pair
             <
@@ -74,6 +78,19 @@ class InformationViewModel @Inject constructor(
                 }
 
                 else -> null
+            }
+        }
+    }
+
+    fun fetchInformationTitle(reference: DatabaseReference) {
+        databaseService.fetchInformationTitle(reference) { title, result ->
+            when (result) {
+                is ServiceResult.Success ->
+                    _indicatorTitle.value = title
+
+                is ServiceResult.Error ->
+                    _errorMessage.value =
+                        ErrorMessageHandler.getErrorMessage(resProvider, result.errorType)
             }
         }
     }
