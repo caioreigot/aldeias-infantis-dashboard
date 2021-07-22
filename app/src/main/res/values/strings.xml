@@ -22,6 +22,7 @@
     <string name="send">ENVIAR</string>
     <string name="add_caps_lock">ADICIONAR</string>
     <string name="save_caps_lock">SALVAR</string>
+    <string name="loading_ellipsis">Carregando…</string>
 
     <!-- General Result Messages -->
     <string name="empty_field_error_message">Por favor, preencha todos os campos</string>
@@ -84,5 +85,5 @@
 
     <string name="login_link">Já é um doador? Acesse o <a href="https://aldeias.portaldodoador.org/login">Portal do Doador</a></string>
     <string name="become_donor">Torne-se um doador! Clique <a href="https://doe.aldeiasinfantis.org.br/?utm_source=app&amp;utm_medium=botao-doacao&amp;utm_campaign=aplicativo-aldeias">Aqui</a></string>
-    <string name="general_info_title">COMPARATIVO COM:</string>
+    <string name="general_info_title">COMPARATIVO DE:</string>
 </resources>

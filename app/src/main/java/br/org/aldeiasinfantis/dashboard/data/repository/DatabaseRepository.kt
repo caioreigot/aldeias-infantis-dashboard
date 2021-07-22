@@ -56,4 +56,12 @@ interface DatabaseRepository {
         subInfo: MutableList<Information>,
         callback: (result: ServiceResult) -> Unit
     )
+
+    fun fetchGeneralIndicatorsComparative(
+        reference: DatabaseReference,
+        callback: (
+            comparative: String,
+            result: ServiceResult
+        ) -> Unit
+    )
 }

@@ -13,9 +13,12 @@ object Global {
     object DatabaseNames {
         /*
         dashboard {
-            acolhimento em casas lares { ... }
-            fortalecimento familiar { ... }
-            indicadores gerais { ano anterior { ... }, mes anterior { ... } }
+            acolhimento em casas lares { ... },
+            fortalecimento familiar { ... },
+            indicadores gerais {
+                ano anterior { comparativo: "", ... },
+                mes anterior { comparativo: "", ... }
+            },
             juventudes { ... }
         }
         */
@@ -25,10 +28,13 @@ object Global {
 
         const val ACOLHIMENTO_EM_CASAS_LARES = "acolhimento_em_casas_lares"
         const val FORTALECIMENTO_FAMILIAR = "fortalecimento_familiar"
+
         const val INDICADORES_GERAIS = "indicadores_gerais"
         const val INDICADORES_GERAIS_ANO = "ano_anterior"
         const val INDICADORES_GERAIS_MES = "mes_anterior"
+        const val INDICADORES_GERAIS_COMPARATIVO = "comparativo"
         const val INDICADORES_GERAIS_SUB_INFO = "infos"
+
         const val JUVENTUDES = "juventudes"
 
         const val INFORMATION_HEADER = "indicador"

@@ -1,32 +1,28 @@
 package br.org.aldeiasinfantis.dashboard.ui.information
 
 import android.app.Dialog
-import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.MotionEvent
 import android.view.VelocityTracker
 import android.view.View
 import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.view.animation.RotateAnimation
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
-import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.org.aldeiasinfantis.dashboard.R
-import br.org.aldeiasinfantis.dashboard.data.helper.ResourceProvider
 import br.org.aldeiasinfantis.dashboard.data.model.*
 import br.org.aldeiasinfantis.dashboard.ui.BaseActivity
-import br.org.aldeiasinfantis.dashboard.ui.MainActivity
+import br.org.aldeiasinfantis.dashboard.ui.main.MainActivity
 import br.org.aldeiasinfantis.dashboard.ui.information.add.percentage.AddPercentageItemDialog
 import br.org.aldeiasinfantis.dashboard.ui.information.add.AddValueItemDialog
 import br.org.aldeiasinfantis.dashboard.ui.information.edit.EditValueItemDialog
@@ -42,9 +38,11 @@ class InformationActivity : BaseActivity() {
 
     private val informationViewModel: InformationViewModel by viewModels()
 
-    private var adapter: InformationAdapter? = null
+    private var mAdapter: InformationAdapter? = null
 
     private var idReceived: Int = -1
+
+    lateinit var mInformationItemTouchHelper: InformationItemTouchHelper
 
     private lateinit var mCurrentInformationType: InformationType
     private lateinit var mCurrentReference: DatabaseReference
@@ -62,6 +60,7 @@ class InformationActivity : BaseActivity() {
     private var mFetchingInformation: Boolean = false
 
     private var mLoadingDialog: Dialog? = null
+    private var mAddItemDialog: DialogFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,7 +77,15 @@ class InformationActivity : BaseActivity() {
         velocity = VelocityTracker.obtain()
         //endregion
 
-        idReceived = intent.getIntExtra(MainActivity.intentIDTag, -1)
+        idReceived = intent.getIntExtra(MainActivity.INTENT_ID_TAG, -1)
+
+        mInformationItemTouchHelper = InformationItemTouchHelper(
+            this,
+            ::refreshItemCount,
+            ::showMessageCallback,
+            0,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        )
 
         recyclerViewMain.layoutManager = LinearLayoutManager(this)
 
@@ -97,7 +104,7 @@ class InformationActivity : BaseActivity() {
             return
         }
 
-        //region Observers
+        //Observers
         with (informationViewModel) {
             val thisActivity = this@InformationActivity
 
@@ -138,7 +145,6 @@ class InformationActivity : BaseActivity() {
                 refreshInformation(0)
             })
         }
-        //endregion
 
         displayRequestInformation(idReceived)
 
@@ -146,7 +152,7 @@ class InformationActivity : BaseActivity() {
         if (UserSingleton.isAdmin) {
             addInformationFab.visibility = View.VISIBLE
 
-            addInformationFab.setOnClickListener(AddInformationClickListener(this))
+            addInformationFab.setOnClickListener(AddInformationClickListener())
         }
     }
 
@@ -183,7 +189,7 @@ class InformationActivity : BaseActivity() {
             }
 
             MainActivity.button4.id -> {
-                val choiceIdReceived = intent.getIntExtra(MainActivity.choiceTag, -1)
+                val choiceIdReceived = intent.getIntExtra(MainActivity.CHOICE_TAG, -1)
 
                 when (choiceIdReceived) {
                     // ID 1 = MES ANTERIOR
@@ -218,7 +224,7 @@ class InformationActivity : BaseActivity() {
     ) {
         mFetchingInformation = false
 
-        adapter = InformationAdapter(
+        mAdapter = InformationAdapter(
             informationData,
             mCurrentInformationType,
             subInformationParent,
@@ -227,18 +233,15 @@ class InformationActivity : BaseActivity() {
             ::showEditDialog
         )
 
-        recyclerViewMain.adapter = adapter
+        recyclerViewMain.adapter = mAdapter
 
         if (UserSingleton.isAdmin) {
-            val helper = ItemTouchHelper(
-                InformationItemTouchHelper(0,
-                    ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-                )
-            )
+            mInformationItemTouchHelper.setup(mAdapter)
+            ItemTouchHelper(mInformationItemTouchHelper).attachToRecyclerView(recyclerViewMain)
 
-            helper.attachToRecyclerView(recyclerViewMain)
-
-            recyclerViewMain.addOnScrollListener(RecyclerViewOnScrollListener(this))
+            recyclerViewMain.addOnScrollListener(RecyclerViewFabOnScrollListener(
+                this, addInformationFab
+            ))
         }
 
         // If refresh button is running (animated), then cancel
@@ -285,59 +288,11 @@ class InformationActivity : BaseActivity() {
         }, delayInMillis)
     }
 
-    inner class InformationItemTouchHelper(
-        dragDirs: Int, swipeDirs: Int
-    ) : ItemTouchHelper.SimpleCallback(
-        dragDirs, swipeDirs
-    ) {
-        override fun onMove(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder)
-        : Boolean { return false }
-
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            adapter?.let { itAdapter ->
-                val position = viewHolder.adapterPosition
-
-                itAdapter.itemSwiped(position)
-                refreshItemCount()
-
-                createMessageDialog(
-                    MessageType.CONFIRMATION,
-                    getString(R.string.delete_information_confirmation_message),
-                    // Positive OnClickListener
-                    {
-                        itAdapter.deleteItem()
-                        refreshItemCount()
-                    },
-
-                    // Negative OnClickListener
-                    {
-                        itAdapter.undoDelete()
-                        refreshItemCount()
-                    },
-
-                    // onDismiss Dialog Callback
-                    { choice ->
-                        // if user closed the dialog without choosing an option
-                        if (choice == null) {
-                            itAdapter.undoDelete()
-                            refreshItemCount()
-                        }
-                    }
-                ).apply {
-                    show(supportFragmentManager, this.tag)
-                }
-            }
-        }
-    }
-
     private fun scrollRecyclerViewTo(position: Int) =
         recyclerViewMain.scrollToPosition(position)
 
     private fun refreshItemCount() {
-        val value = adapter?.informationData?.size
+        val value = mAdapter?.informationData?.size
 
         value?.let {
             infoItemCount.text =
@@ -369,103 +324,40 @@ class InformationActivity : BaseActivity() {
         }
     }
 
-    inner class AddInformationClickListener(
-        private val context: Context,
-    ) : View.OnClickListener {
+    inner class AddInformationClickListener : View.OnClickListener {
 
         override fun onClick(v: View?) {
-            val activity = (context as FragmentActivity)
+            val isShowing = mAddItemDialog?.dialog?.isShowing
+
+            if (isShowing != null && isShowing == true)
+                return
 
             when (mCurrentInformationType) {
                 InformationType.VALUE -> {
-                    val addValueItemDialog = AddValueItemDialog(
+                    mAddItemDialog = AddValueItemDialog(
                         mCurrentReference,
                         ::refreshInformation,
                         ::showMessageCallback
                     )
 
-                    addValueItemDialog.show(activity.supportFragmentManager, addValueItemDialog.tag)
+                    mAddItemDialog?.let {
+                        it.show(supportFragmentManager, it.tag)
+                    }
                 }
 
                 InformationType.PERCENTAGE -> {
-                    val addPercentageItemDialog = AddPercentageItemDialog(
+                    mAddItemDialog = AddPercentageItemDialog(
                         mCurrentReference,
                         ::refreshInformation,
                         ::showMessageCallback
                     )
 
-                    addPercentageItemDialog.show(activity.supportFragmentManager, addPercentageItemDialog.tag)
-
-/*                    createMessageDialog(
-                        MessageType.ERROR,
-                        "Este recurso que permite adicionar informações aos indicadores gerais ainda está em desenvolvimento"
-                    ).apply {
-                        show(supportFragmentManager, this.tag)
-                    }*/
+                    mAddItemDialog?.let {
+                        it.show(supportFragmentManager, it.tag)
+                    }
                 }
 
-                InformationType.TEXT -> {/*TODO*/}
-            }
-        }
-    }
-
-    inner class RecyclerViewOnScrollListener(context: Context) : RecyclerView.OnScrollListener() {
-
-        private var itsInside = true
-        private var animating = false
-
-        private val fabExit: Animation = AnimationUtils.loadAnimation(
-            context, R.anim.fab_exit)
-
-        private val fabEnter: Animation = AnimationUtils.loadAnimation(
-            context, R.anim.fab_enter)
-
-        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-            super.onScrolled(recyclerView, dx, dy)
-
-            // Scrolling up
-            if (dy < 0 && !itsInside && !animating) {
-                fabEnter.setAnimationListener(object : Animation.AnimationListener {
-                    override fun onAnimationEnd(animation: Animation?) {
-                        itsInside = true
-                        animating = false
-
-                        addInformationFab.isEnabled = true
-                        addInformationFab.isClickable = true
-                    }
-
-                    override fun onAnimationStart(animation: Animation?) {
-                        addInformationFab.isEnabled = true
-                        animating = true
-                    }
-
-                    override fun onAnimationRepeat(animation: Animation?) {}
-                })
-
-                addInformationFab.startAnimation(fabEnter)
-            }
-
-            if (!recyclerView.canScrollVertically(1) &&
-                recyclerView.canScrollVertically(-1) &&
-                itsInside &&
-                !animating
-            ) {
-                fabExit.setAnimationListener(object : Animation.AnimationListener {
-                    override fun onAnimationEnd(animation: Animation?) {
-                        addInformationFab.isEnabled = false
-                        itsInside = false
-                        animating = false
-                    }
-
-                    override fun onAnimationStart(animation: Animation?) {
-                        addInformationFab.isClickable = false
-                        animating = true
-                    }
-
-                    override fun onAnimationRepeat(animation: Animation?) {}
-                })
-
-                addInformationFab.startAnimation(fabExit)
+                InformationType.TEXT -> {}
             }
         }
     }
@@ -528,5 +420,4 @@ class InformationActivity : BaseActivity() {
 
         return super.onTouchEvent(event)
     }
-
 }

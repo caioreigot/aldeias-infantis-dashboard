@@ -357,4 +357,21 @@ class DatabaseService : DatabaseRepository {
             }
         }
     }
+
+    override fun fetchGeneralIndicatorsComparative(
+        reference: DatabaseReference,
+        callback: (comparative: String, result: ServiceResult) -> Unit
+    ) {
+        reference
+            .child(Global.DatabaseNames.INDICADORES_GERAIS_COMPARATIVO)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    callback(snapshot.value.toString(), ServiceResult.Success)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    callback("", ServiceResult.Error(ErrorType.SERVER_ERROR))
+                }
+            })
+    }
 }

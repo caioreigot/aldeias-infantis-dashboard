@@ -16,7 +16,7 @@ import br.org.aldeiasinfantis.dashboard.R
 import br.org.aldeiasinfantis.dashboard.data.model.MessageType
 import br.org.aldeiasinfantis.dashboard.data.model.UserSingleton
 import br.org.aldeiasinfantis.dashboard.ui.BaseActivity
-import br.org.aldeiasinfantis.dashboard.ui.MainActivity
+import br.org.aldeiasinfantis.dashboard.ui.main.MainActivity
 import br.org.aldeiasinfantis.dashboard.ui.signup.SignUpActivity
 import br.org.aldeiasinfantis.dashboard.ui.splash.SplashActivity
 

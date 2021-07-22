@@ -17,7 +17,7 @@ import br.org.aldeiasinfantis.dashboard.data.helper.ResourceProvider
 import br.org.aldeiasinfantis.dashboard.data.model.ErrorType
 import br.org.aldeiasinfantis.dashboard.data.model.Global
 import br.org.aldeiasinfantis.dashboard.data.model.UserSingleton
-import br.org.aldeiasinfantis.dashboard.ui.MainActivity
+import br.org.aldeiasinfantis.dashboard.ui.main.MainActivity
 import br.org.aldeiasinfantis.dashboard.ui.login.LoginActivity
 import dagger.hilt.android.AndroidEntryPoint
 
