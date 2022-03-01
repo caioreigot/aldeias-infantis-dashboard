@@ -41,8 +41,8 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:background="@drawable/circular_shape"
-                    android:scaleType="centerCrop"
                     android:padding="10dp"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/ic_baseline_power_settings_new_24"
                     tools:ignore="ContentDescription" />
 
@@ -91,19 +91,21 @@
                     android:layout_height="wrap_content"
                     android:layout_rowWeight="1"
                     android:layout_columnWeight="1"
-                    android:layout_marginEnd="14dp"
                     android:layout_marginStart="14dp"
                     android:layout_marginTop="14dp"
+                    android:layout_marginEnd="14dp"
                     android:layout_marginBottom="10dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
+                    app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="5dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:backgroundTint="@color/white"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:paddingStart="18dp"
@@ -136,19 +138,21 @@
                     android:layout_height="wrap_content"
                     android:layout_rowWeight="2"
                     android:layout_columnWeight="1"
-                    android:layout_marginEnd="14dp"
                     android:layout_marginStart="14dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginEnd="14dp"
                     android:layout_marginBottom="10dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
+                    app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="5dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:backgroundTint="@color/white"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:paddingStart="18dp"
@@ -184,12 +188,14 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
+                    app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="5dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:backgroundTint="@color/white"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:paddingStart="18dp"
@@ -221,19 +227,21 @@
                     android:layout_height="wrap_content"
                     android:layout_rowWeight="4"
                     android:layout_columnWeight="1"
-                    android:layout_marginEnd="14dp"
                     android:layout_marginStart="14dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginEnd="14dp"
                     android:layout_marginBottom="10dp"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
+                    app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="5dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:backgroundTint="@color/white"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:paddingStart="18dp"
@@ -277,6 +285,7 @@
                     android:layout_height="wrap_content"
                     android:linksClickable="true"
                     android:text="@string/login_link"
+                    android:textColor="@color/blackLighter2"
                     android:textColorLink="@color/primaryBlue"
                     android:textSize="16sp" />
 
@@ -287,6 +296,7 @@
                     android:layout_marginTop="2dp"
                     android:linksClickable="true"
                     android:text="@string/become_donor"
+                    android:textColor="@color/blackLighter2"
                     android:textColorLink="@color/primaryBlue"
                     android:textSize="16sp" />
             </LinearLayout>

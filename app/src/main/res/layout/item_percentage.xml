@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="0dp">
+    android:elevation="0dp"
+    app:cardBackgroundColor="@color/white">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -49,11 +50,11 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/edit_btn"
-            android:stateListAnimator="@null"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_below="@id/percentage_recycler_view"
             android:background="@drawable/edit_information_bottom_part"
+            android:stateListAnimator="@null"
             android:visibility="gone" />
 
     </RelativeLayout>
