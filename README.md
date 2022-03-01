@@ -1,4 +1,4 @@
-# aldeias-infantis-dashboard
+# Aldeias Infantis Dashboard
 Aplicativo dashboard criado para a instituição Aldeias Infantis SOS Brasil, com arquitetura MVVM e Firebase
 
 Splash Screen | Tela de Login
